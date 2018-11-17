@@ -1,0 +1,1291 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|sans-serif:300,300italic,400,400italic,700,700italic|Lato:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="系统安全,Web安全,内网,后门,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RcoIl的窝" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="内网渗透，最重要得是定位问题。所以前期的调研和收集是非常重要的一项工作。标：本文多数内容是整合的知识点。">
+<meta name="keywords" content="系统安全,Web安全,内网,后门">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内网渗透（持续更新）">
+<meta property="og:url" content="http://rcoil.me/2017/06/内网渗透/index.html">
+<meta property="og:site_name" content="RcoIl的窝">
+<meta property="og:description" content="内网渗透，最重要得是定位问题。所以前期的调研和收集是非常重要的一项工作。标：本文多数内容是整合的知识点。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://rcoil.me/image/内网渗透/blog_2018-11-16_10-47-14.png">
+<meta property="og:image" content="http://rcoil.me/image/内网渗透/切入点.png">
+<meta property="og:updated_time" content="2018-11-16T02:47:41.545Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="内网渗透（持续更新）">
+<meta name="twitter:description" content="内网渗透，最重要得是定位问题。所以前期的调研和收集是非常重要的一项工作。标：本文多数内容是整合的知识点。">
+<meta name="twitter:image" content="http://rcoil.me/image/内网渗透/blog_2018-11-16_10-47-14.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '6230266985318450000',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://rcoil.me/2017/06/内网渗透/">
+
+
+
+
+
+  <title> 内网渗透（持续更新） | RcoIl的窝 </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?ce3d1967864bac5f69f1c1a6042e5577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RcoIl的窝</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-count">
+          <a href="/count" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-fa fa-free-code-camp"></i> <br>
+            
+            阅读榜
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://rcoil.me/2017/06/内网渗透/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RcoIl">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RcoIl的窝">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                内网渗透（持续更新）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-25T21:29:11+08:00">
+                2017-06-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/内网渗透/" itemprop="url" rel="index">
+                    <span itemprop="name">内网渗透</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/06/内网渗透/" class="leancloud_visitors" data-flag-title="内网渗透（持续更新）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                <!--
+				<i class="fa fa-eye"></i>
+				-->
+				<i class="fa fa-thermometer-three-quarters" aria-hidden="true"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">热度 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+				 <span>℃</span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>内网渗透，最重要得是定位问题。所以前期的调研和收集是非常重要的一项工作。<br>标：本文多数内容是整合的知识点。<br><a id="more"></a></p>
+<hr>
+<h1 id="前期基本信息探测"><a href="#前期基本信息探测" class="headerlink" title="前期基本信息探测"></a>前期基本信息探测</h1><p>尽可能详细得分析出网段信息、各部门ip段、重点找出IT运维部、OA、邮箱服务器、人力资源管理等。<br>最后画一张组织结构图，这样在内网定位的时候，无论是针对内网查找资料还是针对特殊任务都是非常实用的一项技术。<br>不过信息收集，不是一天两天就能完成的事情，这种事情要持之以恒。</p>
+<h2 id="人事组织结构图"><a href="#人事组织结构图" class="headerlink" title="人事组织结构图"></a>人事组织结构图</h2><p>demo:<br><img src="/image/内网渗透/blog_2018-11-16_10-47-14.png" alt="安创科技"></p>
+<p>思路：这种人事图，除了在外部站点上有，也可以到首页去查找<code>关于我们</code>，有一些简单的说明，然后再去招聘网找各式的岗位名称，最后连蒙带猜（没有这样的操作），收集尽量精确能到各个人员。当然，想要详细，就得通过不同的渠道获取。</p>
+<h2 id="ip分布"><a href="#ip分布" class="headerlink" title="ip分布"></a>ip分布</h2><p>思路：</p>
+<ol>
+<li>一般大公司有内部门户系统，可通过内部门户系统公开链接找出部门ip段（如果找到路由也很惊喜）</li>
+<li>内网中可通过路由器、交换机等设备命令执行、snmp、弱口令获取网络拓扑</li>
+</ol>
+<hr>
+<h1 id="切入点（起点）"><a href="#切入点（起点）" class="headerlink" title="切入点（起点）"></a>切入点（起点）</h1><p><img src="/image/内网渗透/切入点.png" alt="切入点.png"></p>
+<ol>
+<li>Web门户系统getshell—-&gt;system权限；</li>
+<li>邮件服务器；</li>
+<li>邮件服务器获取信息中得出VPN账密和IP地址；</li>
+<li>路由器建立VPN进入；</li>
+<li>待更新…</li>
+</ol>
+<hr>
+<h1 id="靶机信息收集"><a href="#靶机信息收集" class="headerlink" title="靶机信息收集"></a>靶机信息收集</h1><p>主要针对三种：</p>
+<ol>
+<li>基于命令形式的，包括权限信息，机器信息，进程端口，网络连接，共享、会话等等；</li>
+<li>基于应用与文件形式的，例如一些敏感文件，密码文件，浏览器，远程连接客户端等；</li>
+<li>还有一种是最直接的，例如抓取本地明文与hash，键盘记录，屏幕记录等。</li>
+</ol>
+<p>网上已经有大量相关的资源与文章了，这里就不再占篇幅了，只说点额外的不常见技巧。</p>
+<h2 id="命令行形式"><a href="#命令行形式" class="headerlink" title="命令行形式"></a>命令行形式</h2><p>包括但不限于一下几点</p>
+<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">hostname #主机名</span><br><span class="line">systeminfo #系统信息（所在域，开机时间，安装信息，补丁情况，系统版本）</span><br><span class="line">set #环境变量</span><br><span class="line">net user #查看默认用户</span><br><span class="line">net view #显示当前域或工作组中计算机的列表</span><br><span class="line">net localgroup #查看用户组</span><br><span class="line">net localgroup Administrators #查看Administrators组所有用户(包括隐藏用户)</span><br><span class="line">query user #查看当前会话（window7 64以上）</span><br><span class="line">tasklist /v #显示当前进程和进程用户</span><br><span class="line">net config workstation #查看当前登陆用户信息</span><br><span class="line">net statistics workstation #查看主机开机时间</span><br><span class="line">net share #查看共享文件夹</span><br></pre></td></tr></table></figure>
+<h3 id="不常用命令"><a href="#不常用命令" class="headerlink" title="不常用命令"></a>不常用命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">whoami /all   查看Mandatory Label看我们是否过uac</span><br><span class="line">net session    查看有没有远程连过来的session</span><br><span class="line">cmdkey /l     看是否保存了登陆凭证.（凭据管理器）</span><br><span class="line">echo %logonserver%  查看登陆域</span><br><span class="line">net stitastics server  查看登陆时间</span><br><span class="line">Wmic  能让攻击者大量利用来获取系统信息的系统自带工具</span><br><span class="line">	wmic qfe list #获取补丁信息</span><br><span class="line">Netsh  做端口转发</span><br><span class="line">spn –l administrator 域内查某个用户spn记录</span><br><span class="line">dsquery | nltest  域内信息收集</span><br></pre></td></tr></table></figure>
+<h2 id="应用与文件形式"><a href="#应用与文件形式" class="headerlink" title="应用与文件形式"></a>应用与文件形式</h2><p>虽然标题不错，但是内容只是去翻文件，包括一些应用的配置文件，密码文件等。<br>有时候会碰到一些加密的office办公软件，例如word,excel 这些。</p>
+<blockquote>
+<p>如果是低版本如2003的话，攻击者会在百度搜一些网上的破解软件进行破解（会联网）。<br>如果是高版本的话，往往在目标用户开着文件时使用微软SysinternalsSuite套装中的procdump将内存dump回去，用内存查看器直接查看文件内容。</p>
+</blockquote>
+<p>因此就算有些敏感文件加密了照样能够被攻击者获取敏感信息。</p>
+<h2 id="hash和明文"><a href="#hash和明文" class="headerlink" title="hash和明文"></a>hash和明文</h2><p>这一步使用mimikatz基本就足够了，也分exe、dll与ps三个版本，攻击者会分情况使用。<br>屏幕截图在windows中也有系统自带psr命令能够做截图等等（但是只有windows7以上才会有）。<br>低版本的可以使用nircmd，使用为：<code>nircmdc.exe savescreenshot 1.png</code>。</p>
+<hr>
+<h1 id="网络环境的判断"><a href="#网络环境的判断" class="headerlink" title="网络环境的判断"></a>网络环境的判断</h1><ol>
+<li>机器所处位置区域的判断;</li>
+<li>机器角色的判断;</li>
+<li>进出口流量是否连通的判断，是否出的去，进的来。</li>
+</ol>
+<h2 id="位置的判断"><a href="#位置的判断" class="headerlink" title="位置的判断"></a>位置的判断</h2><p>位置判断是指机器处于网络拓扑中的某个区域，是在DMZ区，办公网，还是核心区，核心DB等多个位置，当然这里的区域并不是绝对的，只是大概的一个环境，不同的地方网络环境不一样，区域的界限也不一定明显。</p>
+<h2 id="角色的判断"><a href="#角色的判断" class="headerlink" title="角色的判断"></a>角色的判断</h2><p>机器角色的判断指判断已经控制的机器是普通Web服务器、开发测试服务器、公共服务器、文件服务器还是代理服务器、DNS服务器、存储服务器等等。具体的判断是通过对机器内的主机名、文件、网络连接等多种情况进行综合判断的。</p>
+<h2 id="连通性的判断"><a href="#连通性的判断" class="headerlink" title="连通性的判断"></a>连通性的判断</h2><p>出口流量是否连通的判断指机器是否能上外网这些，要综合判断协议（tcp\http\dns\icmp等协议）与端口(常见能出去的端口有80,8080,443,53,110,123等)。在这里还有一种是网络内网设置了代理服务器的情况，攻击者通常会查看环境变量set，主机名是否有proxy字样的机器，注册表是否有写明代理地址或指定pac代理文件等。</p>
+<hr>
+<h1 id="横向渗透"><a href="#横向渗透" class="headerlink" title="横向渗透"></a>横向渗透</h1><p>如果是workgroup横向，攻击者会尝试web漏洞挖掘、密码猜解等。<br>如果是domain横向，方法就比较多了，例如AD2008 gpp 、ms14-068 、kerberoast 、配置错误、一直抓密码等。</p>
+<h2 id="代理转发"><a href="#代理转发" class="headerlink" title="代理转发"></a>代理转发</h2><p><a href="http://rcoil.me/2017/06/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-%E4%B9%8B-%E4%BB%A3%E7%90%86%E7%AF%87/">渗透测试-之-代理篇</a></p>
+<h2 id="默认权限配置"><a href="#默认权限配置" class="headerlink" title="默认权限配置"></a>默认权限配置</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[+]普通机器</span><br><span class="line">允许Console：administrator组（domain admins），users组（domain users），backup operators组</span><br><span class="line">允许rdp：administrator组（domain admins），Remote desktop users组</span><br><span class="line"></span><br><span class="line">[+]域控AD</span><br><span class="line">允许Console：administrator组，backup operators组，account operators组，print operators组，server operators组</span><br><span class="line">允许rdp：administrator组，Remote desktop users组</span><br></pre></td></tr></table></figure>
+<p>如果出现配置错误，那就是权限配置问题。</p>
+<p>tips：当某些普通\不普通用户加入AD的rdp组或其他管理员组，当攻击者拿到这些用户的权限时就相当于可以获取到域控制器的权限了。</p>
+<h2 id="远程命令执行方式"><a href="#远程命令执行方式" class="headerlink" title="远程命令执行方式"></a>远程命令执行方式</h2><p>例如<code>at\schtasks\psexec\wmic\sc\ps</code>网上有很多相关资源也不占篇幅了，只提一个很少提的。从2012r2 起，他们开了一个端口叫<code>5985</code>，原理跟大家常说的powershell remote是一样的，基于winrm服务，于是可以这样执行。又是一个系统自带的远程管理工具。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">winrs -r:192.168.22.33 -u:administrator -p:p@assw0rd ipconfig</span><br></pre></td></tr></table></figure></p>
+<h2 id="域管理员定位"><a href="#域管理员定位" class="headerlink" title="域管理员定位"></a>域管理员定位</h2><p>一是日志，二是会话。<br>日志指的的本地机器的管理员日志。可以使用脚本或wevtutil导出查看<br>会话是域内每个机器的登陆会话，可以匿名查询，无需权限。可以使用netsess.exe或powerview查询<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Users\RcoIl&gt; get-netsession -computername &quot;192.168.1.100&quot;</span><br></pre></td></tr></table></figure></p>
+<h2 id="域内信息探测"><a href="#域内信息探测" class="headerlink" title="域内信息探测"></a>域内信息探测</h2><p>常用命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">net user /domain  #查看域用户</span><br><span class="line">net view /domain  #查看有几个域</span><br><span class="line">net view /domain:XXX  #查看此域内电脑</span><br><span class="line">net group /domain  #查询域里面的组</span><br><span class="line">net group &quot;domain computers&quot; /domain  #查看加入到域内的所有计算机名</span><br><span class="line">net group &quot;domain admins&quot; /domain  #查看域管理员</span><br><span class="line">nltest /dclist:xxx  #查看域控制器</span><br><span class="line">net group &quot;domain controllers&quot; /domain  #查看域控制器</span><br><span class="line">net user hacker /domain  #获得指定账户的详细信息</span><br><span class="line">net accounts /domain  #获得域密码策略设置，密码长短，错误锁定等信息</span><br></pre></td></tr></table></figure></p>
+<p>dsquery 命令 查询 AD<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">dsquery computer - 查找目录中的计算机。</span><br><span class="line">dsquery contact - 查找目录中的联系人。</span><br><span class="line">dsquery subnet - 查找目录中的子网。</span><br><span class="line">dsquery group - 查找目录中的组。</span><br><span class="line">dsquery ou - 查找目录中的组织单位。</span><br><span class="line">dsquery site - 查找目录中的站点。</span><br><span class="line">dsquery server - 查找目录中的 AD DC/LDS 实例。</span><br><span class="line">dsquery user - 查找目录中的用户。</span><br><span class="line">dsquery quota - 查找目录中的配额规定。</span><br><span class="line">dsquery partition - 查找目录中的分区。</span><br><span class="line">dsquery * - 用通用的 LDAP 查询来查找目录中的任何对象。</span><br></pre></td></tr></table></figure></p>
+<p>Net系列命令获取域内信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Csvde/ldifde/dsquery/adfind/ldapsearch #探测更详细信息</span><br><span class="line">使用`Get-SPN`（powershell脚本LDAP中快速查询符合指定得用户、组、或者SPN服务名称）</span><br><span class="line">Nslookup -type=SRV_ldap._tcp #(寻找域控)</span><br><span class="line">tasklist /v  #列出进程和进程所有者（看是否有域管登陆）</span><br><span class="line">PowerView #（powershell脚本 辅助找寻定位关键用户）</span><br><span class="line">WinScanX.exe  #远程信息刺探</span><br><span class="line">Winfo.exe  #遍历远程用户名</span><br><span class="line">nmap smb-enum-sessions.nse #（引擎来获取远程机器的登陆session，并且不需要管理权。）</span><br><span class="line">netview.exe`#(它利用`NetSessionEnum`来寻找登陆sessions，利用`NetShareEnum`来找寻共享，利用`NetWkstaUserEnum`来枚举登陆的用户)</span><br></pre></td></tr></table></figure></p>
+<hr>
+<h3 id="linux"><a href="#linux" class="headerlink" title="linux"></a>linux</h3><ol>
+<li><code>cat /etc/nsswitch</code><br>看看密码登陆策略，我可以看到使用了file ldap模式</li>
+<li><code>less /etc/ldap.conf</code><br>base ou=People,dc=unix-center,dc=net<br>找到ou,dc,dc设置</li>
+<li>查找10条用户记录<br><code>ldapsearch -h 192.168.2.2 -x -z 10 -p</code>指定端口</li>
+<li>查看NFS连接<br><code>showmount -e ip</code></li>
+<li>查找管理员信息<br>匿名方式<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ldapsearch -x -D &quot;cn=administrator,cn=People,dc=unix-center,dc=net&quot; -b &quot;cn=administrator,cn=People,dc=unix-center,dc=net&quot; -h 192.168.2.2</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>有密码形式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ldapsearch -x -W -D &quot;cn=administrator,cn=People,dc=unix-center,dc=net&quot; -b &quot;cn=administrator,cn=People,dc=unix-center,dc=net&quot; -h 192.168.2.2</span><br></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="获取域管权限"><a href="#获取域管权限" class="headerlink" title="获取域管权限"></a>获取域管权限</h2><h3 id="账户枚举"><a href="#账户枚举" class="headerlink" title="账户枚举"></a>账户枚举</h3><p>（nbtstat -A\nmapd等）、hash注入 （mimikatz） 、bypassuac、 session切换等</p>
+<h3 id="组策略漏洞（GPP）"><a href="#组策略漏洞（GPP）" class="headerlink" title="组策略漏洞（GPP）"></a>组策略漏洞（GPP）</h3><p>域管理员使用GPP来配置和操作域，常见的操作有远程创建本地用户、映射打印机、映射磁盘等，这些操作有时候需要提供账号密码。当组策略进行分发时，会在SYSVOL目录下生成一个xml文件，理所当然的前面提供的账号密码都保存在这个xml文件中，而密码是经过AES加密得，也就是说完全可逆的加密算法，而微软同时也很照顾的公布了加密密钥，所以任何域普通用户就可以读取这些xml文件并使用公开得AES密钥破解密码。</p>
+<h3 id="MS14-068-KERBEROS漏洞"><a href="#MS14-068-KERBEROS漏洞" class="headerlink" title="MS14-068 KERBEROS漏洞"></a>MS14-068 KERBEROS漏洞</h3><p>Benjamin Delpy(Mimikatz的作者)写了一个MS14-068的利用工具，叫Kekeo,是PyKEX的升级版。它能够找到并定位有漏洞的域控，在打了补丁和有2012/2012R2域控得情况下仍能凑效。<br>在利用MS14-068之前，建议先使用<code>klist /purge</code>清除服务器端缓存的Kerberos凭据。</p>
+<h3 id="MS17-010"><a href="#MS17-010" class="headerlink" title="MS17-010"></a>MS17-010</h3><p>17年是个好年。</p>
+<h3 id="相同密码登陆"><a href="#相同密码登陆" class="headerlink" title="相同密码登陆"></a>相同密码登陆</h3><p>如果内网主机的本地管理员账户密码相同且允许本地账户登陆域内其他机器，那么可以通过以获取的hash或明文</p>
+<p>一般步骤：</p>
+<ol>
+<li>远程登陆到任意一台主机；</li>
+<li>获取一台域用户主机的权限；</li>
+<li>Dump内存获得hash（或明文）；</li>
+<li>通过pass the hash 或 明文 尝试登陆其他主机；</li>
+<li>继续搜集hash 或明文 并尝试远程登陆；</li>
+<li>直到获得域管理员账户hash，登陆域控，最终成功控制整个域</li>
+</ol>
+<p>域登陆缓存mscash<br>使用reg命令提取sam、system、security、然后用creddump7提取mscash。</p>
+<h3 id="利用漏洞配置不当获取更多主机权限"><a href="#利用漏洞配置不当获取更多主机权限" class="headerlink" title="利用漏洞配置不当获取更多主机权限"></a>利用漏洞配置不当获取更多主机权限</h3><ol>
+<li>常见应用漏洞：<br><code>struts2、zabbix、axis、ImageMagic、fastcgi、Shellshock、redis未授权访问、Hadoop、weblogic、jboss、WebSphere、Coldfusion</code></li>
+<li>常见语言反序列化漏洞<br>php、Java、python、ruby、node.js</li>
+<li>数据库漏洞及配置不当<br>mssql Get-SQLServerAccess、MySQL低版本hash登陆、MySQL低版本Authentication Bypass、域内mssql凭证获取密码、monggodb未授权访问、memcache配置不当</li>
+<li>内网中很多web应用存在常见漏洞、使用有漏洞的中间件和框架、弱口令及配置不当（注入、任意文件读取、备份、源码泄漏（rsync、git、svn、DS_Store）、代码执行、xss、弱口令、上传漏洞、权限绕过…）</li>
+<li>web应用、及数据库中寻找其他服务器密码信息（<code>ftp、mail、smb、ldap存储、sql...</code>）</li>
+<li>系统备份文件（<code>ghost</code>）中读密码</li>
+<li>在已有控制权限主机中，查看各<code>浏览器书签</code>、<code>cookie</code>、<code>存储密码</code>、<code>键盘记录</code>收集相关敏感信息、查询<code>注册表</code>中保存密码、读取各客户端连接密码、putty dll注入、putty密码截取、ssh连接密码，以获取更多主机权限<br>推荐工具：<code>NetRipper</code>、<code>Puttyrider.exe</code>、<code>ProwserPasswordDump.exe</code>、<code>LaZagne.exe</code></li>
+<li><code>ms08-067</code>远程溢出（极少能碰到）</li>
+<li><code>cmdkey /list</code> 远程终端可信任连接连接<code>netpass.exe</code>读取该密码</li>
+<li>arp欺骗中间人攻击（替换sql数据包、认证凭证获取、密码获取极大不到万不得已不会用）</li>
+<li><code>WPAD中间人攻击</code>（全称网络代理自动发现协议、截获凭证该种方法不需要ARP欺骗，比较好用的一种方法（使用Responder.py/net-creds.py））</li>
+<li>翻阅相关文件及以控制数据库中可能存储配置口令（别忘了回收站）</li>
+<li>用已有控制权限的邮箱账号以及前期所了解到的信息进行欺骗（社会工程学）</li>
+<li>定向浏览器信息ip信息定向挂马（0day）</li>
+<li>用以收集的密码（组合变换密码）对各服务进行爆破</li>
+<li>应用0day攻击…</li>
+</ol>
+<hr>
+<h2 id="做MIMT这块的两个工具"><a href="#做MIMT这块的两个工具" class="headerlink" title="做MIMT这块的两个工具"></a>做MIMT这块的两个工具</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">responder.py &amp;&amp;Invoke-Inveigh.ps1 ，经常被用来做信息收集。</span><br><span class="line">responder.py –A 分析模式</span><br></pre></td></tr></table></figure>
+<h2 id="Powerview-ps1-域渗透利器"><a href="#Powerview-ps1-域渗透利器" class="headerlink" title="Powerview.ps1 域渗透利器"></a>Powerview.ps1 域渗透利器</h2><p>最后，如果攻击者终于拿到了域控了，要做的事就是信息获取，包括全域hash（mimikatz），ldap信息(csvde)，dns信息（dnscmd）等，碰到文件占用的情况还会使用卷影复制。</p>
+<p>除此之外攻击者还可能利用域控干点其他事，例如当问权限设置严格，攻击者所在位置访问不了目标机器，甚至域控本机也访问不了，只能是目标单向访问的情况，例如攻击者找不到目标ip，这时攻击者就可以拿出域组策略GPO这个大杀器了，当然相对应的动静会偏大。</p>
+<hr>
+<p>整合参考：<br><a href="https://mp.weixin.qq.com/s?__biz=MzIxNTQxMjQyNg==&amp;mid=2247484247&amp;idx=1&amp;sn=ca9f7fd6ca95000b2b41b13a0a356ede&amp;chksm=9799f8f2a0ee71e44ca01c49c4f9d5a7e222e822608de9e27941272f445600e40e6c7406e94f&amp;mpshare=1&amp;scene=23&amp;srcid=06167UJn60EzUeiDU2pmwqk8#rd" target="_blank" rel="noopener">黑客游走于企业windows内网的几种姿势</a><br><a href="http://bobao.360.cn/learning/detail/3204.html" target="_blank" rel="noopener">内网渗透——网络环境的判断</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>！坚持技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="https://ooo.0o0.ooo/2017/04/12/58ee21687d335.png" alt="RcoIl WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      RcoIl
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://rcoil.me/2017/06/内网渗透/" title="内网渗透（持续更新）">http://rcoil.me/2017/06/内网渗透/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/系统安全/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> 系统安全</a>
+          
+            <a href="/tags/Web安全/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> Web安全</a>
+          
+            <a href="/tags/内网/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> 内网</a>
+          
+            <a href="/tags/后门/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> 后门</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/渗透测试-之-代理篇/" rel="next" title="渗透测试 之 代理篇">
+                <i class="fa fa-chevron-left"></i> 渗透测试 之 代理篇
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/内网存活扫描/" rel="prev" title="内网存活扫描">
+                内网存活扫描 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODE5NS80NzY4"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="RcoIl">
+          <p class="site-author-name" itemprop="name">RcoIl</p>
+           
+              <p class="site-description motion-element" itemprop="description">好吃懒做，还有就是皮肤比黄皮果还黄！</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RcoIl" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=rcoil@qq.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-fa fa-envelope-open"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://isron.cn/" title="Isron" target="_blank">Isron</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hacktech.cn/" title="Akkuman" target="_blank">Akkuman</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.163.com/passw0a_d/" title="rootrain" target="_blank">rootrain</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://kerlinglovsec.lofter.com/" title="kerling" target="_blank">kerling</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.luolikong.vip/" title="Fire-ant" target="_blank">Fire-ant</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xnianq.cn/" title="xniang" target="_blank">xniang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://thief.one/" title="nMask" target="_blank">nMask</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://cate4cafe.com/" title="cate4cafe" target="_blank">cate4cafe</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ansbase5.org/" title="心的开始" target="_blank">心的开始</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://klionsec.github.io/" title="klion" target="_blank">klion</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前期基本信息探测"><span class="nav-number">1.</span> <span class="nav-text">前期基本信息探测</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#人事组织结构图"><span class="nav-number">1.1.</span> <span class="nav-text">人事组织结构图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ip分布"><span class="nav-number">1.2.</span> <span class="nav-text">ip分布</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#切入点（起点）"><span class="nav-number">2.</span> <span class="nav-text">切入点（起点）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#靶机信息收集"><span class="nav-number">3.</span> <span class="nav-text">靶机信息收集</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#命令行形式"><span class="nav-number">3.1.</span> <span class="nav-text">命令行形式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#常用命令"><span class="nav-number">3.1.1.</span> <span class="nav-text">常用命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不常用命令"><span class="nav-number">3.1.2.</span> <span class="nav-text">不常用命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用与文件形式"><span class="nav-number">3.2.</span> <span class="nav-text">应用与文件形式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hash和明文"><span class="nav-number">3.3.</span> <span class="nav-text">hash和明文</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#网络环境的判断"><span class="nav-number">4.</span> <span class="nav-text">网络环境的判断</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#位置的判断"><span class="nav-number">4.1.</span> <span class="nav-text">位置的判断</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#角色的判断"><span class="nav-number">4.2.</span> <span class="nav-text">角色的判断</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#连通性的判断"><span class="nav-number">4.3.</span> <span class="nav-text">连通性的判断</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#横向渗透"><span class="nav-number">5.</span> <span class="nav-text">横向渗透</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#代理转发"><span class="nav-number">5.1.</span> <span class="nav-text">代理转发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#默认权限配置"><span class="nav-number">5.2.</span> <span class="nav-text">默认权限配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#远程命令执行方式"><span class="nav-number">5.3.</span> <span class="nav-text">远程命令执行方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#域管理员定位"><span class="nav-number">5.4.</span> <span class="nav-text">域管理员定位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#域内信息探测"><span class="nav-number">5.5.</span> <span class="nav-text">域内信息探测</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#linux"><span class="nav-number">5.5.1.</span> <span class="nav-text">linux</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取域管权限"><span class="nav-number">5.6.</span> <span class="nav-text">获取域管权限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#账户枚举"><span class="nav-number">5.6.1.</span> <span class="nav-text">账户枚举</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组策略漏洞（GPP）"><span class="nav-number">5.6.2.</span> <span class="nav-text">组策略漏洞（GPP）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MS14-068-KERBEROS漏洞"><span class="nav-number">5.6.3.</span> <span class="nav-text">MS14-068 KERBEROS漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MS17-010"><span class="nav-number">5.6.4.</span> <span class="nav-text">MS17-010</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相同密码登陆"><span class="nav-number">5.6.5.</span> <span class="nav-text">相同密码登陆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#利用漏洞配置不当获取更多主机权限"><span class="nav-number">5.6.6.</span> <span class="nav-text">利用漏洞配置不当获取更多主机权限</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#做MIMT这块的两个工具"><span class="nav-number">5.7.</span> <span class="nav-text">做MIMT这块的两个工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Powerview-ps1-域渗透利器"><span class="nav-number">5.8.</span> <span class="nav-text">Powerview.ps1 域渗透利器</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+<!--
+    <i class="fa fa-heart"></i>
+-->
+	<i class="fa fa-address-card-o" aria-hidden="true"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RcoIl</span>
+</div>
+<!--
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+-->
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-blind" aria-hidden="true"></i>本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-user-md" aria-hidden="true"></i>本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("KVNdpVifyFqJPx0bzSg6cN7z-gzGzoHsz", "vlNRwqLbdUTKC1W06gjYj0iG");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

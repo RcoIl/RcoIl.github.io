@@ -1,0 +1,1239 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|sans-serif:300,300italic,400,400italic,700,700italic|Lato:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="CTF,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RcoIl的窝" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="南宁市第二届网络与信息安全技术大赛">
+<meta name="keywords" content="CTF">
+<meta property="og:type" content="article">
+<meta property="og:title" content="平衡信息杯-Write-Up">
+<meta property="og:url" content="http://rcoil.me/2017/10/平衡信息杯-Write-Up/index.html">
+<meta property="og:site_name" content="RcoIl的窝">
+<meta property="og:description" content="南宁市第二届网络与信息安全技术大赛">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Basic_100.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Basic_100_1.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Basic_100_2.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Basic_200.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Basic_200_1.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Web_100.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Web_100_hint.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Web_200_1.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Web_200_2.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Web_300.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Web_300_sqlmap.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Misc_200_2.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Misc_200_3.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Misc_300.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Misc_300_ProcDump.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Misc_300_1.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Misc_300_mimikatz.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Mobile_Android_crackme1.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Mobile_Android_crackme1_key6.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Mobile_Android_crackme1_ciplist.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Mobile_Android_crackme1_flagdemo.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Mobile_Android_crackme1_flag.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Mobile_Android_crackme1_flags.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/windows_crackme2.png">
+<meta property="og:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/平衡信息杯.png">
+<meta property="og:updated_time" content="2017-10-24T14:09:36.224Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="平衡信息杯-Write-Up">
+<meta name="twitter:description" content="南宁市第二届网络与信息安全技术大赛">
+<meta name="twitter:image" content="http://rcoil.me/image/南宁市第二届网络与信息安全技术大赛/Basic_100.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '6230266985318450000',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://rcoil.me/2017/10/平衡信息杯-Write-Up/">
+
+
+
+
+
+  <title> 平衡信息杯-Write-Up | RcoIl的窝 </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?ce3d1967864bac5f69f1c1a6042e5577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RcoIl的窝</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-count">
+          <a href="/count" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-fa fa-free-code-camp"></i> <br>
+            
+            阅读榜
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://rcoil.me/2017/10/平衡信息杯-Write-Up/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RcoIl">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RcoIl的窝">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                平衡信息杯-Write-Up
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T16:17:24+08:00">
+                2017-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/CTF/" itemprop="url" rel="index">
+                    <span itemprop="name">CTF</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/10/平衡信息杯-Write-Up/" class="leancloud_visitors" data-flag-title="平衡信息杯-Write-Up">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                <!--
+				<i class="fa fa-eye"></i>
+				-->
+				<i class="fa fa-thermometer-three-quarters" aria-hidden="true"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">热度 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+				 <span>℃</span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>南宁市第二届网络与信息安全技术大赛<br><a id="more"></a></p>
+<h1 id="Basic"><a href="#Basic" class="headerlink" title="Basic"></a>Basic</h1><h2 id="Basic-100-神秘二进制"><a href="#Basic-100-神秘二进制" class="headerlink" title="Basic_100-神秘二进制"></a>Basic_100-神秘二进制</h2><p><img src="/image/南宁市第二届网络与信息安全技术大赛/Basic_100.png" alt="Basic_100"><br>这二进制莫名其妙，因为没人能做出，所以就改题了。<br><img src="/image/南宁市第二届网络与信息安全技术大赛/Basic_100_1.png" alt="Basic_100_1"></p>
+<h2 id="Basic-100-2-Finally-You-get-flag"><a href="#Basic-100-2-Finally-You-get-flag" class="headerlink" title="Basic_100_2-Finally, You get flag!"></a>Basic_100_2-Finally, You get flag!</h2><p><img src="/image/南宁市第二届网络与信息安全技术大赛/Basic_100_2.png" alt="Basic_100_2"><br>附件是一个base64的加密,只要解密就可以看到flag</p>
+<h2 id="Basic-200"><a href="#Basic-200" class="headerlink" title="Basic_200"></a>Basic_200</h2><p><img src="/image/南宁市第二届网络与信息安全技术大赛/Basic_200.png" alt="Basic_200"><br>这道题怎么说呢，看图就知道了。<br><img src="/image/南宁市第二届网络与信息安全技术大赛/Basic_200_1.png" alt="Basic_200_1"></p>
+<h1 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h1><h2 id="Web-100"><a href="#Web-100" class="headerlink" title="Web_100"></a>Web_100</h2><p><img src="/image/南宁市第二届网络与信息安全技术大赛/Web_100.png" alt="Web_100"><br>附件的代码为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">eval(function(p,a,c,k,e,d)&#123;e=function(c)&#123;return(c&lt;a?&quot;&quot;:e(parseInt(c/a)))+((c=c%a)&gt;35?String.fromCharCode(c+29):c.toString(36))&#125;;if(!&apos;&apos;.replace(/^/,String))&#123;while(c--)d[e(c)]=k[c]||e(c);k=[function(e)&#123;return d[e]&#125;];e=function()&#123;return&apos;\\w+&apos;&#125;;c=1;&#125;;while(c--)if(k[c])p=p.replace(new RegExp(&apos;\\b&apos;+e(c)+&apos;\\b&apos;,&apos;g&apos;),k[c]);return p;&#125;(&apos;2 c=E;g m()&#123;2 8=p.q;2 6=l j();f(8.w(&quot;?&quot;)!=-1)&#123;2 h=8.r(1);5=h.9(&quot;&amp;&quot;);d(2 i=0;i&lt;5.o;i++)&#123;6[5[i].9(&quot;=&quot;)[0]]=u(5[i].9(&quot;=&quot;)[1])&#125;&#125;v 6&#125;g n(4,s,e)&#123;7=&quot;&quot;;d(i=0;i&lt;4.o;i++)&#123;k=(s+e)%c;t=e;e=s+e;s=t;7+=4[i]^k&#125;f(7==&quot;x&quot;)b.a(&quot;C\&apos;s z!&quot;);B b.a(&quot;A\&apos;s y!&quot;)&#125;2 3=l j();3=m();b.a(3);n(3[\&apos;4\&apos;],F,D);&apos;,42,42,&apos;||var|Request|key|strs|theRequest|cipher|url|split|log|console|iv|for||if|function|str||Object||new|GetRequest|enc|length|location|search|substr|||unescape|return|indexOf|34558914423312210022264341011282361161032135513678115123012499|Wrong|Right|Something|else|That|21|0xff|13&apos;.split(&apos;|&apos;),0,&#123;&#125;))</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
+<p>用<a href="http://jsbeautifier.org/进行解密之后为：" target="_blank" rel="noopener">http://jsbeautifier.org/进行解密之后为：</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">var iv = 0xff;</span><br><span class="line">function GetRequest() &#123;</span><br><span class="line">    var url = location.search;</span><br><span class="line">    var theRequest = new Object();</span><br><span class="line">    if (url.indexOf(&quot;?&quot;) != -1) &#123;</span><br><span class="line">        var str = url.substr(1);</span><br><span class="line">        strs = str.split(&quot;&amp;&quot;);</span><br><span class="line">        for (var i = 0; i &lt; strs.length; i++) &#123;</span><br><span class="line">            theRequest[strs[i].split(&quot;=&quot;)[0]] = unescape(strs[i].split(&quot;=&quot;)[1])</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return theRequest</span><br><span class="line">&#125;</span><br><span class="line">function enc(key, s, e) &#123;</span><br><span class="line">    cipher = &quot;&quot;;</span><br><span class="line">    for (i = 0; i &lt; key.length; i++) &#123;</span><br><span class="line">        k = (s + e) % iv;</span><br><span class="line">        t = e;</span><br><span class="line">        e = s + e;</span><br><span class="line">        s = t;</span><br><span class="line">        cipher += key[i] ^ k</span><br><span class="line">    &#125;</span><br><span class="line">    if (cipher == &quot;34558914423312210022264341011282361161032135513678115123012499&quot;) console.log(&quot;That&apos;s Right!&quot;);</span><br><span class="line">    else console.log(&quot;Something&apos;s Wrong!&quot;)</span><br><span class="line">&#125;</span><br><span class="line">var Request = new Object();</span><br><span class="line">Request = GetRequest();</span><br><span class="line">console.log(Request);</span><br><span class="line">enc(Request[&apos;key&apos;], 13, 21);</span><br></pre></td></tr></table></figure></p>
+<p>反推<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">function enc(key, s, e) &#123;</span><br><span class="line">    cipher = &quot;&quot;;</span><br><span class="line">    for (i = 0; i &lt; key.length; i++) &#123;</span><br><span class="line">        k = (s + e) % iv;</span><br><span class="line">        t = e;</span><br><span class="line">        e = s + e;</span><br><span class="line">        s = t;</span><br><span class="line">        cipher += key[i] ^ k</span><br><span class="line">    &#125;</span><br><span class="line">    if (cipher == &quot;34558914423312210022264341011282361161032135513678115123012499&quot;) console.log(&quot;That&apos;s Right!&quot;);</span><br></pre></td></tr></table></figure></p>
+<p>得出key为<code>000000003007006000702000</code><br>结合<code>function GetRequest</code>得出<code>payload</code>为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?key=000000003007006000702000</span><br></pre></td></tr></table></figure></p>
+<p>但是提交结果不对。过了大半天，但是一个人都没解出来，官方给出hint<br><img src="/image/南宁市第二届网络与信息安全技术大赛/Web_100_hint.png" alt="Web_100_1"><br>emmmmm，这题就这样吧，看不懂。果然100分。</p>
+<h2 id="Web-200"><a href="#Web-200" class="headerlink" title="Web_200"></a>Web_200</h2><p>转啊转，转啊转，信息收集。<br><img src="/image/南宁市第二届网络与信息安全技术大赛/Web_200_1.png" alt="Web_200_1"></p>
+<p>这个<code>input</code>、这个URL格式，不正是今年<code>NodeJS RCE</code></p>
+<p>参考了这个利用 <a href="https://paper.seebug.org/213/" target="_blank" rel="noopener">Node.js 反序列化漏洞远程执行代码</a><br>但是没成功，弹不了shell的，群里说，直接读直接读。但是我没能直接读出来，得把结果扔到vps上。<br><img src="/image/南宁市第二届网络与信息安全技术大赛/Web_200_2.png" alt="Web_200_2"><br>payload出自于<a href="http://www.jianshu.com/p/16f4a473940a" target="_blank" rel="noopener">如何使用NodeJS写出一枚远程命令执行(RCE）漏洞</a></p>
+<h2 id="Web-300"><a href="#Web-300" class="headerlink" title="Web_300"></a>Web_300</h2><p><img src="/image/南宁市第二届网络与信息安全技术大赛/Web_300.png" alt="Web_300"><br>直接<code>sqlmap</code>就行了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">sqlmap resumed the following injection point(s) from stored session:</span><br><span class="line">---</span><br><span class="line">Parameter: id (GET)</span><br><span class="line">    Type: boolean-based blind</span><br><span class="line">    Title: AND boolean-based blind - WHERE or HAVING clause</span><br><span class="line">    Payload: id=8 AND 4897=4897</span><br><span class="line"></span><br><span class="line">    Type: AND/OR time-based blind</span><br><span class="line">    Title: MySQL &gt;= 5.0.12 AND time-based blind</span><br><span class="line">    Payload: id=8 AND SLEEP(5)</span><br><span class="line">---</span><br><span class="line">[13:39:29] [INFO] the back-end DBMS is MySQL</span><br><span class="line">web application technology: Apache</span><br><span class="line">back-end DBMS: MySQL &gt;= 5.0.12</span><br></pre></td></tr></table></figure></p>
+<p><img src="/image/南宁市第二届网络与信息安全技术大赛/Web_300_sqlmap.png" alt="Web_300_sqlmap"></p>
+<h1 id="Misc"><a href="#Misc" class="headerlink" title="Misc"></a>Misc</h1><h2 id="Misc-200-2"><a href="#Misc-200-2" class="headerlink" title="Misc_200_2"></a>Misc_200_2</h2><p><img src="/image/南宁市第二届网络与信息安全技术大赛/Misc_200_2.png" alt="Misc_200_2"><br>这题一直在踩内部doc的坑。<br><img src="/image/南宁市第二届网络与信息安全技术大赛/Misc_200_3.png" alt="Misc_200_3"></p>
+<h2 id="Misc-300"><a href="#Misc-300" class="headerlink" title="Misc_300"></a>Misc_300</h2><p><img src="/image/南宁市第二届网络与信息安全技术大赛/Misc_300.png" alt="Misc_300"><br>先用脚本提取Pcapng中的菜刀流量，这题最大的坑就是数据包有点大大大大大大了。<br><img src="/image/南宁市第二届网络与信息安全技术大赛/Misc_300_ProcDump.png" alt="Misc_300_ProcDump"><br>看到了<code>ProcDump</code>很关键，这道题可能就是利用了<code>ProcDump+mimikatz</code>的组合，毕竟毕竟这样免杀。<br>先导出<code>http</code>，找到了关键点（其实dump的结果都不小），辣鸡数据包、辣鸡电脑，卡到生活不能自理。<br>规则为<code>frame.len == 533</code>,追踪流确实看到关键字<br><img src="/image/南宁市第二届网络与信息安全技术大赛/Misc_300_1.png" alt="Misc_300_1"><br>将数据抠出来，使用<code>mimikatz</code>进行恢复，但是恢复过程中还是出现不少问题，抠出来的数据恢复不了，mimikatz没注意是32还是64等等。。。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mimikatz.exe</span><br><span class="line">sekurlsa::minidump lsass.dmp</span><br><span class="line">sekurlsa::logonPasswords full</span><br></pre></td></tr></table></figure></p>
+<p><img src="/image/南宁市第二届网络与信息安全技术大赛/Misc_300_mimikatz.png" alt="Misc_300_mimikatz"></p>
+<h1 id="Mobile"><a href="#Mobile" class="headerlink" title="Mobile"></a>Mobile</h1><h2 id="Android-crackme1"><a href="#Android-crackme1" class="headerlink" title="Android_crackme1"></a>Android_crackme1</h2><p>先用<code>jadx</code>反编译<code>apk</code><br><img src="/image/南宁市第二届网络与信息安全技术大赛/Mobile_Android_crackme1.png" alt="Mobile_Android_crackme1"><br>就一个控件。<br>往下看，了解这个程序的主要思想：输入的<code>Password</code>值，经过<code>CryptClass</code>后，得到的加密结果是否匹配<code>cip</code>，正确就输出<code>Bingo</code>。<br>重点查看<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String enc = CryptClass.encrypt_str(passstr, (String) keys.get(passstr.length() % keys.size()));</span><br><span class="line">if (enc.equals(MainActivity.this.cip)) &#123;</span><br><span class="line">    Toast.makeText(MainActivity.this, &quot;Bingo!&quot;, 1).show();</span><br></pre></td></tr></table></figure></p>
+<p>首先还是得去弄明白它们的值是怎么来的。</p>
+<p>看到<code>R.string.key6</code>，然后去找这个<code>key6</code>，但是找到的是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public static final int key6 = 2131165222;</span><br></pre></td></tr></table></figure></p>
+<p>有安卓开发的人都知道，编写java代码中的常量在一般情况下，我们是定义在string.xml这个文件中，这个string.xml的值会被R文件映射。<br><img src="/image/南宁市第二届网络与信息安全技术大赛/Mobile_Android_crackme1_key6.png" alt="Mobile_Android_crackme1_key6"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">this.Password = (EditText) findViewById(R.id.editText5);</span><br><span class="line">this.Cipher = (EditText) findViewById(R.id.editText6);</span><br><span class="line">this.cip = getString(R.string.key6);</span><br></pre></td></tr></table></figure></p>
+<p>Password值是编辑框接受输入的值，为后续的<code>passstr</code><br>Cipher值不知道干啥<br>cip值为<code>05bfed10af08193ff0b218e887c53dfa162f8a6e8b</code><br><code>passstr.length() % keys.size()</code>的理论值为0,1,2,3,4,5，主要看<code>passstr</code>的长度，因为是<code>passstr</code>的长度决定了调用哪一个<code>keys</code><br>验证得出passstr的长度以及keys值<br><img src="/image/南宁市第二届网络与信息安全技术大赛/Mobile_Android_crackme1_ciplist.png" alt="Mobile_Android_crackme1_ciplist"><br>这样我们就可以得出<code>passstr</code>的长度为21，使用的<code>keys</code>为3，也就是<code>NO1bgoMn14J85yrLQHM9KoZJ</code></p>
+<p>接下来，就看看怎么解密了。看了下，我选择了爆破的方式。<br>在验证<code>passstr</code>的长度以及<code>keys</code>值的时候，发现输入的<code>password</code>值个数是21个，加密后个数变为42，也就是说<code>1个字符加密得出2个字符</code>。<br>那我们就将<code>cip</code>拆开进行每位数的验证<br><img src="/image/南宁市第二届网络与信息安全技术大赛/Mobile_Android_crackme1_flagdemo.png" alt="Mobile_Android_crackme1_flagdemo"><br>顺便说一句，上图不应该是解密，应为加密，还有就是<code>Eclipse的调试不够人性化</code>。拆开验证是：<br><img src="/image/南宁市第二届网络与信息安全技术大赛/Mobile_Android_crackme1_flag.png" alt="Mobile_Android_crackme1_flag"></p>
+<p>看了各位大佬的wp，才发现，<code>CryptClass</code>类里面是有解密函数的。<br><img src="/image/南宁市第二届网络与信息安全技术大赛/Mobile_Android_crackme1_flags.png" alt="Mobile_Android_crackme1_flags"></p>
+<h1 id="ReV"><a href="#ReV" class="headerlink" title="ReV"></a>ReV</h1><h2 id="windows-crackme2"><a href="#windows-crackme2" class="headerlink" title="windows_crackme2"></a>windows_crackme2</h2><p>菜鸡总是看哪些题是多人解出来之后就去做哪题。<br><img src="/image/南宁市第二届网络与信息安全技术大赛/windows_crackme2.png" alt="windows_crackme2"><br>扔进<code>ILSpy</code>没看到源码，扔进<code>Reflector</code>拿到源码。<br><code>Form1</code>的内容为机器码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public Form1()</span><br><span class="line">&#123;</span><br><span class="line">    this.InitializeComponent();</span><br><span class="line">    this.textBox1.Text = &quot;SzLPCCA4&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们要找出相应的注册码，先看源码。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">private void button1_Click(object sender, EventArgs e)</span><br><span class="line">&#123;</span><br><span class="line">    string text = this.textBox2.Text;  //注册码框</span><br><span class="line">    SHA1 sha = new SHA1CryptoServiceProvider(); //Sha1编码</span><br><span class="line">    byte[] bytes = Encoding.Unicode.GetBytes(this.textBox1.Text);</span><br><span class="line">    string str2 = BitConverter.ToString(sha.ComputeHash(bytes));  //对SzLPCCA4进行Sha1编码</span><br><span class="line">    string str3 = new string(text.ToCharArray().Reverse&lt;char&gt;().ToArray&lt;char&gt;()); </span><br><span class="line">	//对输入的注册码进行反转</span><br><span class="line">    string str4 = &quot;&quot;;</span><br><span class="line">    int num = 0;</span><br><span class="line">    for (int i = 0; i &lt; str3.Length; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        if (text[i] != &apos;-&apos;)</span><br><span class="line">        &#123;</span><br><span class="line">            num++;</span><br><span class="line">            str4 = str4 + str3[i].ToString();</span><br><span class="line">            if (num == 2)</span><br><span class="line">            &#123;</span><br><span class="line">                num = 0;</span><br><span class="line">                if (i != (str3.Length - 1))</span><br><span class="line">                &#123;</span><br><span class="line">                    str4 = str4 + &quot;-&quot;;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    string str5 = AESEncrypt(str2, &quot;H8vY7QKY&quot;, &quot;8@Z&gt;FXsv&quot;); //对sha1编码后的SzLPCCA4进行AES加密</span><br><span class="line">    string str6 = AESEncrypt(str4, &quot;H8vY7QKY&quot;, &quot;8@Z&gt;FXsv&quot;); //对反转后的注册码进行AES加密</span><br><span class="line">    if (str5 == str6)</span><br><span class="line">    &#123;</span><br><span class="line">        MessageBox.Show(&quot;再来一瓶!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">        MessageBox.Show(&quot;谢谢参与!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>主体的思想为：</p>
+<blockquote>
+<p>机器码：Sha1编码后再进行AES加密的值为str5<br>注册码：反转后再进行AES加密的值为str6<br>如果str5等于str6则返回再来一瓶，flag则为输入的注册码</p>
+</blockquote>
+<p>解题思路：</p>
+<blockquote>
+<p>AES加密的密钥都是一样的，所以加密前是相等的。<br>只要将机器码进行Sha1编码后再反转就是注册码<br>也就是将str2进行输出后反转或者反转后输出</p>
+</blockquote>
+<p>demo为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public static void Main(string() args)</span><br><span class="line">&#123;</span><br><span class="line">   	SHA1 sha = new SHA1CryptoServiceProvider();</span><br><span class="line">       byte[] bytes = Encoding.Unicode.GetBytes(&quot;SzLPCCA4&quot;);</span><br><span class="line">       string str2 = BitConverter.ToString(sha.ComputeHash(bytes));</span><br><span class="line">       MessageBox.Show(str2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>得到的结果为<code>0AC8B571539392065B0B160148832CA2DC2710A1</code>,进行反转且八位每段得出flag。<br>1A0172CD-2AC23884-1061B0B5-60293935-175B8CA0</p>
+<p>最后附张图：<br><img src="/image/南宁市第二届网络与信息安全技术大赛/平衡信息杯.png" alt="平衡信息杯"></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>！坚持技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="https://ooo.0o0.ooo/2017/04/12/58ee21687d335.png" alt="RcoIl WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      RcoIl
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://rcoil.me/2017/10/平衡信息杯-Write-Up/" title="平衡信息杯-Write-Up">http://rcoil.me/2017/10/平衡信息杯-Write-Up/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CTF/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> CTF</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/Jboss引起的内网渗透/" rel="next" title="Jboss引起的内网渗透">
+                <i class="fa fa-chevron-left"></i> Jboss引起的内网渗透
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/MySQL-盲注浅析/" rel="prev" title="MySQL-盲注浅析">
+                MySQL-盲注浅析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODE5NS80NzY4"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="RcoIl">
+          <p class="site-author-name" itemprop="name">RcoIl</p>
+           
+              <p class="site-description motion-element" itemprop="description">好吃懒做，还有就是皮肤比黄皮果还黄！</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RcoIl" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=rcoil@qq.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-fa fa-envelope-open"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://isron.cn/" title="Isron" target="_blank">Isron</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hacktech.cn/" title="Akkuman" target="_blank">Akkuman</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.163.com/passw0a_d/" title="rootrain" target="_blank">rootrain</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://kerlinglovsec.lofter.com/" title="kerling" target="_blank">kerling</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.luolikong.vip/" title="Fire-ant" target="_blank">Fire-ant</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xnianq.cn/" title="xniang" target="_blank">xniang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://thief.one/" title="nMask" target="_blank">nMask</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://cate4cafe.com/" title="cate4cafe" target="_blank">cate4cafe</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ansbase5.org/" title="心的开始" target="_blank">心的开始</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://klionsec.github.io/" title="klion" target="_blank">klion</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Basic"><span class="nav-number">1.</span> <span class="nav-text">Basic</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Basic-100-神秘二进制"><span class="nav-number">1.1.</span> <span class="nav-text">Basic_100-神秘二进制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Basic-100-2-Finally-You-get-flag"><span class="nav-number">1.2.</span> <span class="nav-text">Basic_100_2-Finally, You get flag!</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Basic-200"><span class="nav-number">1.3.</span> <span class="nav-text">Basic_200</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Web"><span class="nav-number">2.</span> <span class="nav-text">Web</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Web-100"><span class="nav-number">2.1.</span> <span class="nav-text">Web_100</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Web-200"><span class="nav-number">2.2.</span> <span class="nav-text">Web_200</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Web-300"><span class="nav-number">2.3.</span> <span class="nav-text">Web_300</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Misc"><span class="nav-number">3.</span> <span class="nav-text">Misc</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Misc-200-2"><span class="nav-number">3.1.</span> <span class="nav-text">Misc_200_2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Misc-300"><span class="nav-number">3.2.</span> <span class="nav-text">Misc_300</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mobile"><span class="nav-number">4.</span> <span class="nav-text">Mobile</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-crackme1"><span class="nav-number">4.1.</span> <span class="nav-text">Android_crackme1</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ReV"><span class="nav-number">5.</span> <span class="nav-text">ReV</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#windows-crackme2"><span class="nav-number">5.1.</span> <span class="nav-text">windows_crackme2</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+<!--
+    <i class="fa fa-heart"></i>
+-->
+	<i class="fa fa-address-card-o" aria-hidden="true"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RcoIl</span>
+</div>
+<!--
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+-->
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-blind" aria-hidden="true"></i>本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-user-md" aria-hidden="true"></i>本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("KVNdpVifyFqJPx0bzSg6cN7z-gzGzoHsz", "vlNRwqLbdUTKC1W06gjYj0iG");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

