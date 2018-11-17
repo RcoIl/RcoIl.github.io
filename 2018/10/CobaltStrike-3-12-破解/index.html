@@ -116,7 +116,7 @@
 <meta property="og:description" content="听说有更新，所以就拿来看看，按照3.8的破解流程。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://rcoil.me/image/CobaltStrike-3-12-破解/Snipaste_2018-11-08_17-38-29.PNG">
-<meta property="og:updated_time" content="2018-11-16T01:42:38.722Z">
+<meta property="og:updated_time" content="2018-11-17T04:27:44.529Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Cobalt Strike 3.12 破解">
 <meta name="twitter:description" content="听说有更新，所以就拿来看看，按照3.8的破解流程。">
@@ -468,6 +468,7 @@
 <p>server/ProfileEdits.class<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">c2profile.addCommand(<span class="string">".http-get.server"</span>, <span class="string">"!header"</span>, <span class="string">"X-Malware: X5O!P%@AP[4\\PZX54(P^)7CC)7&#125;$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"</span>);</span><br><span class="line">c2profile.addCommand(<span class="string">".http-post.server"</span>, <span class="string">"!header"</span>, <span class="string">"X-Malware: X5O!P%@AP[4\\PZX54(P^)7CC)7&#125;$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"</span>);</span><br><span class="line">c2profile.addCommand(<span class="string">".http-stager.server"</span>, <span class="string">"!header"</span>, <span class="string">"X-Malware: X5O!P%@AP[4\\PZX54(P^)7CC)7&#125;$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"</span>);</span><br><span class="line">c2profile.addCommand(<span class="string">".stage.transform-x86"</span>, <span class="string">"append"</span>, <span class="string">"X5O!P%@AP[4\\PZX54(P^)7CC)7&#125;$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"</span>);</span><br><span class="line">c2profile.addCommand(<span class="string">".stage.transform-x64"</span>, <span class="string">"append"</span>, <span class="string">"X5O!P%@AP[4\\PZX54(P^)7CC)7&#125;$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"</span>);</span><br></pre></td></tr></table></figure></p>
 <h2 id="0x05-结果"><a href="#0x05-结果" class="headerlink" title="0x05 结果"></a>0x05 结果</h2><p>最后使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javac -classpath cobaltstrike.jar xxxx.java</span><br></pre></td></tr></table></figure></p>
 <p>进行编译<br><img src="/image/CobaltStrike-3-12-破解/Snipaste_2018-11-08_17-38-29.PNG" alt="Snipaste_2018-11-08_17-38-29"></p>
+<h2 id="0x06-参考"><a href="#0x06-参考" class="headerlink" title="0x06 参考"></a>0x06 参考</h2><p><a href="https://xz.aliyun.com/t/2170" target="_blank" rel="noopener">https://xz.aliyun.com/t/2170</a><br><a href="https://www.cnblogs.com/ssooking/p/9825917.html" target="_blank" rel="noopener">https://www.cnblogs.com/ssooking/p/9825917.html</a><br><a href="https://www.bilibili.com/video/av34171888/" target="_blank" rel="noopener">https://www.bilibili.com/video/av34171888/</a><br><a href="https://github.com/Lz1y/cobalt_strike_3.12_patch" target="_blank" rel="noopener">https://github.com/Lz1y/cobalt_strike_3.12_patch</a></p>
 
       
     </div>
@@ -635,7 +636,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -758,7 +759,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00-Cobalt-Strike3-12-下载"><span class="nav-number">1.</span> <span class="nav-text">0x00 Cobalt Strike3.12 下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-文件文件位置"><span class="nav-number">2.</span> <span class="nav-text">0x01 文件文件位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-License-class"><span class="nav-number">3.</span> <span class="nav-text">0x02 License.class</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-去除listener个数限制"><span class="nav-number">4.</span> <span class="nav-text">0x03 去除listener个数限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x04-后门特征指纹"><span class="nav-number">5.</span> <span class="nav-text">0x04 后门特征指纹</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x05-结果"><span class="nav-number">6.</span> <span class="nav-text">0x05 结果</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00-Cobalt-Strike3-12-下载"><span class="nav-number">1.</span> <span class="nav-text">0x00 Cobalt Strike3.12 下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-文件文件位置"><span class="nav-number">2.</span> <span class="nav-text">0x01 文件文件位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-License-class"><span class="nav-number">3.</span> <span class="nav-text">0x02 License.class</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-去除listener个数限制"><span class="nav-number">4.</span> <span class="nav-text">0x03 去除listener个数限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x04-后门特征指纹"><span class="nav-number">5.</span> <span class="nav-text">0x04 后门特征指纹</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x05-结果"><span class="nav-number">6.</span> <span class="nav-text">0x05 结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x06-参考"><span class="nav-number">7.</span> <span class="nav-text">0x06 参考</span></a></li></ol></div>
             
 
           </div>

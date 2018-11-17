@@ -27,7 +27,7 @@
   <entry>
     <title><![CDATA[Cobalt Strike 3.12 破解]]></title>
     <url>%2F2018%2F10%2FCobaltStrike-3-12-%E7%A0%B4%E8%A7%A3%2F</url>
-    <content type="text"><![CDATA[听说有更新，所以就拿来看看，按照3.8的破解流程。 0x00 Cobalt Strike3.12 下载原版：https://github.com/microidz/Cobaltstrike-Trial 校验：https://verify.cobaltstrike.com/ xor.bin：https://github.com/verctor/CS_xor64 破解记录 0x01 文件文件位置1234567common/License.class # 修改时间及提示框common/ArtifactUtils.class # 去除后门特征指纹server/ProfileEdits.class # 去除后门特征指纹aggressor/dialogs/ListenerDialog.class # 去除listener个数限制aggressor/AggressorClient.class # 标题栏修改resources/xor.bin # 放入xor.bin文件resources/xor64.bin # 放入xor.bin文件 0x02 License.class首先将cobaltstrike.jar以压缩包格式打开，复制License.class出来，然后运行jad.exe License.class，jad目录下就会生成License.jad，修改后缀为Java，即是源码文件了。 这里将提供两种破解思路。 (1) 直接修改试用时间 123private static long life = 21L;将21天的试用期修改成private static long life = 99999L; (2) 修改isTrail的判断逻辑 123456789 public static boolean isTrial() &#123; return true; &#125;修改成 public static boolean isTrial() &#123; return false; &#125; 往下：12345678910public static void checkLicenseGUI(Authorization auth)&#123; ....&#125;修改成public static void checkLicenseGUI(Authorization authorization)&#123;&#125;同理public static void checkLicenseConsole(Authorization authorization) 0x03 去除listener个数限制文件在aggressor/dialogs/ListenerDialog.class 去除1234if(Listener.isEgressBeacon(payload) &amp;&amp; DataUtils.isBeaconDefined(datal) &amp;&amp; !name.equals(DataUtils.getEgressBeaconListener(datal))) &#123; DialogUtils.showError("You may only define one egress Beacon per team server.\nThere are a few things I need to sort before you can\nput multiple Beacon HTTP/DNS listeners on one server.\nSpin up a new team server and add your listener there."); &#125; else 0x04 后门特征指纹存在后门特征指纹的其中两个地方 common/ArtifactUtils.class1packer.addString("X5O!P%@AP[4\\PZX54(P^)7CC)7&#125;$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"); server/ProfileEdits.class12345c2profile.addCommand(".http-get.server", "!header", "X-Malware: X5O!P%@AP[4\\PZX54(P^)7CC)7&#125;$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*");c2profile.addCommand(".http-post.server", "!header", "X-Malware: X5O!P%@AP[4\\PZX54(P^)7CC)7&#125;$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*");c2profile.addCommand(".http-stager.server", "!header", "X-Malware: X5O!P%@AP[4\\PZX54(P^)7CC)7&#125;$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*");c2profile.addCommand(".stage.transform-x86", "append", "X5O!P%@AP[4\\PZX54(P^)7CC)7&#125;$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*");c2profile.addCommand(".stage.transform-x64", "append", "X5O!P%@AP[4\\PZX54(P^)7CC)7&#125;$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"); 0x05 结果最后使用1javac -classpath cobaltstrike.jar xxxx.java 进行编译]]></content>
+    <content type="text"><![CDATA[听说有更新，所以就拿来看看，按照3.8的破解流程。 0x00 Cobalt Strike3.12 下载原版：https://github.com/microidz/Cobaltstrike-Trial 校验：https://verify.cobaltstrike.com/ xor.bin：https://github.com/verctor/CS_xor64 破解记录 0x01 文件文件位置1234567common/License.class # 修改时间及提示框common/ArtifactUtils.class # 去除后门特征指纹server/ProfileEdits.class # 去除后门特征指纹aggressor/dialogs/ListenerDialog.class # 去除listener个数限制aggressor/AggressorClient.class # 标题栏修改resources/xor.bin # 放入xor.bin文件resources/xor64.bin # 放入xor.bin文件 0x02 License.class首先将cobaltstrike.jar以压缩包格式打开，复制License.class出来，然后运行jad.exe License.class，jad目录下就会生成License.jad，修改后缀为Java，即是源码文件了。 这里将提供两种破解思路。 (1) 直接修改试用时间 123private static long life = 21L;将21天的试用期修改成private static long life = 99999L; (2) 修改isTrail的判断逻辑 123456789 public static boolean isTrial() &#123; return true; &#125;修改成 public static boolean isTrial() &#123; return false; &#125; 往下：12345678910public static void checkLicenseGUI(Authorization auth)&#123; ....&#125;修改成public static void checkLicenseGUI(Authorization authorization)&#123;&#125;同理public static void checkLicenseConsole(Authorization authorization) 0x03 去除listener个数限制文件在aggressor/dialogs/ListenerDialog.class 去除1234if(Listener.isEgressBeacon(payload) &amp;&amp; DataUtils.isBeaconDefined(datal) &amp;&amp; !name.equals(DataUtils.getEgressBeaconListener(datal))) &#123; DialogUtils.showError("You may only define one egress Beacon per team server.\nThere are a few things I need to sort before you can\nput multiple Beacon HTTP/DNS listeners on one server.\nSpin up a new team server and add your listener there."); &#125; else 0x04 后门特征指纹存在后门特征指纹的其中两个地方 common/ArtifactUtils.class1packer.addString("X5O!P%@AP[4\\PZX54(P^)7CC)7&#125;$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"); server/ProfileEdits.class12345c2profile.addCommand(".http-get.server", "!header", "X-Malware: X5O!P%@AP[4\\PZX54(P^)7CC)7&#125;$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*");c2profile.addCommand(".http-post.server", "!header", "X-Malware: X5O!P%@AP[4\\PZX54(P^)7CC)7&#125;$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*");c2profile.addCommand(".http-stager.server", "!header", "X-Malware: X5O!P%@AP[4\\PZX54(P^)7CC)7&#125;$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*");c2profile.addCommand(".stage.transform-x86", "append", "X5O!P%@AP[4\\PZX54(P^)7CC)7&#125;$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*");c2profile.addCommand(".stage.transform-x64", "append", "X5O!P%@AP[4\\PZX54(P^)7CC)7&#125;$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"); 0x05 结果最后使用1javac -classpath cobaltstrike.jar xxxx.java 进行编译 0x06 参考https://xz.aliyun.com/t/2170https://www.cnblogs.com/ssooking/p/9825917.htmlhttps://www.bilibili.com/video/av34171888/https://github.com/Lz1y/cobalt_strike_3.12_patch]]></content>
       <categories>
         <category>Tools</category>
       </categories>
@@ -124,8 +124,8 @@
         <category>Web安全</category>
       </categories>
       <tags>
-        <tag>PHP</tag>
         <tag>Web安全</tag>
+        <tag>PHP</tag>
       </tags>
   </entry>
   <entry>
@@ -203,9 +203,9 @@
         <category>内网渗透</category>
       </categories>
       <tags>
-        <tag>系统安全</tag>
         <tag>Web安全</tag>
         <tag>内网</tag>
+        <tag>系统安全</tag>
         <tag>后门</tag>
       </tags>
   </entry>
@@ -218,8 +218,8 @@
       </categories>
       <tags>
         <tag>tools</tag>
-        <tag>系统安全</tag>
         <tag>内网</tag>
+        <tag>系统安全</tag>
       </tags>
   </entry>
   <entry>
@@ -230,8 +230,8 @@
         <category>编程之道</category>
       </categories>
       <tags>
-        <tag>PHP</tag>
         <tag>Web安全</tag>
+        <tag>PHP</tag>
       </tags>
   </entry>
   <entry>
@@ -266,8 +266,8 @@
       </categories>
       <tags>
         <tag>tools</tag>
-        <tag>系统安全</tag>
         <tag>内网</tag>
+        <tag>系统安全</tag>
       </tags>
   </entry>
   <entry>
