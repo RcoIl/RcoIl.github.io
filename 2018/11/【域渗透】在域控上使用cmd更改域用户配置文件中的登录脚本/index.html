@@ -89,7 +89,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-  <meta name="keywords" content="系统安全,内网,">
+  <meta name="keywords" content="内网渗透,域渗透,">
 
 
 
@@ -107,18 +107,20 @@
 
 
 
-<meta name="description" content="咦！使人觉得遥远的不是时间长，而是两三件不可挽回的事。">
-<meta name="keywords" content="系统安全,内网">
+<meta name="description" content="摘要：采取直接的手段不能够解决问题，只好曲线救国。">
+<meta name="keywords" content="内网渗透,域渗透">
 <meta property="og:type" content="article">
-<meta property="og:title" content="内网存活扫描">
-<meta property="og:url" content="http://rcoil.me/2017/08/内网存活扫描/index.html">
+<meta property="og:title" content="【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本">
+<meta property="og:url" content="http://rcoil.me/2018/11/【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本/index.html">
 <meta property="og:site_name" content="RcoIl的窝">
-<meta property="og:description" content="咦！使人觉得遥远的不是时间长，而是两三件不可挽回的事。">
+<meta property="og:description" content="摘要：采取直接的手段不能够解决问题，只好曲线救国。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-11-16T02:49:41.133Z">
+<meta property="og:image" content="http://rcoil.me/image/在域控上使用cmd更改域用户配置文件中的登录脚本/blog_2018-11-16_18-18-23.png">
+<meta property="og:updated_time" content="2018-11-27T03:26:57.112Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="内网存活扫描">
-<meta name="twitter:description" content="咦！使人觉得遥远的不是时间长，而是两三件不可挽回的事。">
+<meta name="twitter:title" content="【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本">
+<meta name="twitter:description" content="摘要：采取直接的手段不能够解决问题，只好曲线救国。">
+<meta name="twitter:image" content="http://rcoil.me/image/在域控上使用cmd更改域用户配置文件中的登录脚本/blog_2018-11-16_18-18-23.png">
 
 
 
@@ -146,13 +148,13 @@
 
 
 
-  <link rel="canonical" href="http://rcoil.me/2017/08/内网存活扫描/">
+  <link rel="canonical" href="http://rcoil.me/2018/11/【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本/">
 
 
 
 
 
-  <title> 内网存活扫描 | RcoIl的窝 </title>
+  <title> 【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本 | RcoIl的窝 </title>
 </head>
 
 <body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -333,7 +335,7 @@
   
 
   <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://rcoil.me/2017/08/内网存活扫描/">
+    <link itemprop="mainEntityOfPage" href="http://rcoil.me/2018/11/【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RcoIl">
@@ -354,7 +356,7 @@
             
             
               
-                内网存活扫描
+                【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本
               
             
           </h1>
@@ -369,8 +371,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-05T15:18:43+08:00">
-                2017-08-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-16T16:33:21+08:00">
+                2018-11-16
               </time>
             
 
@@ -409,7 +411,7 @@
 
           
           
-             <span id="/2017/08/内网存活扫描/" class="leancloud_visitors" data-flag-title="内网存活扫描">
+             <span id="/2018/11/【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本/" class="leancloud_visitors" data-flag-title="【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                 <!--
@@ -442,38 +444,32 @@
       
 
       
-        <p>咦！使人觉得遥远的不是时间长，而是两三件不可挽回的事。<br><a id="more"></a></p>
-<h2 id="icmp扫描"><a href="#icmp扫描" class="headerlink" title="icmp扫描"></a>icmp扫描</h2><p>基于icmp的各种内网主机发现方式，如果防火墙过滤的icmp请求，这种方式基本就废了，但是基本上都不会过滤icmp协议的请求。除了本身自带的命令，也可以考虑使用第三方程序，比如<code>cping</code>。</p>
-<h3 id="在win下使用icmp扫描"><a href="#在win下使用icmp扫描" class="headerlink" title="在win下使用icmp扫描"></a>在win下使用icmp扫描</h3><ul>
-<li><p>cmd中执行如下命令，对整个C段进行ping扫描</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for /l %i in (1,1,255) do @ping 192.168.1.%i -w 1 -n 1 | find /i &quot;ttl&quot;</span><br></pre></td></tr></table></figure>
+        <p><font color="#DC143C" size="3">摘要：</font>采取直接的手段不能够解决问题，只好曲线救国。<br><a id="more"></a><br>声明：只是作为搬运工。</p>
+<h2 id="0x00-利用场景"><a href="#0x00-利用场景" class="headerlink" title="0x00 利用场景"></a>0x00 利用场景</h2><ul>
+<li><p>利用前置条件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">域管理员权限</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>利用powershell对目标内网进行icmp扫描</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">powershell.exe -exec bypass -Command &quot;Import-Module C:\Invoke-TSPingSweep.ps1;Invoke-TSPingSweep -StartAddress 192.168.3.1 -EndAddress 192.168.3.254 -ResolveHost -ScanPort -Port 21,22,23,25,53,80,81,82,83,84,85,86,87,88,89,110,111,143,389,443,445,873,1025,1433,1521,2601,3306,3389,3690,5432,5900,7001,8000,8080,8081,8082,8083,8084,8085,8086,8087,8089,9090,10000&quot;  </span><br><span class="line"></span><br><span class="line">目标网段，并非仅限C段，比如你也可以写成这种方式`192.168.3.1 - 192.168.31.254`</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="在linux下使用各类icmp扫描"><a href="#在linux下使用各类icmp扫描" class="headerlink" title="在linux下使用各类icmp扫描"></a>在linux下使用各类icmp扫描</h3><ul>
-<li><p>最简单的方式,将下面的代码保存至shell中,赋予其执行权限,执行该脚本即可</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="keyword">for</span> ip <span class="keyword">in</span> 192.168.1.&#123;1..254&#125; </span><br><span class="line"><span class="keyword">do</span> </span><br><span class="line">	ping <span class="variable">$ip</span> -c 1 &amp;&gt; /dev/null </span><br><span class="line">		<span class="keyword">if</span> [ $? -eq 0 ];<span class="keyword">then</span> </span><br><span class="line">			<span class="built_in">echo</span> <span class="variable">$ip</span> is alive .... </span><br><span class="line">		<span class="keyword">fi</span> </span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">或者</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> 192.168.4.&#123;1..254&#125;; <span class="keyword">do</span> <span class="keyword">if</span> ping -c 3 -w 3 <span class="variable">$i</span> &amp;&gt;/dev/null; <span class="keyword">then</span> <span class="built_in">echo</span> <span class="variable">$i</span> is alived; <span class="keyword">fi</span>; <span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>nmap的icmp扫描</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -sn -PE 192.168.1.0/24</span><br></pre></td></tr></table></figure>
+<li><p>使用场合</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">知道目标域用户名称，探测不到域用户对应机器名或IP；</span><br><span class="line">知道目标机器IP，但是无法通往上控；</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h2 id="arp扫描"><a href="#arp扫描" class="headerlink" title="arp扫描"></a>arp扫描</h2><h3 id="在win下使用各种arp扫描"><a href="#在win下使用各种arp扫描" class="headerlink" title="在win下使用各种arp扫描"></a>在win下使用各种arp扫描</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">start /b arpscan.exe -t 192.168.1.0/24 &gt;&gt; result.txt</span><br><span class="line"></span><br><span class="line">powershell.exe -exec bypass -Command &quot;Import-Module C:\Invoke-ARPScan.ps1;Invoke-ARPScan -CIDR 192.168.1.0/24&quot;  &gt;&gt; result.txt</span><br></pre></td></tr></table></figure>
-<h3 id="在-linux-下使用-arp-扫描"><a href="#在-linux-下使用-arp-扫描" class="headerlink" title="在 linux 下使用 arp 扫描"></a>在 linux 下使用 arp 扫描</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># wget https://nmap.org/dist/nmap-7.40.tar.bz2</span><br><span class="line"># bzip2 -cd nmap-7.40.tar.bz2 | tar xvf -</span><br><span class="line"># cd nmap-7.40 </span><br><span class="line"># ./configure  这里可以用--prefix指定安装路径</span><br><span class="line"># echo $?</span><br><span class="line"># make</span><br><span class="line"># make install</span><br><span class="line"># echo $?</span><br><span class="line"># make install</span><br><span class="line"># echo $?	</span><br><span class="line"># nmap -sn -PR 192.168.1.0/24  尝试arp扫描</span><br></pre></td></tr></table></figure>
+<h2 id="0x01-利用方法"><a href="#0x01-利用方法" class="headerlink" title="0x01 利用方法"></a>0x01 利用方法</h2><p><font color="#DC143C" size="3">PS：</font>以下测试全部在域控上执行</p>
+<h3 id="一）使用dsmod给指定域用户设置登陆脚本"><a href="#一）使用dsmod给指定域用户设置登陆脚本" class="headerlink" title="一）使用dsmod给指定域用户设置登陆脚本"></a>一）使用dsmod给指定域用户设置登陆脚本</h3><p>test.bat放在域控的NETLOGON目录下面<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">copy test.bat \\域控\SYSVOL\sysvol\域名\SCRIPTS\test.bat</span><br><span class="line">dsmod user -loscr &quot;test.bat&quot; &quot;CN=x,OU=x,DC=x,DC=x,DC=x&quot;</span><br></pre></td></tr></table></figure></p>
+<p>测试结果：<br>PS: 测试机为<code>Win-XP x86</code>，第二次注销重新登陆bat脚本才执行，bat内容为<a href="mailto:`@calc.exe" target="_blank" rel="noopener">`@calc.exe</a>`。<br><img src="/image/在域控上使用cmd更改域用户配置文件中的登录脚本/blog_2018-11-16_18-18-23.png" alt=""></p>
+<h3 id="二）登陆脚本给指定用户种马"><a href="#二）登陆脚本给指定用户种马" class="headerlink" title="二）登陆脚本给指定用户种马"></a>二）登陆脚本给指定用户种马</h3><p>logon.bat放在域控的NETLOGON目录下面<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">copy logon.bat \\域控\SYSVOL\sysvol\域名\SCRIPTS\test.bat</span><br><span class="line">net user xp /scriptpath:logon.bat # 内网域成员机器可以使用</span><br><span class="line">gpupdate /force  # 立即刷新组策略 使用域管权限执行  不执行也行,等待随机</span><br></pre></td></tr></table></figure></p>
+<p>测试结果与第一种方法一致</p>
+<h3 id="三）使用PowerShell的Active-Directory模块"><a href="#三）使用PowerShell的Active-Directory模块" class="headerlink" title="三）使用PowerShell的Active Directory模块"></a>三）使用PowerShell的Active Directory模块</h3><p><code>ActiveDirectory.psd1</code>项目：<a href="https://github.com/samratashok/ADModule" target="_blank" rel="noopener">ADModule</a><br>命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Import-Module ActiveDirectory.psd1; 或者Import-Module Microsoft.ActiveDirectory.Management.dll</span><br><span class="line">Set-ADUser -Identity AD_USER -ProfilePath &quot;filepath&quot; -ScriptPath &quot;filename&quot;</span><br></pre></td></tr></table></figure></p>
+<p>参数说明</p>
 <ul>
-<li><p>处在别人的vpn内网(kali)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">netdiscover -r 192.168.1.0/24 -i eth0</span><br><span class="line"></span><br><span class="line">msf的arp扫描模块</span><br><span class="line"></span><br><span class="line">msf &gt; use  auxiliary/scanner/discovery/arp_sweep</span><br><span class="line">msf &gt; show options</span><br><span class="line">msf &gt; set  interface eth0</span><br><span class="line">msf &gt; set  smac 00:0c:29:92:fd:85</span><br><span class="line">msf &gt; set  rhosts 192.168.1.0/24</span><br><span class="line">msf &gt; set  threads 20</span><br><span class="line">msf &gt; set  shost 192.168.1.27</span><br><span class="line">msf &gt; run</span><br></pre></td></tr></table></figure>
+<li><p>Identity<br>通过提供以下属性值之一指定Active Directory用户对象。括号中的标识符是属性的LDAP显示名称。此参数的可接受值为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">一个名字</span><br><span class="line">GUID（objectGUID）</span><br><span class="line">安全标识符（objectSid）</span><br><span class="line">SAM帐户名称（sAMAccountName）</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>meterpreter</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">meterpreter &gt; getsystem 	另外,在目标机器上扫描时,务必先提权(个人建议,会方便很多),不然扫描过程中可能会有些问题</span><br><span class="line">meterpreter &gt; run autoroute -s 192.168.1.0/24</span><br><span class="line">meterpreter &gt; run post/windows/gather/arp_scanner RHOSTS=192.168.1.0/24</span><br></pre></td></tr></table></figure>
+<li><p>ProfilePath<br>指定用户配置文件的路径。该值可以是本地绝对路径或通用命名约定（UNC）路径。</p>
 </li>
+<li>ScriptPath<br>指定用户登录脚本的路径。该值可以是本地绝对路径或通用命名约定（UNC）路径。</li>
 </ul>
-<h2 id="基于smb和netbios的内网主机发现方式"><a href="#基于smb和netbios的内网主机发现方式" class="headerlink" title="基于smb和netbios的内网主机发现方式"></a>基于smb和netbios的内网主机发现方式</h2><h3 id="win下"><a href="#win下" class="headerlink" title="win下:"></a>win下:</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nbtscan.exe -m  192.168.1.0/24   非常经典的小工具</span><br></pre></td></tr></table></figure>
-<p>linux下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wget http://www.unixwiz.net/tools/nbtscan-source-1.0.35.tgz</span><br><span class="line">tar -zxvf nbtscan-source-1.0.35.tgz</span><br><span class="line">make</span><br><span class="line">echo $?</span><br><span class="line">./nbtscan -h</span><br><span class="line">./nbtscan -m 192.168.1.0/24</span><br></pre></td></tr></table></figure></p>
-<h2 id="域内扫描"><a href="#域内扫描" class="headerlink" title="域内扫描"></a>域内扫描</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">net view</span><br><span class="line">dsquery computer  其实,域内最好用的也就是nbtscan了</span><br></pre></td></tr></table></figure>
-<p>Ps:如果计算机名很多的时候，可以利用bat批量ping获取ip<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@echo off</span><br><span class="line">setlocal ENABLEDELAYEDEXPANSION</span><br><span class="line">@FOR /F &quot;usebackq eol=- skip=1 delims=\&quot; %%j IN (`net view ^| find &quot;命令成功完成&quot; /v ^|find &quot;The command completed successfully.&quot; /v`) DO (</span><br><span class="line">@FOR /F &quot;usebackq delims=&quot; %%i IN (`@ping -n 1 -4 %%j ^| findstr &quot;Pinging&quot;`) DO (</span><br><span class="line">@FOR /F &quot;usebackq tokens=2 delims=[]&quot; %%k IN (`echo %%i`) DO (echo %%k  %%j)</span><br><span class="line">)</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>测试结果与第一种方法一致</p>
+<h2 id="0x02-参考"><a href="#0x02-参考" class="headerlink" title="0x02 参考"></a>0x02 参考</h2><p><a href="https://www.t00ls.net/thread-48540-1-1.html" target="_blank" rel="noopener">https://www.t00ls.net/thread-48540-1-1.html</a><br><a href="https://www.labofapenetrationtester.com/2018/10/domain-enumeration-from-PowerShell-CLM.html" target="_blank" rel="noopener">https://www.labofapenetrationtester.com/2018/10/domain-enumeration-from-PowerShell-CLM.html</a><br><a href="https://docs.microsoft.com/en-us/powershell/module/addsadministration/Set-ADUser?view=win10-ps" target="_blank" rel="noopener">https://docs.microsoft.com/en-us/powershell/module/addsadministration/Set-ADUser?view=win10-ps</a></p>
 
       
     </div>
@@ -518,7 +514,7 @@
     </li>
     <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="http://rcoil.me/2017/08/内网存活扫描/" title="内网存活扫描">http://rcoil.me/2017/08/内网存活扫描/</a>
+      <a href="http://rcoil.me/2018/11/【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本/" title="【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本">http://rcoil.me/2018/11/【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本/</a>
     </li>
     <li class="post-copyright-license">
       <strong>版权声明： </strong>
@@ -534,7 +530,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/系统安全-内网/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> 系统安全,内网</a>
+            <a href="/tags/内网渗透/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> 内网渗透</a>
+          
+            <a href="/tags/域渗透/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> 域渗透</a>
           
         </div>
       
@@ -547,8 +545,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/内网渗透/" rel="next" title="内网渗透（持续更新）">
-                <i class="fa fa-chevron-left"></i> 内网渗透（持续更新）
+              <a href="/2018/11/【C-】创建用户，并添加至管理组/" rel="next" title="【C++】创建用户，并添加至管理组">
+                <i class="fa fa-chevron-left"></i> 【C++】创建用户，并添加至管理组
               </a>
             
           </div>
@@ -557,8 +555,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/09/巧妙利用win自带的-PSR-实现监控Windows桌面/" rel="prev" title="巧妙利用win自带的 PSR 实现监控Windows桌面">
-                巧妙利用win自带的 PSR 实现监控Windows桌面 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/11/【域渗透】获取域环境内用户登录信息/" rel="prev" title="【域渗透】获取域环境内用户登录信息">
+                【域渗透】获取域环境内用户登录信息 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -768,7 +766,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#icmp扫描"><span class="nav-number">1.</span> <span class="nav-text">icmp扫描</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#在win下使用icmp扫描"><span class="nav-number">1.1.</span> <span class="nav-text">在win下使用icmp扫描</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在linux下使用各类icmp扫描"><span class="nav-number">1.2.</span> <span class="nav-text">在linux下使用各类icmp扫描</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#arp扫描"><span class="nav-number">2.</span> <span class="nav-text">arp扫描</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#在win下使用各种arp扫描"><span class="nav-number">2.1.</span> <span class="nav-text">在win下使用各种arp扫描</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在-linux-下使用-arp-扫描"><span class="nav-number">2.2.</span> <span class="nav-text">在 linux 下使用 arp 扫描</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于smb和netbios的内网主机发现方式"><span class="nav-number">3.</span> <span class="nav-text">基于smb和netbios的内网主机发现方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#win下"><span class="nav-number">3.1.</span> <span class="nav-text">win下:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#域内扫描"><span class="nav-number">4.</span> <span class="nav-text">域内扫描</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00-利用场景"><span class="nav-number">1.</span> <span class="nav-text">0x00 利用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-利用方法"><span class="nav-number">2.</span> <span class="nav-text">0x01 利用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一）使用dsmod给指定域用户设置登陆脚本"><span class="nav-number">2.1.</span> <span class="nav-text">一）使用dsmod给指定域用户设置登陆脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二）登陆脚本给指定用户种马"><span class="nav-number">2.2.</span> <span class="nav-text">二）登陆脚本给指定用户种马</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三）使用PowerShell的Active-Directory模块"><span class="nav-number">2.3.</span> <span class="nav-text">三）使用PowerShell的Active Directory模块</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-参考"><span class="nav-number">3.</span> <span class="nav-text">0x02 参考</span></a></li></ol></div>
             
 
           </div>

@@ -89,7 +89,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-  <meta name="keywords" content="内网渗透,域渗透,">
+  <meta name="keywords" content="Tools,域渗透,C#,">
 
 
 
@@ -107,20 +107,20 @@
 
 
 
-<meta name="description" content="摘要：采取直接的手段不能够解决问题，只好曲线救国。">
-<meta name="keywords" content="内网渗透,域渗透">
+<meta name="description" content="域内批量执行net user Uname /domain">
+<meta name="keywords" content="Tools,域渗透,C#">
 <meta property="og:type" content="article">
-<meta property="og:title" content="在域控上使用cmd更改域用户配置文件中的登录脚本">
-<meta property="og:url" content="http://rcoil.me/2018/11/在域控上使用cmd更改域用户配置文件中的登录脚本/index.html">
+<meta property="og:title" content="【域渗透】批量Net-User">
+<meta property="og:url" content="http://rcoil.me/2018/08/【域渗透】-批量Net-User/index.html">
 <meta property="og:site_name" content="RcoIl的窝">
-<meta property="og:description" content="摘要：采取直接的手段不能够解决问题，只好曲线救国。">
+<meta property="og:description" content="域内批量执行net user Uname /domain">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://rcoil.me/image/在域控上使用cmd更改域用户配置文件中的登录脚本/blog_2018-11-16_18-18-23.png">
-<meta property="og:updated_time" content="2018-11-17T04:32:28.545Z">
+<meta property="og:image" content="http://rcoil.me/image/域-批量Net-User/1.png">
+<meta property="og:updated_time" content="2018-11-27T03:29:37.113Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="在域控上使用cmd更改域用户配置文件中的登录脚本">
-<meta name="twitter:description" content="摘要：采取直接的手段不能够解决问题，只好曲线救国。">
-<meta name="twitter:image" content="http://rcoil.me/image/在域控上使用cmd更改域用户配置文件中的登录脚本/blog_2018-11-16_18-18-23.png">
+<meta name="twitter:title" content="【域渗透】批量Net-User">
+<meta name="twitter:description" content="域内批量执行net user Uname /domain">
+<meta name="twitter:image" content="http://rcoil.me/image/域-批量Net-User/1.png">
 
 
 
@@ -148,13 +148,13 @@
 
 
 
-  <link rel="canonical" href="http://rcoil.me/2018/11/在域控上使用cmd更改域用户配置文件中的登录脚本/">
+  <link rel="canonical" href="http://rcoil.me/2018/08/【域渗透】-批量Net-User/">
 
 
 
 
 
-  <title> 在域控上使用cmd更改域用户配置文件中的登录脚本 | RcoIl的窝 </title>
+  <title> 【域渗透】批量Net-User | RcoIl的窝 </title>
 </head>
 
 <body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -335,7 +335,7 @@
   
 
   <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://rcoil.me/2018/11/在域控上使用cmd更改域用户配置文件中的登录脚本/">
+    <link itemprop="mainEntityOfPage" href="http://rcoil.me/2018/08/【域渗透】-批量Net-User/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RcoIl">
@@ -356,7 +356,7 @@
             
             
               
-                在域控上使用cmd更改域用户配置文件中的登录脚本
+                【域渗透】批量Net-User
               
             
           </h1>
@@ -371,8 +371,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-16T16:33:21+08:00">
-                2018-11-16
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-01T17:32:25+08:00">
+                2018-08-01
               </time>
             
 
@@ -394,8 +394,8 @@
               
               
                 <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/内网渗透/" itemprop="url" rel="index">
-                    <span itemprop="name">内网渗透</span>
+                  <a href="/categories/编程之道/" itemprop="url" rel="index">
+                    <span itemprop="name">编程之道</span>
                   </a>
                 </span>
 
@@ -411,7 +411,7 @@
 
           
           
-             <span id="/2018/11/在域控上使用cmd更改域用户配置文件中的登录脚本/" class="leancloud_visitors" data-flag-title="在域控上使用cmd更改域用户配置文件中的登录脚本">
+             <span id="/2018/08/【域渗透】-批量Net-User/" class="leancloud_visitors" data-flag-title="【域渗透】批量Net-User">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                 <!--
@@ -444,32 +444,15 @@
       
 
       
-        <p><font color="#DC143C" size="3">摘要：</font>采取直接的手段不能够解决问题，只好曲线救国。<br><a id="more"></a><br>声明：只是作为搬运工。</p>
-<h2 id="0x00-利用场景"><a href="#0x00-利用场景" class="headerlink" title="0x00 利用场景"></a>0x00 利用场景</h2><ul>
-<li><p>利用前置条件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">域管理员权限</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>使用场合</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">知道目标域用户名称，探测不到域用户对应机器名或IP；</span><br><span class="line">知道目标机器IP，但是无法通往上控；</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h2 id="0x01-利用方法"><a href="#0x01-利用方法" class="headerlink" title="0x01 利用方法"></a>0x01 利用方法</h2><p><font color="#DC143C" size="3">PS：</font>以下测试全部在域控上执行</p>
-<h3 id="一）使用dsmod给指定域用户设置登陆脚本"><a href="#一）使用dsmod给指定域用户设置登陆脚本" class="headerlink" title="一）使用dsmod给指定域用户设置登陆脚本"></a>一）使用dsmod给指定域用户设置登陆脚本</h3><p>test.bat放在域控的NETLOGON目录下面<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">copy test.bat \\域控\SYSVOL\sysvol\域名\SCRIPTS\test.bat</span><br><span class="line">dsmod user -loscr &quot;test.bat&quot; &quot;CN=x,OU=x,DC=x,DC=x,DC=x&quot;</span><br></pre></td></tr></table></figure></p>
-<p>测试结果：<br>PS: 测试机为<code>Win-XP x86</code>，第二次注销重新登陆bat脚本才执行，bat内容为<a href="mailto:`@calc.exe" target="_blank" rel="noopener">`@calc.exe</a>`。<br><img src="/image/在域控上使用cmd更改域用户配置文件中的登录脚本/blog_2018-11-16_18-18-23.png" alt=""></p>
-<h3 id="二）登陆脚本给指定用户种马"><a href="#二）登陆脚本给指定用户种马" class="headerlink" title="二）登陆脚本给指定用户种马"></a>二）登陆脚本给指定用户种马</h3><p>logon.bat放在域控的NETLOGON目录下面<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">copy logon.bat \\域控\SYSVOL\sysvol\域名\SCRIPTS\test.bat</span><br><span class="line">net user xp /scriptpath:logon.bat # 内网域成员机器可以使用</span><br><span class="line">gpupdate /force  # 立即刷新组策略 使用域管权限执行  不执行也行,等待随机</span><br></pre></td></tr></table></figure></p>
-<p>测试结果与第一种方法一致</p>
-<h3 id="三）使用PowerShell的Active-Directory模块"><a href="#三）使用PowerShell的Active-Directory模块" class="headerlink" title="三）使用PowerShell的Active Directory模块"></a>三）使用PowerShell的Active Directory模块</h3><p><code>ActiveDirectory.psd1</code>项目：<a href="https://github.com/samratashok/ADModule" target="_blank" rel="noopener">ADModule</a><br>命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Import-Module ActiveDirectory.psd1; 或者Import-Module Microsoft.ActiveDirectory.Management.dll</span><br><span class="line">Set-ADUser -Identity AD_USER -ProfilePath &quot;filepath&quot; -ScriptPath &quot;filename&quot;</span><br></pre></td></tr></table></figure></p>
-<p>参数说明</p>
-<ul>
-<li><p>Identity<br>通过提供以下属性值之一指定Active Directory用户对象。括号中的标识符是属性的LDAP显示名称。此参数的可接受值为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">一个名字</span><br><span class="line">GUID（objectGUID）</span><br><span class="line">安全标识符（objectSid）</span><br><span class="line">SAM帐户名称（sAMAccountName）</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>ProfilePath<br>指定用户配置文件的路径。该值可以是本地绝对路径或通用命名约定（UNC）路径。</p>
-</li>
-<li>ScriptPath<br>指定用户登录脚本的路径。该值可以是本地绝对路径或通用命名约定（UNC）路径。</li>
-</ul>
-<p>测试结果与第一种方法一致</p>
-<h2 id="0x02-参考"><a href="#0x02-参考" class="headerlink" title="0x02 参考"></a>0x02 参考</h2><p><a href="https://www.t00ls.net/thread-48540-1-1.html" target="_blank" rel="noopener">https://www.t00ls.net/thread-48540-1-1.html</a><br><a href="https://www.labofapenetrationtester.com/2018/10/domain-enumeration-from-PowerShell-CLM.html" target="_blank" rel="noopener">https://www.labofapenetrationtester.com/2018/10/domain-enumeration-from-PowerShell-CLM.html</a><br><a href="https://docs.microsoft.com/en-us/powershell/module/addsadministration/Set-ADUser?view=win10-ps" target="_blank" rel="noopener">https://docs.microsoft.com/en-us/powershell/module/addsadministration/Set-ADUser?view=win10-ps</a></p>
+        <p>域内批量执行<code>net user Uname /domain</code></p>
+<a id="more"></a>
+<h2 id="0x00使用场景"><a href="#0x00使用场景" class="headerlink" title="0x00使用场景"></a>0x00使用场景</h2><p>在渗透测试中，需要查找域内某用户的机器所在，必须得确定目标人物所对应的域用户。<br>查找域用户对应的<code>Full Name</code>信息，从而确认目标任务对应的域用户。</p>
+<h2 id="0x01-代码"><a href="#0x01-代码" class="headerlink" title="0x01 代码"></a>0x01 代码</h2><p>代码其实很简单，使用C#进行编写，可自行编译。</p>
+<p>将所有域用户导入<code>user.txt</code>中（每个域用户一行），遍历文件中的用户，然后调用系统cmd命令执行<code>net user Uname /domain</code>，将运行结果进行输出，可根据自己需求进行二次修改（线程、正则、输出保存）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line">using System;</span><br><span class="line">using System.IO;</span><br><span class="line">using System.Text;</span><br><span class="line">using System.Text.RegularExpressions;</span><br><span class="line"></span><br><span class="line">namespace domain</span><br><span class="line">&#123;</span><br><span class="line">    class Program</span><br><span class="line">    &#123;</span><br><span class="line">        static void Main(string[] args)</span><br><span class="line">        &#123;</span><br><span class="line">        	Console.WriteLine(&quot;Tools By RcoIl \r&quot;);</span><br><span class="line">            string currentDirectory = Environment.CurrentDirectory;</span><br><span class="line">            string text = currentDirectory + &quot;\\user.txt&quot;; // 文件绝对路径</span><br><span class="line">            if (!File.Exists(text))</span><br><span class="line">            &#123;</span><br><span class="line">                Console.WriteLine(&quot;File not found &quot; + text); </span><br><span class="line">            &#125;</span><br><span class="line">            else</span><br><span class="line">            &#123;</span><br><span class="line">                FileStream stream = new FileStream(text, FileMode.Open, FileAccess.Read); // 打开文本</span><br><span class="line">                try</span><br><span class="line">                &#123;</span><br><span class="line">                    StreamReader streamReader = new StreamReader(stream, Encoding.Default); // 实例化</span><br><span class="line">                    try</span><br><span class="line">                    &#123;</span><br><span class="line">                        while (!streamReader.EndOfStream) // 读取文本</span><br><span class="line">                        &#123;</span><br><span class="line">                            string text2;</span><br><span class="line">                            if ((text2 = streamReader.ReadLine()) != null &amp;&amp; text2.Length != 0) </span><br><span class="line">                            &#123;</span><br><span class="line">                                string id = text2;</span><br><span class="line">                                Program.Check(id);</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    finally</span><br><span class="line">                    &#123;</span><br><span class="line">                        if (streamReader != null)</span><br><span class="line">                        &#123;</span><br><span class="line">                            ((IDisposable)streamReader).Dispose();</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                finally</span><br><span class="line">                &#123;</span><br><span class="line">                    if (stream != null)</span><br><span class="line">                    &#123;</span><br><span class="line">                        ((IDisposable)stream).Dispose();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                Console.WriteLine(&quot;============================================================&quot;);</span><br><span class="line">                Console.WriteLine(&quot;Finish!&quot;);</span><br><span class="line">                GC.Collect();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public static void Check(string id)</span><br><span class="line">        &#123;</span><br><span class="line">            System.Diagnostics.ProcessStartInfo proccessStartInfo = new System.Diagnostics.ProcessStartInfo(&quot;net&quot;, &quot;user &quot; + id + &quot; /domain&quot;);</span><br><span class="line">            proccessStartInfo.CreateNoWindow = true;</span><br><span class="line">            System.Diagnostics.Process proc = new System.Diagnostics.Process &#123; StartInfo = proccessStartInfo &#125;;</span><br><span class="line"></span><br><span class="line">            proc.StartInfo.RedirectStandardOutput = true; // 由调用程序获取输出信息</span><br><span class="line">            proc.StartInfo.UseShellExecute = false; // 是否使用操作系统shell启动</span><br><span class="line">            proc.StartInfo.CreateNoWindow = true; // 不显示程序窗口</span><br><span class="line">            proc.Start();  // 启动程序</span><br><span class="line"></span><br><span class="line">            string outlist = proc.StandardOutput.ReadToEnd(); // 获取cmd窗口的输出信息</span><br><span class="line"></span><br><span class="line">            Regex reg = new Regex(&quot;.*ame.*&quot;);</span><br><span class="line">            MatchCollection result = reg.Matches(outlist);</span><br><span class="line">            Console.WriteLine(&quot;============================================================&quot;);</span><br><span class="line">            foreach (Match match in result)</span><br><span class="line">            &#123;</span><br><span class="line">                Console.WriteLine(match);</span><br><span class="line">            &#125;</span><br><span class="line">            proc.WaitForExit(); // 等待程序执行完退出进程</span><br><span class="line">            proc.Close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行效果图：</p>
+<p><img src="/image/域-批量Net-User/1.png" alt=""></p>
+<h2 id="0x02-总结"><a href="#0x02-总结" class="headerlink" title="0x02 总结"></a>0x02 总结</h2><p>在域内使用<code>dsquery</code>查找的信息是有限的，所以需要相应的辅助工具，这个工具存在的意义就是人物与域用户之间的确认。</p>
 
       
     </div>
@@ -514,7 +497,7 @@
     </li>
     <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="http://rcoil.me/2018/11/在域控上使用cmd更改域用户配置文件中的登录脚本/" title="在域控上使用cmd更改域用户配置文件中的登录脚本">http://rcoil.me/2018/11/在域控上使用cmd更改域用户配置文件中的登录脚本/</a>
+      <a href="http://rcoil.me/2018/08/【域渗透】-批量Net-User/" title="【域渗透】批量Net-User">http://rcoil.me/2018/08/【域渗透】-批量Net-User/</a>
     </li>
     <li class="post-copyright-license">
       <strong>版权声明： </strong>
@@ -530,9 +513,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/内网渗透/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> 内网渗透</a>
+            <a href="/tags/Tools/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> Tools</a>
           
             <a href="/tags/域渗透/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> 域渗透</a>
+          
+            <a href="/tags/C/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> C#</a>
           
         </div>
       
@@ -545,8 +530,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/11/【C-】创建用户，并添加至管理组/" rel="next" title="【C++】创建用户，并添加至管理组">
-                <i class="fa fa-chevron-left"></i> 【C++】创建用户，并添加至管理组
+              <a href="/2018/05/关于windows的RDP连接记录/" rel="next" title="关于windows的RDP连接记录">
+                <i class="fa fa-chevron-left"></i> 关于windows的RDP连接记录
               </a>
             
           </div>
@@ -554,6 +539,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/CobaltStrike-3-12-破解/" rel="prev" title="Cobalt Strike 3.12 破解">
+                Cobalt Strike 3.12 破解 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -624,7 +613,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -762,7 +751,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00-利用场景"><span class="nav-number">1.</span> <span class="nav-text">0x00 利用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-利用方法"><span class="nav-number">2.</span> <span class="nav-text">0x01 利用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一）使用dsmod给指定域用户设置登陆脚本"><span class="nav-number">2.1.</span> <span class="nav-text">一）使用dsmod给指定域用户设置登陆脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二）登陆脚本给指定用户种马"><span class="nav-number">2.2.</span> <span class="nav-text">二）登陆脚本给指定用户种马</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三）使用PowerShell的Active-Directory模块"><span class="nav-number">2.3.</span> <span class="nav-text">三）使用PowerShell的Active Directory模块</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-参考"><span class="nav-number">3.</span> <span class="nav-text">0x02 参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00使用场景"><span class="nav-number">1.</span> <span class="nav-text">0x00使用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-代码"><span class="nav-number">2.</span> <span class="nav-text">0x01 代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-总结"><span class="nav-number">3.</span> <span class="nav-text">0x02 总结</span></a></li></ol></div>
             
 
           </div>
