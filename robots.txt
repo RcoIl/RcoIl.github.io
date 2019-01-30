@@ -10,5 +10,5 @@ Disallow: /fonts/
 Disallow: /vendors/
 Disallow: /fancybox/
 
-Sitemap: http://rcoil.me/sitemap.xml
-Sitemap: http://rcoil.me/baidusitemap.xml
+Sitemap: https://rcoil.me/sitemap.xml
+Sitemap: https://rcoil.me/baidusitemap.xml
