@@ -89,7 +89,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-  <meta name="keywords" content="内网渗透,">
+  <meta name="keywords" content="Python, Hacker">
 
 
 
@@ -107,22 +107,20 @@
 
 
 
-<meta name="description" content="环境为模拟环境，文章使用的均为公开测试工具且未涉及到各方法的原理。 分享便是我最好的老师。   ——Micropoor">
-<meta name="keywords" content="内网渗透">
+<meta name="description" content="环境为模拟环境，文章使用的均为公开测试工具且未涉及到各个方法的原理。 分享便是我最好的老师。   ——Micropoor">
 <meta property="og:type" content="article">
 <meta property="og:title" content="内网练习（四）- 知识梳理">
 <meta property="og:url" content="https://rcoil.me/2019/03/内网练习（四）/index.html">
 <meta property="og:site_name" content="RcoIl的窝">
-<meta property="og:description" content="环境为模拟环境，文章使用的均为公开测试工具且未涉及到各方法的原理。 分享便是我最好的老师。   ——Micropoor">
+<meta property="og:description" content="环境为模拟环境，文章使用的均为公开测试工具且未涉及到各个方法的原理。 分享便是我最好的老师。   ——Micropoor">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://rcoil.me/image/内网练习（四）/初始网络拓扑.png">
-<meta property="og:image" content="d:/Hexo_blog/RcoIl的窝/image/内网练习（四）/blog_2019-03-25_16-37-30.png">
 <meta property="og:image" content="https://rcoil.me/image/内网练习（四）/blog_2019-03-25_16-37-30.png">
 <meta property="og:image" content="https://rcoil.me/image/内网练习（四）/网络拓扑.PNG">
-<meta property="og:updated_time" content="2019-03-28T04:25:38.296Z">
+<meta property="og:updated_time" content="2019-03-28T07:49:12.076Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="内网练习（四）- 知识梳理">
-<meta name="twitter:description" content="环境为模拟环境，文章使用的均为公开测试工具且未涉及到各方法的原理。 分享便是我最好的老师。   ——Micropoor">
+<meta name="twitter:description" content="环境为模拟环境，文章使用的均为公开测试工具且未涉及到各个方法的原理。 分享便是我最好的老师。   ——Micropoor">
 <meta name="twitter:image" content="https://rcoil.me/image/内网练习（四）/初始网络拓扑.png">
 
 
@@ -385,28 +383,6 @@
           </span>
 
           
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/内网渗透/" itemprop="url" rel="index">
-                    <span itemprop="name">内网渗透</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
 
           
             
@@ -447,7 +423,7 @@
       
 
       
-        <p>环境为模拟环境，文章使用的均为公开测试工具且未涉及到各方法的原理。</p>
+        <p>环境为模拟环境，文章使用的均为公开测试工具且未涉及到各个方法的原理。</p>
 <p>分享便是我最好的老师。   ——Micropoor</p>
 <a id="more"></a>
 <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>在渗透测试中，经常会遇到一些奇奇怪怪的环境。本文所采用的环境是一个红蓝对抗靶场，以贴切实际环境为出发点。</p>
@@ -456,16 +432,17 @@
 <li>提示：flag{ooxx-ooxx}</li>
 </ul>
 <ul>
-<li>初始网络拓扑</li>
+<li><p>初始网络拓扑</p>
+<p><img src="/image/内网练习（四）/初始网络拓扑.png" alt="初始网络拓扑"></p>
+</li>
 </ul>
-<p>  <img src="/image/内网练习（四）/初始网络拓扑.png" alt="初始网络拓扑"></p>
 <h1 id="0x01-靶机信息收集"><a href="#0x01-靶机信息收集" class="headerlink" title="0x01 靶机信息收集"></a>0x01 靶机信息收集</h1><p>因为是模拟环境，所以初始权限为<code>win7域用户权限</code>（上了RAT–&gt;http协议）。</p>
 <ul>
 <li><code>DKRST011</code>的基本信息</li>
 </ul>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">机器名: DKRST011</span><br><span class="line">权限: 域用户权限(rcoil\tk001)</span><br><span class="line">系统: Windows <span class="number">7</span> Professional <span class="number">6.1</span><span class="number">.7601</span> Service Pack <span class="number">1</span> Build <span class="number">7601</span> x64</span><br><span class="line">Domain: rcoil.local</span><br><span class="line">IP地址: <span class="number">172.16</span><span class="number">.238</span><span class="number">.29</span></span><br><span class="line">杀软: McAfee(非最新版)</span><br><span class="line">补丁情况：[*<span class="number">240</span>]</span><br><span class="line">.NET版本：V1<span class="number">.0</span>、V1<span class="number">.1</span>、V2<span class="number">.0</span>、V3<span class="number">.0</span>、V3<span class="number">.5</span>、V4<span class="number">.0</span></span><br><span class="line">已有操作: 密码拖取（未提权）、全盘文件列表获取、浏览器浏览记录及密码、TCP连接及进程等相关基础操作</span><br><span class="line">额为信息: <span class="number">192.168</span><span class="number">.5</span><span class="number">.6</span>:<span class="number">8080</span>为内网代理服务 --&gt; Linux</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">机器名: DKRST011</span><br><span class="line">权限: 域用户权限(rcoil\tk001)</span><br><span class="line">系统: Windows <span class="number">7</span> Professional <span class="number">6.1</span><span class="number">.7601</span> Service Pack <span class="number">1</span> Build <span class="number">7601</span> x64</span><br><span class="line">Domain: rcoil.local</span><br><span class="line">IP地址: <span class="number">172.16</span><span class="number">.238</span><span class="number">.29</span></span><br><span class="line">杀软: McAfee(非最新版)</span><br><span class="line">补丁情况：[*<span class="number">240</span>]</span><br><span class="line">.NET版本：V1<span class="number">.0</span>、V1<span class="number">.1</span>、V2<span class="number">.0</span>、V3<span class="number">.0</span>、V3<span class="number">.5</span>、V4<span class="number">.0</span></span><br><span class="line">已有操作: 密码拖取（需要未提权）、全盘文件列表获取、浏览器浏览记录及密码、TCP连接及进程等相关基础操作</span><br><span class="line">额为信息: <span class="number">192.168</span><span class="number">.5</span><span class="number">.6</span>:<span class="number">8080</span>为内网代理服务 --&gt; Linux</span><br></pre></td></tr></table></figure>
 <p>在收集信息的时候发现<code>TCP连接</code>都是内网连接，而RAT的进程连接也是内网，感觉网络有问题。</p>
-<p>探测出网情况：此机器为半脱网情况，<code>dns、icmp、udp均不可出来</code>，http与https协议可出网。所有出网程序连接均为<code>192.10.5.6:8080</code>，由此初步判断为代理出网情况，且是http无限制出网。</p>
+<p>探测出网情况：此机器为半脱网情况，<code>dns、icmp、udp均不可出来</code>，http与https协议可出网。所有出网程序连接均为<code>192.10.22.6:8080</code>，由此初步判断为代理出网情况，且是http无限制出网。</p>
 <p>通过对带有password等关键字眼的文件进行搜索拖取，当作储备。</p>
 <ul>
 <li><strong>内网存活探测</strong></li>
@@ -479,12 +456,9 @@
 <li><code>setspn.exe</code> 被删除。</li>
 </ul>
 <h2 id="2）方案"><a href="#2）方案" class="headerlink" title="2）方案"></a>2）方案</h2><ul>
-<li><p>免杀<code>shellcode</code>，使用加载器运行，<a href="https://github.com/Micropoor/Micro8/blob/master/payload%E5%88%86%E7%A6%BB%E5%85%8D%E6%9D%80%E6%80%9D%E8%B7%AF%E7%AC%AC%E4%BA%8C%E5%AD%A3%EF%BC%88%E7%AC%AC%E5%9B%9B%E5%8D%81%E5%85%AB%E8%AF%BE%EF%BC%89.pdf" target="_blank" rel="noopener">例子</a> ；</p>
-</li>
-<li><p><code>Cobalt Strike</code>的<code>execute-assembly</code>运行本地相应C#程序；</p>
-</li>
-<li><p>使用<a href="https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetUserSPNs.py" target="_blank" rel="noopener">GetUserSPNs</a> 替换<code>setspn</code>使用；</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python GetUserSPNs.py -request -dc-ip 192.10.22.22 pentestlab.com/rcoil</span><br></pre></td></tr></table></figure>
+<li>免杀<code>shellcode</code>，使用加载器运行，<a href="https://github.com/Micropoor/Micro8/blob/master/payload%E5%88%86%E7%A6%BB%E5%85%8D%E6%9D%80%E6%80%9D%E8%B7%AF%E7%AC%AC%E4%BA%8C%E5%AD%A3%EF%BC%88%E7%AC%AC%E5%9B%9B%E5%8D%81%E5%85%AB%E8%AF%BE%EF%BC%89.pdf" target="_blank" rel="noopener">例子</a> ；</li>
+<li><code>Cobalt Strike</code>的<code>execute-assembly</code>运行本地相应C#程序；</li>
+<li>使用<a href="https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetUserSPNs.py" target="_blank" rel="noopener">GetUserSPNs</a> 替换<code>setspn</code>使用；<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python GetUserSPNs.py -request -dc-ip 192.10.22.22 pentestlab.com/rcoil</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <h2 id="3）域信息的收集结果大致如下"><a href="#3）域信息的收集结果大致如下" class="headerlink" title="3）域信息的收集结果大致如下"></a>3）域信息的收集结果大致如下</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">域控：</span><br><span class="line">	TTT-2_172.16.88.21_windows 2016 x64 (主域控)</span><br><span class="line">	TTT-V_172.16.88.20_windows 2016 x64 (辅助域控)	</span><br><span class="line">域管理员：10+</span><br><span class="line">域用户：200+</span><br><span class="line">域内机器：150+</span><br><span class="line">其他：略....</span><br></pre></td></tr></table></figure>
@@ -498,13 +472,11 @@
 </li>
 <li><p><strong>Kerberoasting</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[*]GetUserSPNs.py</span><br><span class="line">	python GetUserSPNs.py -request -dc-ip 192.10.22.22 pentestlab.com/rcoil </span><br><span class="line">关闭Kerberos预身份认证</span><br><span class="line">[*]Rubeus --&gt; https://github.com/GhostPack/Rubeus</span><br><span class="line">	Rubeus.exe asreproast # 枚举所有域用户（或者指定）Roasting AS-REPs</span><br><span class="line">[*] 结果:	</span><br><span class="line">	失败</span><br></pre></td></tr></table></figure>
-<p>​</p>
 </li>
 </ul>
 <h2 id="2）-主流方法及结果"><a href="#2）-主流方法及结果" class="headerlink" title="2） 主流方法及结果"></a>2） 主流方法及结果</h2><ul>
 <li><p><strong>基于资源约束委派</strong>(RBCD) –&gt; （未尝试）</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[*] 条件：2012+域控制器</span><br><span class="line">[*] powermad</span><br><span class="line">[*] powerview</span><br><span class="line">[*] Rubeus</span><br><span class="line">[*] SharpAllowedToAct</span><br><span class="line">	https://github.com/pkb1s/SharpAllowedToAct</span><br></pre></td></tr></table></figure>
-<p>​</p>
 </li>
 <li><p><strong>NTLM中继攻击</strong>（未尝试）</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[*] Responder</span><br><span class="line">	windows版本：https://github.com/Kevin-Robertson/Inveigh（修改函数名绕杀软等方法）</span><br><span class="line">	linux版本：https://github.com/SpiderLabs/Responder</span><br><span class="line">[*] mitm6+ntlmrelayx</span><br><span class="line">	https://github.com/fox-it/mitm6</span><br><span class="line">	https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py</span><br><span class="line">[*] CrackMapExec</span><br><span class="line">	https://github.com/byt3bl33d3r/CrackMapExec</span><br></pre></td></tr></table></figure>
@@ -543,8 +515,7 @@
 <p><strong>注：</strong>调用<code>Volume Shadow Copy</code>服务会产生日志文件，位于System下，<code>Event ID为7036</code></p>
 </li>
 </ul>
-<h2 id="2）遇到问题"><a href="#2）遇到问题" class="headerlink" title="2）遇到问题"></a>2）遇到问题</h2><p>执行以下命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wmiexec.py -hashes LMHASH:NTHASH rcoil/administrator@172.16.238.29 &quot;c:\\payload.exe&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="2）遇到问题"><a href="#2）遇到问题" class="headerlink" title="2）遇到问题"></a>2）遇到问题</h2><p>执行以下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wmiexec.py -hashes LMHASH:NTHASH rcoil/administrator@172.16.238.29 &quot;c:\\payload.exe&quot;</span><br></pre></td></tr></table></figure></p>
 <p><code>Cobalt Strike</code>未上线，这个情况其实是第一次见。</p>
 <p>以多种形式的<code>payload</code>运行也无果。</p>
 <p>确认非协议问题，因为以同样的程序，在域用户权限下正常启动并上线。</p>
@@ -552,10 +523,8 @@
 <li>获取明文密码，计划任务启动；</li>
 <li>添加<code>HKLM自启注册表</code></li>
 </ul>
-<h1 id="0x05-获取域管明文密码"><a href="#0x05-获取域管明文密码" class="headerlink" title="0x05 获取域管明文密码"></a>0x05 获取域管明文密码</h1><p>使用<code>powerview</code>查询域管登陆过的机器：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Find-DomainUserLocation == old Invoke-UserHunter</span><br><span class="line"># enumerate servers that allow unconstrained Kerberos delegation and show all users logged in</span><br><span class="line">Find-DomainUserLocation -ComputerUnconstrained -ShowAll</span><br></pre></td></tr></table></figure>
+<h1 id="0x05-获取域管明文密码"><a href="#0x05-获取域管明文密码" class="headerlink" title="0x05 获取域管明文密码"></a>0x05 获取域管明文密码</h1><p>使用<code>powerview</code>查询域管登陆过的机器：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Find-DomainUserLocation == old Invoke-UserHunter</span><br><span class="line"># enumerate servers that allow unconstrained Kerberos delegation and show all users logged in</span><br><span class="line">Find-DomainUserLocation -ComputerUnconstrained -ShowAll</span><br></pre></td></tr></table></figure></p>
 <p>最后选择了<code>172.16.10.29</code>的<code>win 2008 server</code>的机器，而且这台机器上存在<code>AdAudit Plus</code>。</p>
-<p><img src="D:\Hexo_blog\RcoIl的窝\image\内网练习（四）\blog_2019-03-25_16-37-30.png" alt="blog_2019-03-25_16-37-30"></p>
 <p><img src="/image/内网练习（四）/blog_2019-03-25_16-37-30.png" alt="blog_2019-03-25_16-37-30"></p>
 <p>由于目前没有任何容器可提供文件传输，所以自建。</p>
 <ul>
@@ -571,19 +540,17 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[*] 高权限计划任务启动CS服务端，未上线。</span><br><span class="line">[*] 添加HKLM自启动，未上线。</span><br><span class="line"></span><br><span class="line">这是什么问题呢？（未解决）</span><br></pre></td></tr></table></figure>
 <h1 id="0x05-其余flag获取"><a href="#0x05-其余flag获取" class="headerlink" title="0x05 其余flag获取"></a>0x05 其余flag获取</h1><p>从提示与目的来判断，剩下的<code>2个flag</code>位于<code>demo.rcoil.local域</code>的域控、域用户名为<code>flagav</code>的机器上。</p>
 <ul>
-<li><code>flagav</code>用户机器</li>
-</ul>
-<p>直接从<code>AdAudit Plus</code>获取到域用户<code>flagav</code>的登陆情况，这样就不用去翻日志了。</p>
-<p>使用<code>CrackMapExec</code>、<code>wmiexec</code>等工具执行命令查找flag：</p>
+<li><p><code>flagav</code>用户机器<br>直接从<code>AdAudit Plus</code>获取到域用户<code>flagav</code>的登陆情况，这样就不用去翻日志了。<br>使用<code>CrackMapExec</code>、<code>wmiexec</code>等工具执行命令查找flag：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;Cease_to_struggle_and_you_cease_to_live&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>子域域控flag</li>
+</li>
+<li><p>子域域控flag</p>
+</li>
 </ul>
 <p>使用主域控的域管可直接登陆子域的域控</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;Success_grows_out_of_struggles_to_overcome_difficulties&#125;</span><br></pre></td></tr></table></figure>
 <h1 id="0x0x-最后的拓扑"><a href="#0x0x-最后的拓扑" class="headerlink" title="0x0x 最后的拓扑"></a>0x0x 最后的拓扑</h1><p>好多没去了解，就草草结束了。</p>
 <p><img src="/image/内网练习（四）/网络拓扑.PNG" alt="网络拓扑"></p>
-<p><strong>免责声明：</strong>文章中所提到的工具/教程，不得用语商业或非法用途，否则后果自负。</p>
+<p><strong>免责声明：</strong>文章中所提到的工具/教程，不得用于商业或非法用途，否则后果自负。</p>
 
       
     </div>
@@ -641,12 +608,6 @@
     </div>
 
     <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/内网渗透/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> 内网渗透</a>
-          
-        </div>
       
 
       
