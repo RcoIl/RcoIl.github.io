@@ -1,0 +1,1298 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|sans-serif:300,300italic,400,400italic,700,700italic|Lato:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="系统安全,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RcoIl的窝" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="在日常的工作生活中，如何打造一个相对安全的环境，这是值得思考及解决的问题。">
+<meta name="keywords" content="系统安全">
+<meta property="og:type" content="article">
+<meta property="og:title" content="安全鸡">
+<meta property="og:url" content="https://rcoil.me/2017/07/安全鸡/index.html">
+<meta property="og:site_name" content="RcoIl的窝">
+<meta property="og:description" content="在日常的工作生活中，如何打造一个相对安全的环境，这是值得思考及解决的问题。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://rcoil.me/image/安全鸡/5961b024147b6.gif">
+<meta property="og:image" content="https://rcoil.me/image/安全鸡/5961a1683864c.png">
+<meta property="og:image" content="https://rcoil.me/image/安全鸡/5961a49722a44.gif">
+<meta property="og:image" content="https://rcoil.me/image/安全鸡/5961a732965e5.gif">
+<meta property="og:image" content="https://rcoil.me/image/安全鸡/5961b8b68a3a5.gif">
+<meta property="og:image" content="https://rcoil.me/image/安全鸡/文件md5.png">
+<meta property="og:updated_time" content="2019-04-12T01:19:32.383Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="安全鸡">
+<meta name="twitter:description" content="在日常的工作生活中，如何打造一个相对安全的环境，这是值得思考及解决的问题。">
+<meta name="twitter:image" content="https://rcoil.me/image/安全鸡/5961b024147b6.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '6230266985318450000',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://rcoil.me/2017/07/安全鸡/">
+
+
+
+
+
+  <title> 安全鸡 | RcoIl的窝 </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?ce3d1967864bac5f69f1c1a6042e5577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RcoIl的窝</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-count">
+          <a href="/count" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-fa fa-free-code-camp"></i> <br>
+            
+            阅读榜
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://rcoil.me/2017/07/安全鸡/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RcoIl">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RcoIl的窝">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                安全鸡
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-08T12:28:58+08:00">
+                2017-07-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/系统安全/" itemprop="url" rel="index">
+                    <span itemprop="name">系统安全</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/07/安全鸡/" class="leancloud_visitors" data-flag-title="安全鸡">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                <!--
+				<i class="fa fa-eye"></i>
+				-->
+				<i class="fa fa-thermometer-three-quarters" aria-hidden="true"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">热度 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+				 <span>℃</span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在日常的工作生活中，如何打造一个相对安全的环境，这是值得思考及解决的问题。<br><a id="more"></a></p>
+<h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p>从事安全行业或者喜欢研究安全技术的人员，建议如下搭建环境。</p>
+<ul>
+<li>两张网卡两条不同线路（可多）；</li>
+<li>统一使用英文系统；</li>
+<li>物理机脱网，设置加密盘；</li>
+<li>不同虚拟机设置不同线路（ 日常上网一条，日常工作一条）；</li>
+<li>编程机器不要带入个人 ID；</li>
+<li>工作机不安装任何带有母语信息的软件；</li>
+<li>所有机器补丁打满；</li>
+<li>虚拟机关机即还原；</li>
+<li>略….</li>
+</ul>
+<p>以下如无特殊说明，均为 <code>Windows 7</code>虚拟环境，详细情况如下。</p>
+<h2 id="0x01-个人电脑"><a href="#0x01-个人电脑" class="headerlink" title="0x01 个人电脑"></a>0x01 个人电脑</h2><h3 id="1-时间同步"><a href="#1-时间同步" class="headerlink" title="1) 时间同步"></a>1) 时间同步</h3><p>通常为了得到更加精确的时间信息，我们会采用将 Windows 时间与网络时间进行同步操作来实现。<br>但是如果在被反日的过程中发现使用了时间同步功能，那基本就可以确定所在地区，所以为了更友好，就需要关闭这项功能。</p>
+<ul>
+<li>点击桌面右下角时间，然后在弹出的窗口中点击<code>更改日期和时间设置</code></li>
+<li>在出现的窗口上部的选项选择<code>Internet 时间</code></li>
+<li>接下来选择<code>更改设置</code></li>
+<li>去除<code>与 Internet 时间同步</code>，再点击<code>确定</code>就行了。<br><img src="/image/安全鸡/5961b024147b6.gif" alt=""></li>
+</ul>
+<h3 id="2-win7关闭同步中心"><a href="#2-win7关闭同步中心" class="headerlink" title="2) win7关闭同步中心"></a>2) win7关闭同步中心</h3><ul>
+<li><code>Win+R</code> – <code>regedit</code> 打开注册表</li>
+<li>在<code>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Syncmgr\Handlers</code>项中找到一个与<code>SQL Server 2000</code> 相关的分支</li>
+<li>删除它，这时任务栏里的同步中心图标应该会消失，重启以后同步中心也不会自动启动了。</li>
+<li>当然，如果你有其它同步项，比如没有禁用离线文件，或者有移动设备同步，都有可能使同步中心自动启动。</li>
+</ul>
+<h3 id="3-update"><a href="#3-update" class="headerlink" title="3) update"></a>3) update</h3><p>大多数朋友可能会遇上 Win 7 系统关机时出现自动更新延长关机时间，导致有急事无法快速关机拔电源。但要说的不是这回事，仔细了解 update 背后的故事，都懂得。<br><img src="/image/安全鸡/5961a1683864c.png" alt=""><br>同时调出本地组策略编辑器</p>
+<ul>
+<li><code>Win+R</code> – <code>gpedit.msc</code> 打开组策略编辑器</li>
+<li>找到<code>管理模板 /Windows 组件</code></li>
+<li>找到 <code>Windows Update</code>，开启那啥。<br><img src="/image/安全鸡/5961a49722a44.gif" alt=""></li>
+</ul>
+<h3 id="4-打印机"><a href="#4-打印机" class="headerlink" title="4) 打印机"></a>4) 打印机</h3><ul>
+<li>在控制面板中的管理工具中找到服务</li>
+<li>在其中找到 <code>Print Spooler</code></li>
+<li>将服务停掉<br><img src="/image/安全鸡/5961a732965e5.gif" alt=""><br>也可以直接在命令行下执行 <code>net stop spooler</code></li>
+</ul>
+<h3 id="5-摄像头"><a href="#5-摄像头" class="headerlink" title="5) 摄像头"></a>5) 摄像头</h3><p>最保险的办法的就是直接禁用摄像头的驱动了。</p>
+<ul>
+<li>右击电脑桌面上的“计算机”图标选择“属性”选项;</li>
+<li>设备管理器</li>
+<li>图像设备，找到我们笔记本内置的摄像头</li>
+<li>直接右击禁用即可</li>
+</ul>
+<h3 id="6-麦克风"><a href="#6-麦克风" class="headerlink" title="6) 麦克风"></a>6) 麦克风</h3><p>关闭方法：</p>
+<ul>
+<li>首先在电脑桌面右下角任务栏上的声音图标上右键，然后选择“录音设备”。</li>
+<li>之后在弹出的声音属性对话框，将鼠标放在“麦克风”上右键选择“禁用”即可（或点击属性进行选择）。</li>
+<li>这样我们就简单禁用了录音设备麦克风了，不影响声卡，依然可以正常播放音乐，只是不能再录音以及语音说话了。</li>
+</ul>
+<h3 id="7-USB自动读取"><a href="#7-USB自动读取" class="headerlink" title="7) USB自动读取"></a>7) USB自动读取</h3><p>禁止 usb 设备的自动运行，首先是出于安全考虑，再者按需运行，减少不必要的程序开启。<br><img src="/image/安全鸡/5961b8b68a3a5.gif" alt="5961b8b68a3a5"></p>
+<h3 id="8-小娜（windows-10）"><a href="#8-小娜（windows-10）" class="headerlink" title="8) 小娜（windows 10）"></a>8) 小娜（windows 10）</h3><p>使用毛豆就可以。</p>
+<h2 id="0x02-个人意识"><a href="#0x02-个人意识" class="headerlink" title="0x02 个人意识"></a>0x02 个人意识</h2><h3 id="1-安全上网"><a href="#1-安全上网" class="headerlink" title="1) 安全上网"></a>1) 安全上网</h3><p>不在工作机上登陆私人账户</p>
+<h3 id="2-密码分级"><a href="#2-密码分级" class="headerlink" title="2) 密码分级"></a>2) 密码分级</h3><p>很多人各网站用户名密码相同，这样黑客用被泄露网站的密码登录其他网站很有可能会成功，每个网站都设置不同的密码可能不现实，那就可以对密码就行分级管理。</p>
+<h3 id="3-文件删除"><a href="#3-文件删除" class="headerlink" title="3) 文件删除"></a>3) 文件删除</h3><p>如果是平时的删除则使用强制删除，<code>Shift+del</code>。<br>电脑出售或者移交其他人使用，删除<code>敏感文件</code>后，同样需要对硬盘脱密，使用脱密工具反复擦写<code>5次</code>以上。</p>
+<h3 id="4-文件加密存储"><a href="#4-文件加密存储" class="headerlink" title="4) 文件加密存储"></a>4) 文件加密存储</h3><p>Windows 的话本身的 BitLocker 就很不错。个人使用 <code>TrueCrypt</code> ，文件直接放在硬盘上，电脑丢失后硬盘上文件就可以被直接读取，如果存到加密盘中，拿到硬盘后必须输入加密盘密码加载加密盘才能看到其中的文件，就有效避免了重要文件泄密。</p>
+<h3 id="5-软件下载"><a href="#5-软件下载" class="headerlink" title="5) 软件下载"></a>5) 软件下载</h3><p>最好是到该软件官网下载，校验MD5值，避免出现捆马现象。<br>校验方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certutil -hashfile 文件名 MD5</span><br></pre></td></tr></table></figure></p>
+<p><img src="/image/安全鸡/文件md5.png" alt="文件md5"></p>
+<h3 id="6-软件更新"><a href="#6-软件更新" class="headerlink" title="6) 软件更新"></a>6) 软件更新</h3><p>弹出更新框，关掉，去官网下载新版进行安装。</p>
+<h3 id="7-数据备份"><a href="#7-数据备份" class="headerlink" title="7) 数据备份"></a>7) 数据备份</h3><ul>
+<li>个人电脑上的重要数据要定期备份到服务器或移动硬盘</li>
+<li>备份时注意数据要加密，建议使用加密盘，备份整个加密盘原始文件</li>
+</ul>
+<h3 id="8-邮箱"><a href="#8-邮箱" class="headerlink" title="8) 邮箱"></a>8) 邮箱</h3><p>工作邮箱文件及时删除（前提是备份好文件）</p>
+<h3 id="9-桌面安全"><a href="#9-桌面安全" class="headerlink" title="9) 桌面安全"></a>9) 桌面安全</h3><p>同事之间工作内容、工作性质不同，有权知晓的信息内容、信息密级也有所不同。离开电脑时记得锁屏，快捷键为<code>Win+L</code><br>桌面文件不可以存在敏感文件，敏感文件需要放在加密盘</p>
+<h2 id="0x03-网络"><a href="#0x03-网络" class="headerlink" title="0x03 网络"></a>0x03 网络</h2><p>物理机脱网处理，虚拟机使用桥接模式，接入不同网卡 –&gt; 网线。</p>
+<p>加密盘放在物理机内，整盘加密或者部分文件加密都是选择对象。</p>
+<p>文本文件处理都在隔断网络的物理机上，毕竟各种钓鱼。</p>
+<h3 id="1-WIFI安全"><a href="#1-WIFI安全" class="headerlink" title="1) WIFI安全"></a>1) WIFI安全</h3><p>只能说，不是自己的WIFI就不要连接，毕竟、毕竟、毕竟只要是 WIFI 名字相同就能随意连接的年代，有点慌。<br>建议：</p>
+<ul>
+<li>日常不用 WIFI 时关闭手机和笔记本的无线局域网功能，以防止自动连接恶意 WIFI   ；</li>
+<li>当手机或笔记本连接上 WIFI 后，留意连接到的 WIFI 热点名称</li>
+</ul>
+<h3 id="3-强制通过VPN上网-VPN断线就断网"><a href="#3-强制通过VPN上网-VPN断线就断网" class="headerlink" title="3) 强制通过VPN上网,VPN断线就断网"></a>3) 强制通过VPN上网,VPN断线就断网</h3><p>部分工作机是需要这样的机制，至于为什么，嗯。</p>
+<p><a href="https://www.t00ls.net/thread-38739-1-1.html" target="_blank" rel="noopener">https://www.t00ls.net/thread-38739-1-1.html</a><br><a href="https://www.t00ls.net/viewthread.php?tid=38860&amp;extra=&amp;page=1" target="_blank" rel="noopener">https://www.t00ls.net/viewthread.php?tid=38860&amp;extra=&amp;page=1</a></p>
+<div class="note danger"><p>待续…</p>
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>！坚持技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechatpay.jpg" alt="RcoIl WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      RcoIl
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://rcoil.me/2017/07/安全鸡/" title="安全鸡">https://rcoil.me/2017/07/安全鸡/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/系统安全/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> 系统安全</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/内网渗透/" rel="next" title="内网渗透归纳（持续更新）">
+                <i class="fa fa-chevron-left"></i> 内网渗透归纳（持续更新）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/内网存活扫描/" rel="prev" title="内网存活扫描">
+                内网存活扫描 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODE5NS80NzY4"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="RcoIl">
+          <p class="site-author-name" itemprop="name">RcoIl</p>
+           
+              <p class="site-description motion-element" itemprop="description">好吃懒做，还有就是皮肤比黄皮果还黄！</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RcoIl" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=rcoil@qq.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-fa fa-envelope-open"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+		
+		
+		<div id="days"></div>
+		<script language="javascript">
+			function show_date_time(){
+				window.setTimeout("show_date_time()", 1000);
+				BirthDay=new Date("09/01/2016 10:13:14");
+				today=new Date();
+				timeold=(today.getTime()-BirthDay.getTime());
+				sectimeold=timeold/1000
+				secondsold=Math.floor(sectimeold);
+				msPerDay=24*60*60*1000
+				e_daysold=timeold/msPerDay
+				daysold=Math.floor(e_daysold);
+				e_hrsold=(e_daysold-daysold)*24;
+				hrsold=setzero(Math.floor(e_hrsold));
+				e_minsold=(e_hrsold-hrsold)*60;
+				minsold=setzero(Math.floor((e_hrsold-hrsold)*60));
+				seconds=setzero(Math.floor((e_minsold-minsold)*60));
+				document.getElementById('days').innerHTML="已运行 "+daysold+" 天 "+hrsold+" 小时 "+minsold+" 分";
+			}
+			function setzero(i){
+				if (i<10)
+				{i="0" + i};
+				return i;
+			}		
+			show_date_time();
+		</script>
+		
+		
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://isron.cn/" title="Isron" target="_blank">Isron</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hacktech.cn/" title="Akkuman" target="_blank">Akkuman</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.163.com/passw0a_d/" title="rootrain" target="_blank">rootrain</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://kerlinglovsec.lofter.com/" title="kerling" target="_blank">kerling</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.luolikong.vip/" title="Fire-ant" target="_blank">Fire-ant</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xnianq.cn/" title="xniang" target="_blank">xniang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://thief.one/" title="nMask" target="_blank">nMask</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://cate4cafe.com/" title="cate4cafe" target="_blank">cate4cafe</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ansbase5.org/" title="心的开始" target="_blank">心的开始</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://klionsec.github.io/" title="klion" target="_blank">klion</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hone.cool/" title="Hone" target="_blank">Hone</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://evi1cg.me/" title="Evi1cg" target="_blank">Evi1cg</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00-前言"><span class="nav-number">1.</span> <span class="nav-text">0x00 前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-个人电脑"><span class="nav-number">2.</span> <span class="nav-text">0x01 个人电脑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-时间同步"><span class="nav-number">2.1.</span> <span class="nav-text">1) 时间同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-win7关闭同步中心"><span class="nav-number">2.2.</span> <span class="nav-text">2) win7关闭同步中心</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-update"><span class="nav-number">2.3.</span> <span class="nav-text">3) update</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-打印机"><span class="nav-number">2.4.</span> <span class="nav-text">4) 打印机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-摄像头"><span class="nav-number">2.5.</span> <span class="nav-text">5) 摄像头</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-麦克风"><span class="nav-number">2.6.</span> <span class="nav-text">6) 麦克风</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-USB自动读取"><span class="nav-number">2.7.</span> <span class="nav-text">7) USB自动读取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-小娜（windows-10）"><span class="nav-number">2.8.</span> <span class="nav-text">8) 小娜（windows 10）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-个人意识"><span class="nav-number">3.</span> <span class="nav-text">0x02 个人意识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-安全上网"><span class="nav-number">3.1.</span> <span class="nav-text">1) 安全上网</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-密码分级"><span class="nav-number">3.2.</span> <span class="nav-text">2) 密码分级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-文件删除"><span class="nav-number">3.3.</span> <span class="nav-text">3) 文件删除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-文件加密存储"><span class="nav-number">3.4.</span> <span class="nav-text">4) 文件加密存储</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-软件下载"><span class="nav-number">3.5.</span> <span class="nav-text">5) 软件下载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-软件更新"><span class="nav-number">3.6.</span> <span class="nav-text">6) 软件更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-数据备份"><span class="nav-number">3.7.</span> <span class="nav-text">7) 数据备份</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-邮箱"><span class="nav-number">3.8.</span> <span class="nav-text">8) 邮箱</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-桌面安全"><span class="nav-number">3.9.</span> <span class="nav-text">9) 桌面安全</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-网络"><span class="nav-number">4.</span> <span class="nav-text">0x03 网络</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-WIFI安全"><span class="nav-number">4.1.</span> <span class="nav-text">1) WIFI安全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-强制通过VPN上网-VPN断线就断网"><span class="nav-number">4.2.</span> <span class="nav-text">3) 强制通过VPN上网,VPN断线就断网</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+<!--
+    <i class="fa fa-heart"></i>
+-->
+	<i class="fa fa-address-card-o" aria-hidden="true"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RcoIl</span>
+</div>
+<!--
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+-->
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-blind" aria-hidden="true"></i>本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-user-md" aria-hidden="true"></i>本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("KVNdpVifyFqJPx0bzSg6cN7z-gzGzoHsz", "vlNRwqLbdUTKC1W06gjYj0iG");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
