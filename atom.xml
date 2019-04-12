@@ -177,9 +177,9 @@
       <category term="编程之道" scheme="https://rcoil.me/categories/%E7%BC%96%E7%A8%8B%E4%B9%8B%E9%81%93/"/>
     
     
-      <category term="C#" scheme="https://rcoil.me/tags/C/"/>
-    
       <category term="Tools" scheme="https://rcoil.me/tags/Tools/"/>
+    
+      <category term="C#" scheme="https://rcoil.me/tags/C/"/>
     
       <category term="域渗透" scheme="https://rcoil.me/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/"/>
     
@@ -365,9 +365,9 @@
       <category term="Web安全" scheme="https://rcoil.me/categories/Web%E5%AE%89%E5%85%A8/"/>
     
     
-      <category term="Web安全" scheme="https://rcoil.me/tags/Web%E5%AE%89%E5%85%A8/"/>
-    
       <category term="PHP" scheme="https://rcoil.me/tags/PHP/"/>
+    
+      <category term="Web安全" scheme="https://rcoil.me/tags/Web%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   

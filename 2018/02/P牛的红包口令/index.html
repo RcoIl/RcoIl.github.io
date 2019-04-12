@@ -89,7 +89,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-  <meta name="keywords" content="Web安全,PHP,">
+  <meta name="keywords" content="PHP,Web安全,">
 
 
 
@@ -108,7 +108,7 @@
 
 
 <meta name="description" content="这个口令红包没领成。">
-<meta name="keywords" content="Web安全,PHP">
+<meta name="keywords" content="PHP,Web安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="P牛的红包口令">
 <meta property="og:url" content="https://rcoil.me/2018/02/P牛的红包口令/index.html">
@@ -558,9 +558,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Web安全/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> Web安全</a>
-          
             <a href="/tags/PHP/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> PHP</a>
+          
+            <a href="/tags/Web安全/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> Web安全</a>
           
         </div>
       
@@ -723,8 +723,9 @@
         
 		
 		
-		<div id="days"></div>
-		<script language="javascript">
+          <div class="feed-link motion-element">
+            <div id="days"></div>
+			<script language="javascript">
 			function show_date_time(){
 				window.setTimeout("show_date_time()", 1000);
 				BirthDay=new Date("09/01/2016 10:13:14");
@@ -740,7 +741,7 @@
 				e_minsold=(e_hrsold-hrsold)*60;
 				minsold=setzero(Math.floor((e_hrsold-hrsold)*60));
 				seconds=setzero(Math.floor((e_minsold-minsold)*60));
-				document.getElementById('days').innerHTML="已运行 "+daysold+" 天 "+hrsold+" 小时 "+minsold+" 分";
+				document.getElementById('days').innerHTML="本站已运行 "+daysold+" 天 "+hrsold+" 小时 "+minsold+" 分"+ seconds +" 秒";
 			}
 			function setzero(i){
 				if (i<10)
@@ -749,8 +750,8 @@
 			}		
 			show_date_time();
 		</script>
-		
-		
+        </div>
+        
 
         
         
@@ -794,7 +795,7 @@
                 </li>
               
                 <li class="links-of-blogroll-item">
-                  <a href="http://www.ansbase5.org/" title="心的开始" target="_blank">心的开始</a>
+                  <a href="http://52stu.me/" title="心的开始" target="_blank">心的开始</a>
                 </li>
               
                 <li class="links-of-blogroll-item">
