@@ -173,8 +173,8 @@
         <category>Web安全</category>
       </categories>
       <tags>
-        <tag>PHP</tag>
         <tag>Web安全</tag>
+        <tag>PHP</tag>
       </tags>
   </entry>
   <entry>
@@ -263,9 +263,9 @@
         <category>内网渗透</category>
       </categories>
       <tags>
+        <tag>Web安全</tag>
         <tag>内网</tag>
         <tag>系统安全</tag>
-        <tag>Web安全</tag>
         <tag>后门</tag>
       </tags>
   </entry>
@@ -302,8 +302,8 @@
         <category>编程之道</category>
       </categories>
       <tags>
-        <tag>PHP</tag>
         <tag>Web安全</tag>
+        <tag>PHP</tag>
       </tags>
   </entry>
   <entry>
