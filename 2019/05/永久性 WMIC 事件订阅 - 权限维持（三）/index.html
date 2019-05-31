@@ -107,20 +107,20 @@
 
 
 
-<meta name="description" content="与之前的文章不同，这个操作需要管理员权限。">
+<meta name="description" content="本文是针对Windows常见持久控制的第三次说明。 与之前的文章不同，这个操作需要管理员权限。">
 <meta name="keywords" content="权限维持">
 <meta property="og:type" content="article">
 <meta property="og:title" content="永久性 WMIC 事件订阅 - 权限维持（三）">
 <meta property="og:url" content="https://rcoil.me/2019/05/永久性 WMIC 事件订阅 - 权限维持（三）/index.html">
 <meta property="og:site_name" content="RcoIl的窝">
-<meta property="og:description" content="与之前的文章不同，这个操作需要管理员权限。">
+<meta property="og:description" content="本文是针对Windows常见持久控制的第三次说明。 与之前的文章不同，这个操作需要管理员权限。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://rcoil.me/image/永久性%20WMIC%20事件订阅%20-%20权限维持（三）/blog_2019-05-30_11-42-33.png">
 <meta property="og:image" content="https://rcoil.me/image/永久性%20WMIC%20事件订阅%20-%20权限维持（三）/blog_2019-05-29_11-42-33.gif">
-<meta property="og:updated_time" content="2019-04-16T01:31:52.987Z">
+<meta property="og:updated_time" content="2019-05-31T08:10:54.727Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="永久性 WMIC 事件订阅 - 权限维持（三）">
-<meta name="twitter:description" content="与之前的文章不同，这个操作需要管理员权限。">
+<meta name="twitter:description" content="本文是针对Windows常见持久控制的第三次说明。 与之前的文章不同，这个操作需要管理员权限。">
 <meta name="twitter:image" content="https://rcoil.me/image/永久性%20WMIC%20事件订阅%20-%20权限维持（三）/blog_2019-05-30_11-42-33.png">
 
 
@@ -445,11 +445,14 @@
       
 
       
-        <p>与之前的文章不同，这个操作需要管理员权限。<br><a id="more"></a></p>
+        <p>本文是针对<a href="https://github.com/RcoIl/Mind-Map/blob/master/Windows%E5%B8%B8%E8%A7%81%E6%8C%81%E4%B9%85%E6%8E%A7%E5%88%B6.png" target="_blank" rel="noopener">Windows常见持久控制</a>的第三次说明。</p>
+<p>与之前的文章不同，这个操作需要管理员权限。</p>
+<a id="more"></a>
 <h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p>在日常中，使用 <code>WMI</code> 都是用于信息的收集，如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">wmic qfe list #获取补丁信息</span><br><span class="line">wmic startup list brief # 启动的程序</span><br><span class="line">wmic startup list full # 自启动的程序</span><br><span class="line">wmic process call create &quot;calc.exe&quot; # 在当前机器中执行指定程序</span><br><span class="line">wmic process where name=&apos;*.exe&apos; list full   #查询某个进程所对应某个具体的可执行程序是什么</span><br><span class="line">wmic process where(description=&quot;rundll32.exe&quot;) # 查看rundll32所加载的dll</span><br><span class="line">wmic cpu get DataWidth /format:list # 查询当前机器的操作系统位数</span><br><span class="line">wmic share  get name,path,status  #利用wmic查找共享</span><br><span class="line">wmic logicaldisk where drivetype=3 get name,freespace,systemname,filesystem,volumeserialnumber,size #查看分区</span><br></pre></td></tr></table></figure>
 <p>但其实它的功能还有很多，比如：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">防病毒检测</span><br><span class="line">代码执行</span><br><span class="line">横向移动</span><br><span class="line">持久化</span><br><span class="line">盗取数据</span><br></pre></td></tr></table></figure>
+<p>这里就针对持久化进行说明 。</p>
 <h2 id="0x01-查询-WMI"><a href="#0x01-查询-WMI" class="headerlink" title="0x01 查询 WMI"></a>0x01 查询 WMI</h2><p><code>WMI</code> 提供了一种非常直观的语法用来查询WMI对象的实例，类和命名空间，即 <code>WQL</code> （类似 SQL的查询语言）。WQL查询通常可以分为以下几类：</p>
 <ul>
 <li>Instance Queries（实例查询）：查询WMI对象实例。</li>
@@ -591,8 +594,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/05/通过编程实现的本地机器信息收集/" rel="next" title="通过编程实现的本地机器信息收集">
-                <i class="fa fa-chevron-left"></i> 通过编程实现的本地机器信息收集
+              <a href="/2019/05/Microsoft Office - 权限维持（一）/" rel="next" title="Microsoft Office - 权限维持（一）">
+                <i class="fa fa-chevron-left"></i> Microsoft Office - 权限维持（一）
               </a>
             
           </div>
@@ -670,7 +673,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">33</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
