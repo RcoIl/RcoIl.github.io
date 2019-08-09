@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://rcoil.me/"/>
-  <updated>2019-06-18T11:23:42.902Z</updated>
+  <updated>2019-08-09T02:38:53.963Z</updated>
   <id>https://rcoil.me/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>深入了解 PsExec [知识回顾]</title>
+    <link href="https://rcoil.me/2019/08/%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%20PsExec/"/>
+    <id>https://rcoil.me/2019/08/深入了解 PsExec/</id>
+    <published>2019-08-08T06:37:56.000Z</published>
+    <updated>2019-08-09T02:38:53.963Z</updated>
+    
+    <content type="html"><![CDATA[<p>这个<strong>[ 知识回顾 ]</strong>系列文章，整合记录的是在掌握知识点中，所忽略的点、涉及的原理等；</p><a id="more"></a><h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p>这篇文章将解释 <code>PsExec</code> 的使用条件、原理及背景知识。但不包括 <code>PsExec</code> 在通信时主要用到了 <code>SMB</code> 这个应用层协议（ <code>SMB</code>协商过程），想了解的请看 参考-1-2。</p><h2 id="0x01-什么是-PsExec"><a href="#0x01-什么是-PsExec" class="headerlink" title="0x01 什么是 PsExec"></a>0x01 什么是 <code>PsExec</code></h2><p><code>PsExec</code> 是由 <code>Mark Russinovich</code> 创建的 <a href="https://docs.microsoft.com/en-us/sysinternals/downloads/sysinternals-suite" target="_blank" rel="noopener">Sysinternals Suite</a> 中包含的工具。最初，它旨在作为系统管理员的便利工具，以便他们可以通过在远程主机上运行命令来执行维护任务。<code>PsExec</code> 可以算是一个轻量级的 telnet 替代工具，它使您无需手动安装客户端软件即可执行其他系统上的进程，并且可以获得与命令控制台几乎相同的实时交互性。PsExec最强大的功能就是在远程系统和远程支持工具（如 ipconfig、whoami）中启动交互式命令提示窗口，以便显示无法通过其他方式显示的有关远程系统的信息。</p><h2 id="0x02-工作原理"><a href="#0x02-工作原理" class="headerlink" title="0x02 工作原理"></a>0x02 工作原理</h2><p>通过提供目标主机的地址，有效用户和密码，就可以远程控制计算机。</p><p><img src="/image/深入了解 PsExec/Snipaste_2019-08-08_10-45-55.png" alt=""></p><p>它的背后到底发生了些什么，我们来看看：</p><ul><li>将 <code>PSEXESVC.exe</code> 上传到 <code>ADMIN$</code> （指向 <code>/admin$/system32/PSEXESVC.EXE</code>）共享文件夹内；</li><li>远程创建用于运行 <code>PSEXESVC.exe</code> 的服务；</li><li>远程启动服务。</li></ul><p><code>PSEXESVC</code> 服务充当一个重定向器（包装器）。它在远程系统上运行指定的可执行文件（事例中的是 <code>cmd.exe</code>）。同时，它通过主机之间来重定向进程的输入/输出（利用命名管道）。</p><p><img src="/image/深入了解 PsExec/blog_2019-08-09_09-39-29.png" alt=""></p><h2 id="0x03-详细过程"><a href="#0x03-详细过程" class="headerlink" title="0x03 详细过程"></a>0x03 详细过程</h2><ul><li>使用提供的凭证，通过 <code>SMB 会话</code> 进行身份验证。</li><li>通过 <code>SMB</code> 访问默认共享文件夹 <code>ADMIN$</code>，并上载 <code>PSEXESVC.exe</code>；</li><li><p><img src="/image/深入了解 PsExec/Snipaste_2019-08-08_15-14-16.png" alt=""></p></li><li><p>打开 <code>\\RDC\pipe\svcctl</code> 的句柄，与<code>服务控制管理器（SCM）</code>进行通信，这使得我们能够远程创建/启动服务。此时使用的是 <code>SVCCTL</code> 服务，通过对 <code>SVCCTL服务</code> 的 <code>DCE/RPC</code> 调用来启动 <code>PsExec</code>;</p></li><li>使用上传的 <code>PSEXESVC.exe</code> 作为服务二进制文件，调用 <code>CreateService 函数</code>；</li><li>调用 <code>StartServices 函数</code>；</li><li><img src="/image/深入了解 PsExec/Snipaste_2019-08-08_15-25-29.png" alt=""></li><li><p><img src="/image/深入了解 PsExec/Snipaste_2019-08-08_15-28-25.png" alt=""></p></li><li><p>正如下面的 <code>Wireshark</code> 所捕获到的数据，它是创建了命名管道来重定向 stdin（输入）、stdout（输出）、stderr（输出）。</p></li><li><img src="/image/深入了解 PsExec/Snipaste_2019-08-08_15-33-49.png" alt=""></li></ul><p>总共创建了4个命名管道，一个用于服务本身，另外的管道用于重定向进程的 stdin、stdout、stderr。</p><p><img src="/image/深入了解 PsExec/Snipaste_2019-08-08_15-47-34.png" alt=""></p><h2 id="0x04-使用-PsExec-的最低要求"><a href="#0x04-使用-PsExec-的最低要求" class="headerlink" title="0x04 使用 PsExec 的最低要求"></a>0x04 使用 PsExec 的最低要求</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1、远程机器的 139 或 445 端口需要开启状态，即 SMB；</span><br><span class="line">2、明文密码或者 NTLM 哈希；</span><br><span class="line">3、具备将文件写入共享文件夹的权限；</span><br><span class="line">4、能够在远程机器上创建服务：SC_MANAGER_CREATE_SERVICE (访问掩码：0x0002)；</span><br><span class="line">5、能够启动所创建的服务：SERVICE_QUERY_STATUS（访问掩码：0x0004）+ SERVICE_START（访问掩码：0x0010）</span><br></pre></td></tr></table></figure><p><strong>注意</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">NTLM != NTLM v1/v2 ；</span><br><span class="line">NTFS 权限 != 共享权限；</span><br><span class="line">如果使用的是 Sysinternal 的 PsExec，它是会将 PSEXESVC.exe 复制到 ADMIN$，因此是具备访问它的权限；</span><br><span class="line">PSEXESVC 服务将会安装在远程系统中，此时将会生成 Event 4697、7045 这2种事件日志；</span><br><span class="line">PsExec 2.1版本之后，不再是明文传输。</span><br></pre></td></tr></table></figure><p>在多数情况下，即使账号出现泄漏情况，使用 <code>PsExec</code>， 也无法完成第4和第5点的要求，因为账号不是特权账号（RID500、域管理员）。</p><h2 id="0x05-其他"><a href="#0x05-其他" class="headerlink" title="0x05 其他"></a>0x05 其他</h2><p>日志分析：略</p><h2 id="0x06-参考"><a href="#0x06-参考" class="headerlink" title="0x06 参考"></a>0x06 参考</h2><p>1、<a href="https://bbs.pediy.com/thread-223721.htm" target="_blank" rel="noopener">[翻译] 网络安全分析之 SMB 协议</a><br>2、<a href="http://zone.secbug.net/content/2230.html" target="_blank" rel="noopener">[使用Hash直接登录Windows]简单分析</a><br>3、<a href="https://www.anquanke.com/post/id/84921" target="_blank" rel="noopener">[技术分享] 深入分析PsExec执行行为</a></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;这个&lt;strong&gt;[ 知识回顾 ]&lt;/strong&gt;系列文章，整合记录的是在掌握知识点中，所忽略的点、涉及的原理等；&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="内网渗透" scheme="https://rcoil.me/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/"/>
+    
+    
+      <category term="内网" scheme="https://rcoil.me/tags/%E5%86%85%E7%BD%91/"/>
+    
+      <category term="系统安全" scheme="https://rcoil.me/tags/%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/"/>
+    
+  </entry>
   
   <entry>
     <title>【域渗透】 SPN 扫描利用</title>
@@ -272,9 +296,9 @@
       <category term="编程之道" scheme="https://rcoil.me/categories/%E7%BC%96%E7%A8%8B%E4%B9%8B%E9%81%93/"/>
     
     
-      <category term="C#" scheme="https://rcoil.me/tags/C/"/>
-    
       <category term="Tools" scheme="https://rcoil.me/tags/Tools/"/>
+    
+      <category term="C#" scheme="https://rcoil.me/tags/C/"/>
     
       <category term="域渗透" scheme="https://rcoil.me/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/"/>
     
@@ -392,9 +416,9 @@
       <category term="Tools" scheme="https://rcoil.me/categories/Tools/"/>
     
     
-      <category term="内网渗透" scheme="https://rcoil.me/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/"/>
-    
       <category term="Tools" scheme="https://rcoil.me/tags/Tools/"/>
+    
+      <category term="内网渗透" scheme="https://rcoil.me/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/"/>
     
   </entry>
   
@@ -460,31 +484,9 @@
       <category term="Web安全" scheme="https://rcoil.me/categories/Web%E5%AE%89%E5%85%A8/"/>
     
     
-      <category term="PHP" scheme="https://rcoil.me/tags/PHP/"/>
-    
       <category term="Web安全" scheme="https://rcoil.me/tags/Web%E5%AE%89%E5%85%A8/"/>
     
-  </entry>
-  
-  <entry>
-    <title>编码转换工具 （C#入门）</title>
-    <link href="https://rcoil.me/2018/01/%E7%BC%96%E7%A0%81%E8%BD%AC%E6%8D%A2%E5%B7%A5%E5%85%B7/"/>
-    <id>https://rcoil.me/2018/01/编码转换工具/</id>
-    <published>2018-01-03T07:11:51.000Z</published>
-    <updated>2018-01-03T13:35:47.978Z</updated>
-    
-    <content type="html"><![CDATA[<p>一直想写一些图形化工具来用。从小入手，写了个计算器，看了下代码，有点麻瓜。</p><a id="more"></a><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">工具：编码转换工具</span><br><span class="line">编译：VS2015 C#(.NET Framework v4.0)</span><br></pre></td></tr></table></figure><p>先看一下效果图：</p><p><img src="/image/编码转换工具/2018-01-03_15-54-01.png" alt="2018-01-03_15-54-01"></p><p>其中有个bug，就是<code>ASCii</code>不归零，也不知道是怎么回事。</p><p>默认的<code>textBox</code>获取方式为<code>Encoding.Default.GetBytes(str)</code>，注意的是要使用<code>UTF8</code>，代码有些丑陋，就不贴了。</p><p>在写到<code>Base32</code>的时候，没找到现成的方法可以直接利用，所以就去了解了下、</p><p><code>Base32</code>是由<code>ABCDEFGHIJKLMNOPQRSTUVWXYZ234567</code>组成的,由于<code>0</code>和<code>1</code>由于与字母<code>O</code>和<code>I</code>相似性而被跳过。</p><p>规则：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">任意给定一个二进制数据，以5个位(bit)为一组进行切分(base64以6个位(bit)为一组)</span><br><span class="line">对切分而成的每个组进行编码得到1个可见字符。</span><br></pre></td></tr></table></figure><p>演示：（以<code>rcoil</code>字符串进行编码）</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">字符rcoil取ASCII码之后，对其转换成二进制（切5补0）得到</span><br><span class="line">01110,01001,10001,10110,11110,11010,01011,01100</span><br><span class="line">计算每组二进制对应的十进制，然后参考Base32编码表，组成密文</span><br></pre></td></tr></table></figure><p><img src="/image/编码转换工具/2018-01-03_17-51-05.png" alt="2018-01-03_17-51-05"></p><p>具体的算法就是这样，有了流程就可以写代码了。</p><p>后来找了找，能找到一些别人已经写好的类。<a href="https://stackoverflow.com/questions/641361/base32-decoding" target="_blank" rel="noopener">Base32 Decoding</a>，直接利用就可以了。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;一直想写一些图形化工具来用。从小入手，写了个计算器，看了下代码，有点麻瓜。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="编程之道" scheme="https://rcoil.me/categories/%E7%BC%96%E7%A8%8B%E4%B9%8B%E9%81%93/"/>
-    
-    
-      <category term="C#" scheme="https://rcoil.me/tags/C/"/>
+      <category term="PHP" scheme="https://rcoil.me/tags/PHP/"/>
     
   </entry>
   
