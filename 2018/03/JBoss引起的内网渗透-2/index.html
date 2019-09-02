@@ -457,11 +457,11 @@
 <h2 id="切入点"><a href="#切入点" class="headerlink" title="切入点"></a>切入点</h2><p>Jboss的反序列化漏洞，接下来看站点信息</p>
 <p><img src="/image/JBoss引起的内网渗透-2/jboss-admin-console.png" alt=""></p>
 <p>正常来说这个<code>admin-console</code>及<code>web-console/</code>都是能正常访问的，就算不能正常访问也不会是<code>404状态</code> ，所以为了搞清楚原因，去翻了其目录，进行对比。发现</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">server\default\deploy  #默认部署war目录</span><br><span class="line">server\web\deploy  # 部署war相对应的编译生成目录</span><br></pre></td></tr></table></figure>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">server</span>\<span class="keyword">default</span>\deploy  <span class="meta">#默认部署war目录</span></span><br><span class="line"><span class="keyword">server</span>\web\deploy  <span class="meta"># 部署war相对应的编译生成目录</span></span><br></pre></td></tr></table></figure>
 <p>两个目录中，在<code>\web\deploy\</code>中缺少了<code>admin-console</code>和<code>web-console</code>，所以原因是：管理员在安装了<code>JBoss后</code>，为了安全起见，就在<code>server\web\deploy</code>删除了<code>admin-console.war</code>和<code>web-console.war</code>，所以在部署目录下是存在war包，但是编译目录下是不存在的。</p>
 <p>所以接下来就进行常规的war部署，发现war已经上传上去了，但是访问出现404，所以跑去<code>server\web\deploy</code>查看，发现是没有生成相对应的文件夹，原因暂时未知。</p>
 <p>所以就直接将jsp脚本上传到了<code>jmx-console.war</code>当中，成功获取<code>WebShell</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">server\default\deploy\jmx-console.war\  # 上传访问失败</span><br><span class="line">server\web\deploy\jmx-console.war\  # 上传访问成功</span><br></pre></td></tr></table></figure>
+<figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">server<span class="symbol">\d</span>efault<span class="symbol">\d</span>eploy<span class="symbol">\j</span>mx-console.war<span class="symbol">\ </span> # 上传访问失败</span><br><span class="line">server<span class="symbol">\w</span>eb<span class="symbol">\d</span>eploy<span class="symbol">\j</span>mx-console.war<span class="symbol">\ </span> # 上传访问成功</span><br></pre></td></tr></table></figure>
 <p><img src="/image/JBoss引起的内网渗透-2/jboss-webshell.png" alt=""></p>
 <h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>接下来又是常规的信息收集</p>
 <p>发现在菜刀里面执行命令，多数都是超时状态，所以还是回到之前的工具进行执行或是上传个命令执行马或是用web访问马。</p>
@@ -470,10 +470,10 @@
 <p><img src="/image/JBoss引起的内网渗透-2/jboss-systeminfo.png" alt=""></p>
 <p>进程里面是存在<code>avguard.exe</code>，所以需要做免杀。系统是windows xp-x86。</p>
 <p>在查看环境变量的时候发现是存在<code>powershell</code>的,但是没起作用。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">net user #查看本机用户</span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line">Administrator            Guest                    HelpAssistant            </span><br><span class="line">postgres                 saverio                  SUPPORT_388945a0   </span><br><span class="line"></span><br><span class="line">net group &quot;domain admins&quot; /domain  #查看域管理员</span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line">Administrator            bckagent                 dbagent                  </span><br><span class="line">faxmaker                 idsmessina               lattuca                  </span><br><span class="line">SpaceGuardSvcAccnt       trovato                  VMwareVDPBackupUser      </span><br><span class="line"></span><br><span class="line">net group &quot;domain controllers&quot; /domain  #查看域控制器</span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line">DOMAIN1$                 DOMAIN2$    </span><br><span class="line"></span><br><span class="line">域用户就不列举了，实在有些多</span><br></pre></td></tr></table></figure>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">net<span class="built_in"> user </span>#查看本机用户</span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line">Administrator            Guest                    HelpAssistant            </span><br><span class="line">postgres                 saverio                  SUPPORT_388945a0   </span><br><span class="line"></span><br><span class="line">net<span class="built_in"> group </span><span class="string">"domain admins"</span> /domain  #查看域管理员</span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line">Administrator            bckagent                 dbagent                  </span><br><span class="line">faxmaker                 idsmessina               lattuca                  </span><br><span class="line">SpaceGuardSvcAccnt       trovato                  VMwareVDPBackupUser      </span><br><span class="line"></span><br><span class="line">net<span class="built_in"> group </span><span class="string">"domain controllers"</span> /domain  #查看域控制器</span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line">DOMAIN1$                 DOMAIN2$    </span><br><span class="line"></span><br><span class="line">域用户就不列举了，实在有些多</span><br></pre></td></tr></table></figure>
 <p>信息收集到这里，就有些蹊跷，因为本机用户里面，除了<code>Administrator</code>存在于域用户中，其余的账户均不见，所以这里能直接判断<code>Administrator</code>就是域管理员。</p>
 <p>综合以上信息：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DOMAIN2 - 192.168.20.10 # 域控制器</span><br><span class="line">PROTRIBUTCT -Administrator # 域管理员</span><br><span class="line">avguard.exe # 小红伞杀软</span><br><span class="line">powershell # 不可用</span><br></pre></td></tr></table></figure>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">DOMAIN2</span> - <span class="number">192.168.20.10</span> <span class="comment"># 域控制器</span></span><br><span class="line">PROTRIBUTCT -Administrator <span class="comment"># 域管理员</span></span><br><span class="line">avguard.exe <span class="comment"># 小红伞杀软</span></span><br><span class="line">powershell <span class="comment"># 不可用</span></span><br></pre></td></tr></table></figure>
 <h2 id="小小免杀"><a href="#小小免杀" class="headerlink" title="小小免杀"></a>小小免杀</h2><p>续上次的<code>shellter</code>免杀，是过不了小红伞的，所以，这种时候，该储备的东西就起作用了。</p>
 <p><img src="/image/JBoss引起的内网渗透-2/jboss-2.png" alt=""></p>
 <p>生成一个Metasploit的马，去<code>Virustotal</code>做测试免杀，是过了AVG的，所以尝试一波。但是，生成的exe在windows 7下面是能正常执行的，但是到了xp上面就不行了。</p>
@@ -523,7 +523,7 @@
         
   <ul class="post-copyright">
     <li class="post-copyright-author">
-      <strong>本文作者：</strong>
+      <strong>嘤嘤怪：</strong>
       RcoIl
     </li>
     <li class="post-copyright-link">
@@ -640,7 +640,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-count">36</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -662,7 +662,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

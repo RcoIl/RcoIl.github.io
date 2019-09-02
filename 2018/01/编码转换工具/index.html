@@ -447,7 +447,7 @@
       
         <p>一直想写一些图形化工具来用。从小入手，写了个计算器，看了下代码，有点麻瓜。</p>
 <a id="more"></a>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">工具：编码转换工具</span><br><span class="line">编译：VS2015 C#(.NET Framework v4.0)</span><br></pre></td></tr></table></figure>
+<figure class="highlight leaf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">工具：编码转换工具</span><br><span class="line">编译：VS2015 C<span class="function"><span class="keyword">#</span><span class="params">(.<span class="variable">NET</span> <span class="variable">Framework</span> <span class="variable">v4</span>.0)</span></span></span><br></pre></td></tr></table></figure>
 <p>先看一下效果图：</p>
 <p><img src="/image/编码转换工具/2018-01-03_15-54-01.png" alt="2018-01-03_15-54-01"></p>
 <p>其中有个bug，就是<code>ASCii</code>不归零，也不知道是怎么回事。</p>
@@ -455,9 +455,9 @@
 <p>在写到<code>Base32</code>的时候，没找到现成的方法可以直接利用，所以就去了解了下、</p>
 <p><code>Base32</code>是由<code>ABCDEFGHIJKLMNOPQRSTUVWXYZ234567</code>组成的,由于<code>0</code>和<code>1</code>由于与字母<code>O</code>和<code>I</code>相似性而被跳过。</p>
 <p>规则：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">任意给定一个二进制数据，以5个位(bit)为一组进行切分(base64以6个位(bit)为一组)</span><br><span class="line">对切分而成的每个组进行编码得到1个可见字符。</span><br></pre></td></tr></table></figure>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">任意给定一个二进制数据，以<span class="number">5</span>个位(bit)为一组进行切分(base64以<span class="number">6</span>个位(bit)为一组)</span><br><span class="line">对切分而成的每个组进行编码得到<span class="number">1</span>个可见字符。</span><br></pre></td></tr></table></figure>
 <p>演示：（以<code>rcoil</code>字符串进行编码）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">字符rcoil取ASCII码之后，对其转换成二进制（切5补0）得到</span><br><span class="line">01110,01001,10001,10110,11110,11010,01011,01100</span><br><span class="line">计算每组二进制对应的十进制，然后参考Base32编码表，组成密文</span><br></pre></td></tr></table></figure>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">字符rcoil取ASCII码之后，对其转换成二进制（切<span class="number">5</span>补<span class="number">0</span>）得到</span><br><span class="line"><span class="number">01110</span>,<span class="number">01001</span>,<span class="number">10001</span>,<span class="number">10110</span>,<span class="number">11110</span>,<span class="number">11010</span>,<span class="number">01011</span>,<span class="number">01100</span></span><br><span class="line">计算每组二进制对应的十进制，然后参考Base32编码表，组成密文</span><br></pre></td></tr></table></figure>
 <p><img src="/image/编码转换工具/2018-01-03_17-51-05.png" alt="2018-01-03_17-51-05"></p>
 <p>具体的算法就是这样，有了流程就可以写代码了。</p>
 <p>后来找了找，能找到一些别人已经写好的类。<a href="https://stackoverflow.com/questions/641361/base32-decoding" target="_blank" rel="noopener">Base32 Decoding</a>，直接利用就可以了。</p>
@@ -500,7 +500,7 @@
         
   <ul class="post-copyright">
     <li class="post-copyright-author">
-      <strong>本文作者：</strong>
+      <strong>嘤嘤怪：</strong>
       RcoIl
     </li>
     <li class="post-copyright-link">
@@ -608,7 +608,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-count">36</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -630,7 +630,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

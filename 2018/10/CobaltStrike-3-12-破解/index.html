@@ -449,7 +449,7 @@
 <p>校验：<a href="https://verify.cobaltstrike.com/" target="_blank" rel="noopener">https://verify.cobaltstrike.com/</a></p>
 <p>xor.bin：<a href="https://github.com/verctor/CS_xor64" target="_blank" rel="noopener">https://github.com/verctor/CS_xor64</a></p>
 <p>破解记录</p>
-<h2 id="0x01-文件文件位置"><a href="#0x01-文件文件位置" class="headerlink" title="0x01 文件文件位置"></a>0x01 文件文件位置</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">common/License.class  # 修改时间及提示框</span><br><span class="line">common/ArtifactUtils.class  # 去除后门特征指纹</span><br><span class="line">server/ProfileEdits.class # 去除后门特征指纹</span><br><span class="line">aggressor/dialogs/ListenerDialog.class  # 去除listener个数限制</span><br><span class="line">aggressor/AggressorClient.class  # 标题栏修改</span><br><span class="line">resources/xor.bin  # 放入xor.bin文件</span><br><span class="line">resources/xor64.bin  # 放入xor.bin文件</span><br></pre></td></tr></table></figure>
+<h2 id="0x01-文件文件位置"><a href="#0x01-文件文件位置" class="headerlink" title="0x01 文件文件位置"></a>0x01 文件文件位置</h2><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">common/License.<span class="keyword">class</span>  <span class="meta"># 修改时间及提示框</span></span><br><span class="line">common/ArtifactUtils.<span class="keyword">class</span>  <span class="meta"># 去除后门特征指纹</span></span><br><span class="line">server/ProfileEdits.<span class="keyword">class</span> <span class="meta"># 去除后门特征指纹</span></span><br><span class="line">aggressor/dialogs/ListenerDialog.<span class="keyword">class</span>  <span class="meta"># 去除listener个数限制</span></span><br><span class="line">aggressor/AggressorClient.<span class="keyword">class</span>  <span class="meta"># 标题栏修改</span></span><br><span class="line">resources/<span class="keyword">xor</span>.bin  <span class="meta"># 放入xor.bin文件</span></span><br><span class="line">resources/xor64.bin  <span class="meta"># 放入xor.bin文件</span></span><br></pre></td></tr></table></figure>
 <h2 id="0x02-License-class"><a href="#0x02-License-class" class="headerlink" title="0x02 License.class"></a>0x02 License.class</h2><p>首先将cobaltstrike.jar以压缩包格式打开，复制License.class出来，然后运行<code>jad.exe License.class</code>，jad目录下就会生成<code>License.jad</code>，修改后缀为<code>Java</code>，即是源码文件了。</p>
 <p>这里将提供两种破解思路。</p>
 <ul>
@@ -466,7 +466,7 @@
 <h2 id="0x04-后门特征指纹"><a href="#0x04-后门特征指纹" class="headerlink" title="0x04 后门特征指纹"></a>0x04 后门特征指纹</h2><p>存在后门特征指纹的其中两个地方</p>
 <p>common/ArtifactUtils.class<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">packer.addString(<span class="string">"X5O!P%@AP[4\\PZX54(P^)7CC)7&#125;$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"</span>);</span><br></pre></td></tr></table></figure></p>
 <p>server/ProfileEdits.class<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">c2profile.addCommand(<span class="string">".http-get.server"</span>, <span class="string">"!header"</span>, <span class="string">"X-Malware: X5O!P%@AP[4\\PZX54(P^)7CC)7&#125;$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"</span>);</span><br><span class="line">c2profile.addCommand(<span class="string">".http-post.server"</span>, <span class="string">"!header"</span>, <span class="string">"X-Malware: X5O!P%@AP[4\\PZX54(P^)7CC)7&#125;$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"</span>);</span><br><span class="line">c2profile.addCommand(<span class="string">".http-stager.server"</span>, <span class="string">"!header"</span>, <span class="string">"X-Malware: X5O!P%@AP[4\\PZX54(P^)7CC)7&#125;$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"</span>);</span><br><span class="line">c2profile.addCommand(<span class="string">".stage.transform-x86"</span>, <span class="string">"append"</span>, <span class="string">"X5O!P%@AP[4\\PZX54(P^)7CC)7&#125;$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"</span>);</span><br><span class="line">c2profile.addCommand(<span class="string">".stage.transform-x64"</span>, <span class="string">"append"</span>, <span class="string">"X5O!P%@AP[4\\PZX54(P^)7CC)7&#125;$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"</span>);</span><br></pre></td></tr></table></figure></p>
-<h2 id="0x05-结果"><a href="#0x05-结果" class="headerlink" title="0x05 结果"></a>0x05 结果</h2><p>最后使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javac -classpath cobaltstrike.jar xxxx.java</span><br></pre></td></tr></table></figure></p>
+<h2 id="0x05-结果"><a href="#0x05-结果" class="headerlink" title="0x05 结果"></a>0x05 结果</h2><p>最后使用<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">javac</span> <span class="selector-tag">-classpath</span> <span class="selector-tag">cobaltstrike</span><span class="selector-class">.jar</span> <span class="selector-tag">xxxx</span><span class="selector-class">.java</span></span><br></pre></td></tr></table></figure></p>
 <p>进行编译<br><img src="/image/CobaltStrike-3-12-破解/Snipaste_2018-11-08_17-38-29.PNG" alt="Snipaste_2018-11-08_17-38-29"></p>
 <h2 id="0x06-参考"><a href="#0x06-参考" class="headerlink" title="0x06 参考"></a>0x06 参考</h2><p><a href="https://xz.aliyun.com/t/2170" target="_blank" rel="noopener">https://xz.aliyun.com/t/2170</a><br><a href="https://www.cnblogs.com/ssooking/p/9825917.html" target="_blank" rel="noopener">https://www.cnblogs.com/ssooking/p/9825917.html</a><br><a href="https://www.bilibili.com/video/av34171888/" target="_blank" rel="noopener">https://www.bilibili.com/video/av34171888/</a><br><a href="https://github.com/Lz1y/cobalt_strike_3.12_patch" target="_blank" rel="noopener">https://github.com/Lz1y/cobalt_strike_3.12_patch</a></p>
 
@@ -508,7 +508,7 @@
         
   <ul class="post-copyright">
     <li class="post-copyright-author">
-      <strong>本文作者：</strong>
+      <strong>嘤嘤怪：</strong>
       RcoIl
     </li>
     <li class="post-copyright-link">
@@ -625,7 +625,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-count">36</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -647,7 +647,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

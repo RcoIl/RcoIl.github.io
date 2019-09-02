@@ -482,9 +482,9 @@
 </ul>
 <p>总共创建了4个命名管道，一个用于服务本身，另外的管道用于重定向进程的 stdin、stdout、stderr。</p>
 <p><img src="/image/深入了解 PsExec/Snipaste_2019-08-08_15-47-34.png" alt=""></p>
-<h2 id="0x04-使用-PsExec-的最低要求"><a href="#0x04-使用-PsExec-的最低要求" class="headerlink" title="0x04 使用 PsExec 的最低要求"></a>0x04 使用 PsExec 的最低要求</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1、远程机器的 139 或 445 端口需要开启状态，即 SMB；</span><br><span class="line">2、明文密码或者 NTLM 哈希；</span><br><span class="line">3、具备将文件写入共享文件夹的权限；</span><br><span class="line">4、能够在远程机器上创建服务：SC_MANAGER_CREATE_SERVICE (访问掩码：0x0002)；</span><br><span class="line">5、能够启动所创建的服务：SERVICE_QUERY_STATUS（访问掩码：0x0004）+ SERVICE_START（访问掩码：0x0010）</span><br></pre></td></tr></table></figure>
+<h2 id="0x04-使用-PsExec-的最低要求"><a href="#0x04-使用-PsExec-的最低要求" class="headerlink" title="0x04 使用 PsExec 的最低要求"></a>0x04 使用 PsExec 的最低要求</h2><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>、远程机器的 <span class="number">139</span> 或 <span class="number">445</span> 端口需要开启状态，即 SMB；</span><br><span class="line"><span class="number">2</span>、明文密码或者 NTLM 哈希；</span><br><span class="line"><span class="number">3</span>、具备将文件写入共享文件夹的权限；</span><br><span class="line"><span class="number">4</span>、能够在远程机器上创建服务：SC_MANAGER_CREATE_SERVICE (访问掩码：<span class="number">0x0002</span>)；</span><br><span class="line"><span class="number">5</span>、能够启动所创建的服务：SERVICE_QUERY_STATUS（访问掩码：<span class="number">0x0004</span>）+ SERVICE_START（访问掩码：<span class="number">0x0010</span>）</span><br></pre></td></tr></table></figure>
 <p><strong>注意</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">NTLM != NTLM v1/v2 ；</span><br><span class="line">NTFS 权限 != 共享权限；</span><br><span class="line">如果使用的是 Sysinternal 的 PsExec，它是会将 PSEXESVC.exe 复制到 ADMIN$，因此是具备访问它的权限；</span><br><span class="line">PSEXESVC 服务将会安装在远程系统中，此时将会生成 Event 4697、7045 这2种事件日志；</span><br><span class="line">PsExec 2.1版本之后，不再是明文传输。</span><br></pre></td></tr></table></figure>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">NTLM != NTLM v1/v2 ；</span><br><span class="line">NTFS 权限 != 共享权限；</span><br><span class="line">如果使用的是 Sysinternal 的 PsExec，它是会将 PSEXESVC.exe 复制到 ADMIN$，因此是具备访问它的权限；</span><br><span class="line">PSEXESVC 服务将会安装在远程系统中，此时将会生成 Event <span class="number">4697</span>、<span class="number">7045</span> 这<span class="number">2</span>种事件日志；</span><br><span class="line">PsExec <span class="number">2.1</span>版本之后，不再是明文传输。</span><br></pre></td></tr></table></figure>
 <p>在多数情况下，即使账号出现泄漏情况，使用 <code>PsExec</code>， 也无法完成第4和第5点的要求，因为账号不是特权账号（RID500、域管理员）。</p>
 <h2 id="0x05-其他"><a href="#0x05-其他" class="headerlink" title="0x05 其他"></a>0x05 其他</h2><p>日志分析：略</p>
 <h2 id="0x06-参考"><a href="#0x06-参考" class="headerlink" title="0x06 参考"></a>0x06 参考</h2><p>1、<a href="https://bbs.pediy.com/thread-223721.htm" target="_blank" rel="noopener">[翻译] 网络安全分析之 SMB 协议</a><br>2、<a href="http://zone.secbug.net/content/2230.html" target="_blank" rel="noopener">[使用Hash直接登录Windows]简单分析</a><br>3、<a href="https://www.anquanke.com/post/id/84921" target="_blank" rel="noopener">[技术分享] 深入分析PsExec执行行为</a></p>
@@ -527,7 +527,7 @@
         
   <ul class="post-copyright">
     <li class="post-copyright-author">
-      <strong>本文作者：</strong>
+      <strong>嘤嘤怪：</strong>
       RcoIl
     </li>
     <li class="post-copyright-link">
@@ -572,6 +572,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/SharpDecryptPwd/" rel="prev" title="SharpDecryptPwd">
+                SharpDecryptPwd <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -642,7 +646,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-count">36</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -664,7 +668,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

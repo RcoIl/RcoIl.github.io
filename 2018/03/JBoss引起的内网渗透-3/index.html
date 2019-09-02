@@ -456,7 +456,7 @@
 <a id="more"></a>
 <p>首先说明，这个系列的JBoss都是批量获取的，并不是针对某地区某组织而为。</p>
 <p><code>WebShell</code>如同上一篇文章获取，但是这次是直接上传<code>jsp脚本</code>文件，这样更加快捷。</p>
-<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">本机用户信息：</span><br><span class="line">	%computername% --&gt; SZXzzAO-RxxxSY</span><br><span class="line">	ifconfig --&gt; 192.168.140.171 </span><br><span class="line">	%os% --&gt; Windows Server 2008 R2 x64</span><br><span class="line">	System Model --&gt; VMware Virtual Platform</span><br><span class="line">	Statistiques depuis --&gt; 19/03/2018 15:00:18</span><br><span class="line">域情况：</span><br><span class="line">	存在域</span><br><span class="line">使用循环ping找出了50+台C段存活主机</span><br></pre></td></tr></table></figure>
+<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">本机用户信息：</span><br><span class="line">	%computername% --&gt; SZXzzAO-RxxxSY</span><br><span class="line">	ifconfig --&gt; 192.168.140.171 </span><br><span class="line">	%os% --&gt; Windows<span class="built_in"> Server </span>2008 R2 x64</span><br><span class="line"><span class="built_in">	System </span>Model --&gt; VMware Virtual Platform</span><br><span class="line">	Statistiques depuis --&gt; 19/03/2018 15:00:18</span><br><span class="line">域情况：</span><br><span class="line">	存在域</span><br><span class="line">使用循环ping找出了50+台C段存活主机</span><br></pre></td></tr></table></figure>
 <p>翻阅目录</p>
 <ul>
 <li>从用户目录来看，发现域管登录的痕迹；</li>
@@ -507,9 +507,9 @@
 </ul>
 <h3 id="定位"><a href="#定位" class="headerlink" title="定位"></a>定位</h3><p>想要横向，那就得需要知道域控为哪些，域管为哪些，域用户为哪些，内网机器存活为多少。这就关于到内网渗透定位技术问题。</p>
 <p>常规的命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">net user /domain  # 存在数据</span><br><span class="line">net view /domain  # 该列表是空的</span><br><span class="line">net group /domain # 存在数据</span><br><span class="line">net group &quot;domain admins&quot; /domain # 无法找到组名称</span><br><span class="line">net time /domain # 存在数据</span><br><span class="line">net group &quot;domain controllers&quot; /domain # 无法找到组名称</span><br><span class="line">nltest /dclist:ALxxx.lxxxl # 存在数据</span><br></pre></td></tr></table></figure>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">net<span class="built_in"> user </span>/domain  # 存在数据</span><br><span class="line">net view /domain  # 该列表是空的</span><br><span class="line">net<span class="built_in"> group </span>/domain # 存在数据</span><br><span class="line">net<span class="built_in"> group </span><span class="string">"domain admins"</span> /domain # 无法找到组名称</span><br><span class="line">net time /domain # 存在数据</span><br><span class="line">net<span class="built_in"> group </span><span class="string">"domain controllers"</span> /domain # 无法找到组名称</span><br><span class="line">nltest /dclist:ALxxx.lxxxl # 存在数据</span><br></pre></td></tr></table></figure>
 <p>以下内容是以上信息的综合：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">域控：</span><br><span class="line">	SZXDC01  --&gt; 192.168.140.10</span><br><span class="line">	SZXDC02  --&gt; 192.168.140.11</span><br></pre></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">域控：</span><br><span class="line">	<span class="selector-tag">SZXDC01</span>  <span class="selector-tag">--</span>&gt; 192<span class="selector-class">.168</span><span class="selector-class">.140</span><span class="selector-class">.10</span></span><br><span class="line">	<span class="selector-tag">SZXDC02</span>  <span class="selector-tag">--</span>&gt; 192<span class="selector-class">.168</span><span class="selector-class">.140</span><span class="selector-class">.11</span></span><br></pre></td></tr></table></figure>
 <p><img src="/image/JBoss引起的内网渗透-3/JBoss-CS-net-user-domain.png" alt=""></p>
 <p>使用<code>Cobalt Strike</code>的ARP扫描（因为net view使用不了），使得<code>Targets</code>有记录。</p>
 <p><img src="/image/JBoss引起的内网渗透-3/JBoss-CS-arp.png" alt=""></p>
@@ -518,7 +518,7 @@
 <p>完成！</p>
 <h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><p>用比较典型的<code>hash注入</code>碰一下看看运气怎么样。由于存在<code>KB2871997</code>补丁，所以只能使用<code>administrator用户</code>进行注入。</p>
 <p>登陆情况如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">192.168.140.10 # 失败</span><br><span class="line">192.168.140.11 # 失败</span><br><span class="line">192.168.140.14 # 成功</span><br><span class="line">....</span><br><span class="line">192.168.140.57 # 成功</span><br><span class="line">192.168.140.78 # 失败</span><br><span class="line">192.168.140.160 # 成功</span><br><span class="line">....</span><br></pre></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">192<span class="selector-class">.168</span><span class="selector-class">.140</span><span class="selector-class">.10</span> # 失败</span><br><span class="line">192<span class="selector-class">.168</span><span class="selector-class">.140</span><span class="selector-class">.11</span> # 失败</span><br><span class="line">192<span class="selector-class">.168</span><span class="selector-class">.140</span><span class="selector-class">.14</span> # 成功</span><br><span class="line">....</span><br><span class="line">192<span class="selector-class">.168</span><span class="selector-class">.140</span><span class="selector-class">.57</span> # 成功</span><br><span class="line">192<span class="selector-class">.168</span><span class="selector-class">.140</span><span class="selector-class">.78</span> # 失败</span><br><span class="line">192<span class="selector-class">.168</span><span class="selector-class">.140</span><span class="selector-class">.160</span> # 成功</span><br><span class="line">....</span><br></pre></td></tr></table></figure>
 <p><img src="/image/JBoss引起的内网渗透-3/JBoss-CS-psh.png" alt=""></p>
 <p>这个过程就是不断的进行<code>hash注入</code>，不断的<code>dump密码</code>，结果就如上图。看<code>Credentials</code>里是否存在域管用户账密。</p>
 <p><img src="/image/JBoss引起的内网渗透-3/JBoss-CS-mimikatz.png" alt=""></p>
@@ -563,7 +563,7 @@
         
   <ul class="post-copyright">
     <li class="post-copyright-author">
-      <strong>本文作者：</strong>
+      <strong>嘤嘤怪：</strong>
       RcoIl
     </li>
     <li class="post-copyright-link">
@@ -680,7 +680,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-count">36</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -702,7 +702,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

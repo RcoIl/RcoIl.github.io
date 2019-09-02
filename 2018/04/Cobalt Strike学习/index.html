@@ -463,23 +463,23 @@
 <p>日常的Cobalt Strike学习，Cobalt Strike提供的UI界面，使得很多操作都很容易理解，所以使得很多操作变得更加的简单。</p>
 <h2 id="监听器"><a href="#监听器" class="headerlink" title="监听器"></a>监听器</h2><font color="#0099ff" size="3" face="黑体">beacon</font>
 
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">是Cobalt Strike内嵌的监听器，也就是说，当在目标系统成功执行payload后，</span><br><span class="line">会弹会一个beacon的shell给Cobalt Strike，</span><br><span class="line">该shell所支持的通信协议主要包括dns、https、http、smp[pipe]。</span><br></pre></td></tr></table></figure>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">是Cobalt Strike内嵌的监听器，也就是说，当在目标系统成功执行payload后，</span><br><span class="line">会弹会一个beacon的<span class="keyword">shell</span><span class="bash">给Cobalt Strike，</span></span><br><span class="line"><span class="bash">该shell所支持的通信协议主要包括dns、https、http、smp[pipe]。</span></span><br></pre></td></tr></table></figure>
 <p>实战中尽可能使用dns，或者，不用IP而使用域名。</p>
 <font color="#0099ff" size="3" face="黑体">foreign</font>
 
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">提供给外部使用的一些监听器，</span><br><span class="line">比如你想利用Cobalt Strike派生一个Meterpreter的shell进行内网渗透，</span><br><span class="line">这就需要用到foreign。</span><br></pre></td></tr></table></figure>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">提供给外部使用的一些监听器，</span><br><span class="line">比如你想利用Cobalt Strike派生一个Meterpreter的<span class="keyword">shell</span><span class="bash">进行内网渗透，</span></span><br><span class="line"><span class="bash">这就需要用到foreign。</span></span><br></pre></td></tr></table></figure>
 <h2 id="使用powershell"><a href="#使用powershell" class="headerlink" title="使用powershell"></a>使用powershell</h2><p>第一种方式：在beacon shell中导入外部ps脚本到远程机器上</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">powershell-import /root/Desktop/PowerView.ps1</span><br><span class="line">powershell Get-NetGroup -GroupName *admin*</span><br></pre></td></tr></table></figure>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">powershell</span>-<span class="meta">import</span> /root/Desktop/PowerView.ps1</span><br><span class="line"><span class="symbol">powershell</span> <span class="meta">Get</span>-NetGroup -GroupName *admin*</span><br></pre></td></tr></table></figure>
 <p>第二种方式：在beacon shell中直接执行powershell代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">powerpick Get-NetGroup</span><br></pre></td></tr></table></figure>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">powerpick</span> <span class="meta">Get</span>-NetGroup</span><br></pre></td></tr></table></figure>
 <p><img src="/image/Cobalt Strike学习/powerpick.png" alt=""></p>
 <h2 id="socks"><a href="#socks" class="headerlink" title="socks"></a>socks</h2><p>为了让CS和msf互相间联通使用，在目标机器上开启socks4a代理。</p>
 <p>[<strong>Beacon</strong>]–&gt;[<strong>Pivoting</strong>]–&gt;[<strong>SOCKS Server</strong>] 或者直接在beacon中执行<code>socks post</code></p>
 <p><img src="/image/Cobalt Strike学习/socks-start.png" alt=""></p>
 <p>第一种利用方式：利用各种socks代理客户端直接把各类渗透工具带进目标进网</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># vi /etc/proxychains.conf</span><br><span class="line">	socks4 lhost 2333</span><br><span class="line"># proxychains msfconsole</span><br></pre></td></tr></table></figure>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># vi /etc/proxychains.conf</span></span><br><span class="line">	socks4 lhost <span class="number">2333</span></span><br><span class="line"><span class="meta"># proxychains msfconsole</span></span><br></pre></td></tr></table></figure>
 <p>第二种利用方式：直接利用隧道把整个msf带进目标内网</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># msfconsole</span><br><span class="line">setg Proxies socks4:lhost:2333</span><br></pre></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># <span class="selector-tag">msfconsole</span></span><br><span class="line"><span class="selector-tag">setg</span> <span class="selector-tag">Proxies</span> <span class="selector-tag">socks4</span><span class="selector-pseudo">:lhost</span><span class="selector-pseudo">:2333</span></span><br></pre></td></tr></table></figure>
 <p><img src="/image/Cobalt Strike学习/socks-setg.png" alt=""></p>
 <h2 id="SSH登陆"><a href="#SSH登陆" class="headerlink" title="SSH登陆"></a>SSH登陆</h2><p><img src="/image/Cobalt Strike学习/socks-ssh.png" alt=""></p>
 <p>使用<code>upload</code>和<code>download</code>进行上传下载。也可以通过socks代理进行登陆。</p>
@@ -519,7 +519,7 @@
 <p>查看<a href="https://youtu.be/mpsdLuJ-J_U" target="_blank" rel="noopener"><strong>官方操作</strong></a>，与日常操作方式不太一样。</p>
 <h2 id="转发"><a href="#转发" class="headerlink" title="转发"></a>转发</h2><p>通过红色区域（指已获取beacon shell的机器）做一个重定向到蓝色区域（没有取得控制权的目标机器）有漏洞的机器。</p>
 <p>查看说明</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">beacon&gt; help rportfwd</span><br><span class="line">Use: rportfwd [bind port] [forward host] [forward port]</span><br><span class="line">     rportfwd stop [bind port]</span><br><span class="line"></span><br><span class="line">Binds the specified port on the target host. When a connection comes in,</span><br><span class="line">Cobalt Strike will make a connection to the forwarded host/port and use Beacon</span><br><span class="line">to relay traffic between the two connections.</span><br></pre></td></tr></table></figure>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">beacon&gt; help rportfwd</span><br><span class="line">Use: rportfwd [bind port] [forward host] [forward port]</span><br><span class="line">     rportfwd stop [bind port]</span><br><span class="line"></span><br><span class="line">Binds the specified<span class="built_in"> port </span>on the target host. When a<span class="built_in"> connection </span>comes <span class="keyword">in</span>,</span><br><span class="line">Cobalt Strike will make a<span class="built_in"> connection </span><span class="keyword">to</span> the forwarded host<span class="built_in">/port </span><span class="keyword">and</span> use Beacon</span><br><span class="line"><span class="keyword">to</span> relay traffic between the two connections.</span><br></pre></td></tr></table></figure>
 <p>第一个参数为监听端口，第二个参数是转发主机和转发端口。<strong>注意：</strong>目标主机都会有防火墙拦截链接（弹框提示）。</p>
 <p>becon  shell 内置了端口转发功能，把本机的某个端口转发到公网（如3389）。</p>
 <p>[<strong>Beacon</strong>]–&gt;[<strong>Pivoting</strong>]–&gt;[<strong>Listener</strong>]</p>
@@ -529,7 +529,7 @@
 
 <p>在Beacon shell中建立一条新的监听规则。</p>
 <p><img src="/image/Cobalt Strike学习/Listener-rportfwd.png" alt=""></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">beacon&gt; shell netstat -ano | findstr &quot;7878&quot;</span><br><span class="line">[*] Tasked beacon to run: netstat -ano | findstr &quot;7878&quot;</span><br><span class="line">[+] host called home, sent: 37 bytes</span><br><span class="line">[+] received output:</span><br><span class="line">  TCP    0.0.0.0:7878           0.0.0.0:0              LISTENING       3516</span><br></pre></td></tr></table></figure>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">beacon&gt; shell netstat -ano | findstr <span class="string">"7878"</span></span><br><span class="line"><span class="string">[*]</span> Tasked beacon to run: netstat -ano | findstr <span class="string">"7878"</span></span><br><span class="line"><span class="string">[+]</span> host called home, sent: <span class="number">37</span> bytes</span><br><span class="line"><span class="string">[+]</span> received output:</span><br><span class="line">  TCP    <span class="number">0.0.0.0:7878</span>           <span class="number">0.0.0.0:0</span>              LISTENING       <span class="number">3516</span></span><br></pre></td></tr></table></figure>
 <p>在Cobalt Strike当中新建一个Listener，内容如图所示：</p>
 <p><img src="/image/Cobalt Strike学习/Listener.png" alt=""></p>
 <p>上线的Listener选择新建的<code>rportfwd-listener</code>即可。</p>
@@ -545,7 +545,7 @@
 <p><strong>PS</strong>：</p>
 <p>首先要使用<code>klist /purge</code>清除缓存的授权票据。</p>
 <h2 id="Malleable-C2"><a href="#Malleable-C2" class="headerlink" title="Malleable-C2"></a>Malleable-C2</h2><p>自从Cobalt Strike更新至3.6版本后，官方给出了一个Malleable-C2，也就是在启动团队服务器（服务端）的时候加载一些配置文件，这是一个非常棒的功能，可以帮助我们伪装流量、SSL加密通讯，达到隐匿的效果，值得一用。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /opt/cobaltstrike/</span><br><span class="line">git clone https://github.com/rsmudge/Malleable-C2-Profiles</span><br><span class="line"># 使用方法：./teamserver [external IP] [password] [/path/to/my.profile]</span><br></pre></td></tr></table></figure>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cd</span> /<span class="keyword">opt</span>/cobaltstrike/</span><br><span class="line">git clone http<span class="variable">s:</span>//github.<span class="keyword">com</span>/rsmudge/Malleable-C2-Profiles</span><br><span class="line"># 使用方法：./teamserver [external IP] [password] [/path/<span class="keyword">to</span>/my.<span class="keyword">profile</span>]</span><br></pre></td></tr></table></figure>
 <p>参考：<a href="https://www.cobaltstrike.com/support" target="_blank" rel="noopener">Cobalt Strike-help</a></p>
 
       
@@ -586,7 +586,7 @@
         
   <ul class="post-copyright">
     <li class="post-copyright-author">
-      <strong>本文作者：</strong>
+      <strong>嘤嘤怪：</strong>
       RcoIl
     </li>
     <li class="post-copyright-link">
@@ -705,7 +705,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-count">36</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -727,7 +727,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
