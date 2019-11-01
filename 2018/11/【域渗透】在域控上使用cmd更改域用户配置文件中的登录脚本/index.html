@@ -110,17 +110,17 @@
 <meta name="description" content="摘要：采取直接的手段不能够解决问题，只好曲线救国。">
 <meta name="keywords" content="内网渗透,域渗透">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本">
+<meta property="og:title" content="【域渗透】【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本">
 <meta property="og:url" content="https://rcoil.me/2018/11/【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本/index.html">
 <meta property="og:site_name" content="RcoIl的窝">
 <meta property="og:description" content="摘要：采取直接的手段不能够解决问题，只好曲线救国。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://rcoil.me/image/在域控上使用cmd更改域用户配置文件中的登录脚本/blog_2018-11-16_18-18-23.png">
-<meta property="og:updated_time" content="2018-12-14T06:36:44.982Z">
+<meta property="og:image" content="https://rcoil.me/image/【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本/blog_2018-11-16_18-18-23.png">
+<meta property="og:updated_time" content="2019-10-31T15:42:40.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本">
+<meta name="twitter:title" content="【域渗透】【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本">
 <meta name="twitter:description" content="摘要：采取直接的手段不能够解决问题，只好曲线救国。">
-<meta name="twitter:image" content="https://rcoil.me/image/在域控上使用cmd更改域用户配置文件中的登录脚本/blog_2018-11-16_18-18-23.png">
+<meta name="twitter:image" content="https://rcoil.me/image/【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本/blog_2018-11-16_18-18-23.png">
 
 
 
@@ -154,7 +154,7 @@
 
 
 
-  <title> 【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本 | RcoIl的窝 </title>
+  <title> 【域渗透】【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本 | RcoIl的窝 </title>
 </head>
 
 <body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -356,7 +356,7 @@
             
             
               
-                【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本
+                【域渗透】【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本
               
             
           </h1>
@@ -411,7 +411,7 @@
 
           
           
-             <span id="/2018/11/【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本/" class="leancloud_visitors" data-flag-title="【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本">
+             <span id="/2018/11/【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本/" class="leancloud_visitors" data-flag-title="【域渗透】【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                 <!--
@@ -455,7 +455,7 @@
 </ul>
 <h2 id="0x01-利用方法"><a href="#0x01-利用方法" class="headerlink" title="0x01 利用方法"></a>0x01 利用方法</h2><p><font color="#DC143C" size="3">PS：</font>以下测试全部在域控上执行</p>
 <h3 id="一）使用dsmod给指定域用户设置登陆脚本"><a href="#一）使用dsmod给指定域用户设置登陆脚本" class="headerlink" title="一）使用dsmod给指定域用户设置登陆脚本"></a>一）使用dsmod给指定域用户设置登陆脚本</h3><p>test.bat放在域控的NETLOGON目录下面<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">copy test.bat \\域控\SYSVOL\sysvol\域名\SCRIPTS\test.bat</span><br><span class="line">dsmod<span class="built_in"> user </span>-loscr <span class="string">"test.bat"</span> <span class="string">"CN=x,OU=x,DC=x,DC=x,DC=x"</span></span><br></pre></td></tr></table></figure></p>
-<p>测试结果：<br>PS: 测试机为<code>Win-XP x86</code>，第二次注销重新登陆bat脚本才执行，bat内容为<a href="mailto:`@calc.exe" target="_blank" rel="noopener">`@calc.exe</a>`。<br><img src="/image/在域控上使用cmd更改域用户配置文件中的登录脚本/blog_2018-11-16_18-18-23.png" alt=""></p>
+<p>测试结果：<br>PS: 测试机为<code>Win-XP x86</code>，第二次注销重新登陆bat脚本才执行，bat内容为<a href="mailto:`@calc.exe" target="_blank" rel="noopener">`@calc.exe</a>`。<br><img src="/image/【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本/blog_2018-11-16_18-18-23.png" alt=""></p>
 <h3 id="二）登陆脚本给指定用户种马"><a href="#二）登陆脚本给指定用户种马" class="headerlink" title="二）登陆脚本给指定用户种马"></a>二）登陆脚本给指定用户种马</h3><p>test.bat放在域控的NETLOGON目录下面<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">copy test.bat \\域控\SYSVOL\sysvol\域名\SCRIPTS\test.bat</span><br><span class="line">net<span class="built_in"> user </span>xp /scriptpath:test.bat # 内网域成员机器可以使用</span><br><span class="line">gpupdate /force  # 立即刷新组策略 使用域管权限执行  不执行也行,等待随机</span><br></pre></td></tr></table></figure></p>
 <p>测试结果与第一种方法一致</p>
 <h3 id="三）使用PowerShell的Active-Directory模块"><a href="#三）使用PowerShell的Active-Directory模块" class="headerlink" title="三）使用PowerShell的Active Directory模块"></a>三）使用PowerShell的Active Directory模块</h3><p><code>ActiveDirectory.psd1</code>项目：<a href="https://github.com/samratashok/ADModule" target="_blank" rel="noopener">ADModule</a><br>命令：<br><figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Import</span>-<span class="keyword">Module</span> ActiveDirectory.psd1; 或者<span class="keyword">Import</span>-<span class="keyword">Module</span> Microsoft.ActiveDirectory.Management.dll</span><br><span class="line"><span class="keyword">Set</span>-ADUser -<span class="keyword">Identity</span> AD_USER -ProfilePath <span class="string">"filepath"</span> -ScriptPath <span class="string">"filename"</span></span><br></pre></td></tr></table></figure></p>
@@ -514,7 +514,7 @@
     </li>
     <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://rcoil.me/2018/11/【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本/" title="【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本">https://rcoil.me/2018/11/【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本/</a>
+      <a href="https://rcoil.me/2018/11/【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本/" title="【域渗透】【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本">https://rcoil.me/2018/11/【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本/</a>
     </li>
     <li class="post-copyright-license">
       <strong>版权声明： </strong>
@@ -545,8 +545,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/11/【C-】创建用户，并添加至管理组/" rel="next" title="【C++】创建用户，并添加至管理组">
-                <i class="fa fa-chevron-left"></i> 【C++】创建用户，并添加至管理组
+              <a href="/2018/11/【编程】创建用户，并添加至管理组/" rel="next" title="【编程】创建用户，并添加至管理组">
+                <i class="fa fa-chevron-left"></i> 【编程】创建用户，并添加至管理组
               </a>
             
           </div>
@@ -650,7 +650,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">30</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

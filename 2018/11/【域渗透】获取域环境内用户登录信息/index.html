@@ -89,7 +89,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-  <meta name="keywords" content="内网渗透,域渗透,">
+  <meta name="keywords" content="内网渗透,域渗透,C#,Tools,">
 
 
 
@@ -108,14 +108,14 @@
 
 
 <meta name="description" content="之前见到有人在讨论域内用户在域内的机器ip怎么查呢，集思广益，结合答复及自己的观点，总结了以下内容。">
-<meta name="keywords" content="内网渗透,域渗透">
+<meta name="keywords" content="内网渗透,域渗透,C#,Tools">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【域渗透】获取域环境内用户登录信息">
 <meta property="og:url" content="https://rcoil.me/2018/11/【域渗透】获取域环境内用户登录信息/index.html">
 <meta property="og:site_name" content="RcoIl的窝">
 <meta property="og:description" content="之前见到有人在讨论域内用户在域内的机器ip怎么查呢，集思广益，结合答复及自己的观点，总结了以下内容。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-11-27T03:31:50.019Z">
+<meta property="og:updated_time" content="2019-10-31T15:44:50.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【域渗透】获取域环境内用户登录信息">
 <meta name="twitter:description" content="之前见到有人在讨论域内用户在域内的机器ip怎么查呢，集思广益，结合答复及自己的观点，总结了以下内容。">
@@ -392,8 +392,8 @@
               
               
                 <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/内网渗透/" itemprop="url" rel="index">
-                    <span itemprop="name">内网渗透</span>
+                  <a href="/categories/编程之道/" itemprop="url" rel="index">
+                    <span itemprop="name">编程之道</span>
                   </a>
                 </span>
 
@@ -443,10 +443,12 @@
 
       
         <p>之前见到有人在讨论<a href="https://www.t00ls.net/viewthread.php?tid=47649&amp;extra=&amp;page=1" target="_blank" rel="noopener">域内用户在域内的机器ip怎么查呢</a>，集思广益，结合答复及自己的观点，总结了以下内容。<br><a id="more"></a></p>
-<h2 id="0x00-adfind-未实践"><a href="#0x00-adfind-未实践" class="headerlink" title="0x00 adfind(未实践)"></a>0x00 adfind(未实践)</h2><p>有时候管理员会设置域用户只可以登录指定的的域内计算机，使用adfind或者powerview导出域用户信息可以查看；<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">查看域内用户详细信息：</span><br><span class="line">adfind.exe -h DNS_SERVER_IP -sc <span class="string">u:</span>username(目标用户)</span><br><span class="line"></span><br><span class="line">查看域内所有用户详细信息：</span><br><span class="line">AdFind.exe -h DNS_SERVER_IP -sc <span class="string">u:</span>*</span><br><span class="line">详见：<span class="string">http:</span><span class="comment">//www.joeware.net/freetools/tools/adfind/usage.htm</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="0x00-adfind"><a href="#0x00-adfind" class="headerlink" title="0x00 adfind"></a>0x00 adfind</h2><p>有时候管理员会设置域用户只可以登录指定的的域内计算机，使用 adfind或者 powerview导出域用户信息可以查看；<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">查看域内用户详细信息：</span><br><span class="line">adfind.exe -h DNS_SERVER_IP -sc <span class="string">u:</span>rcoil(目标用户)</span><br><span class="line">adfind.exe -h DNS_SERVER_IP -sc <span class="string">u:</span>rcoil | findstr userWorkstations <span class="comment">//非域权限执行需要指定账户密码</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">查看域内所有用户详细信息：</span><br><span class="line">AdFind.exe -h DNS_SERVER_IP -sc <span class="string">u:</span>*</span><br><span class="line">详见：<span class="string">http:</span><span class="comment">//www.joeware.net/freetools/tools/adfind/usage.htm</span></span><br></pre></td></tr></table></figure></p>
 <p>powerview在域内执行就可以。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Get-NetUser -Domain demo<span class="selector-class">.rcoil</span><span class="selector-class">.me</span>  <span class="comment">//domain参数请加完整的域名</span></span><br><span class="line">或</span><br><span class="line">Invoke-EnumerateLocalAdmin</span><br></pre></td></tr></table></figure>
 <h2 id="0x01-查看域内机器的用户目录文件夹"><a href="#0x01-查看域内机器的用户目录文件夹" class="headerlink" title="0x01 查看域内机器的用户目录文件夹"></a>0x01 查看域内机器的用户目录文件夹</h2><p>确定开机状态的计算机列表-建立连接-查看用户目录-断开连接，可以参考如下批处理：<br><figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> /f "delims=" <span class="variable">%%i</span> <span class="keyword">in</span> (live.txt) <span class="keyword">DO</span> (</span><br><span class="line">        <span class="built_in">net</span> use \\<span class="variable">%%i</span>\C$ password /u:domain\domain_admins_user</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">errorlevel</span> <span class="number">1</span> (</span><br><span class="line">                <span class="keyword">for</span> /f "delims=" <span class="variable">%%j</span> <span class="keyword">in</span> ('<span class="built_in">dir</span> /od /b \\<span class="variable">%%i</span>\C$\users\') <span class="keyword">do</span> (</span><br><span class="line">                        <span class="built_in">echo</span> <span class="variable">%%i</span>:<span class="variable">%%j</span>&gt;&gt; test.log</span><br><span class="line">                )</span><br><span class="line">                <span class="built_in">net</span> use \\<span class="variable">%%i</span>\C$ /<span class="built_in">del</span></span><br><span class="line">        )</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
-<p>域管不用建立连接就可以访问域内计算机资源（未实践），因此以域管权限运行时可以参考如下批处理：<br><figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> /f "delims=" <span class="variable">%%i</span> <span class="keyword">in</span> (live.txt) <span class="keyword">DO</span> (</span><br><span class="line">        <span class="keyword">for</span> /f "delims=" <span class="variable">%%j</span> <span class="keyword">in</span> ('<span class="built_in">dir</span> /od /b \\<span class="variable">%%i</span>\C$\users\') <span class="keyword">do</span> (</span><br><span class="line">                <span class="built_in">echo</span> <span class="variable">%%i</span>:<span class="variable">%%j</span>&gt;&gt; test.log</span><br><span class="line">        )</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>域管不用建立连接就可以访问域内计算机资源，因此以域管权限运行时可以参考如下批处理：<br><figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> /f "delims=" <span class="variable">%%i</span> <span class="keyword">in</span> (live.txt) <span class="keyword">DO</span> (</span><br><span class="line">        <span class="keyword">for</span> /f "delims=" <span class="variable">%%j</span> <span class="keyword">in</span> ('<span class="built_in">dir</span> /od /b \\<span class="variable">%%i</span>\C$\users\') <span class="keyword">do</span> (</span><br><span class="line">                <span class="built_in">echo</span> <span class="variable">%%i</span>:<span class="variable">%%j</span>&gt;&gt; test.log</span><br><span class="line">        )</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>代码补充：<a href="https://github.com/RcoIl/CSharp-Tools/tree/master/NetWorkConnectIPC" target="_blank" rel="noopener">NetWorkConnectIPC</a></p>
 <h2 id="0x02-域控日志"><a href="#0x02-域控日志" class="headerlink" title="0x02 域控日志"></a>0x02 域控日志</h2><p><code>wevtutil</code>为Windows 事件命令行实用程序，其导出的日志为evtx格式（即Windows日志本身的存储格式），可以使用Windows事件查看器分析，Crtl+F查找，或者不使用<code>epl</code>参数，直接重定向输出即可。<br><code>wevtutil</code>常用的场景是清理日志。<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wevtutil cl application</span><br><span class="line">wevtutil cl security</span><br><span class="line">wevtutil cl system</span><br><span class="line">wevtutil cl <span class="string">"windows powershell"</span></span><br></pre></td></tr></table></figure></p>
 <p>而它也可作为筛选分析日志的工具。这里需要注意的几个ID分别为：4624（用户登陆成功）、4768、4776（用户账号验证成功）</p>
 <font color="#0099ff" size="3">使用<code>wevtutil</code>结合python</font>
@@ -463,7 +465,18 @@
 </li>
 </ul>
 <p>PS: 筛选条件还有很多，都可以组合利用，从而筛选出自己所需要的信息。<br><figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wevtutil qe Security /q:"*[EventData[Data[@Name='LogonType']='<span class="number">10</span>'] and EventData[Data[@Name='TargetUserName']='RcoIl'] and System[(EventID=<span class="number">4624</span>) and TimeCreated[timediff(@SystemTime) &amp;lt;= <span class="number">2592000000</span>]]]"</span><br><span class="line"></span><br><span class="line">wevtutil qe Security /q:"*[System[(Keywords='<span class="number">0</span>x8020000000000000')] and EventData[Data[@Name='SubjectUserName']='RcoIl']]" /f:text /<span class="built_in">rd</span>:true /c:<span class="number">2</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="0x03-【参考】"><a href="#0x03-【参考】" class="headerlink" title="0x03 【参考】"></a>0x03 【参考】</h2><p><a href="http://cate4cafe.com/2018/11/21/wevtutil%E7%AD%9B%E9%80%89windows%E6%97%A5%E5%BF%97%E6%9F%A5%E8%AF%A2%E7%BB%93%E6%9E%9C/" target="_blank" rel="noopener">wevtutil筛选windows日志查询结果</a><br><a href="https://blog.csdn.net/dearggae/article/details/70147511" target="_blank" rel="noopener">[Tools]获取域环境内所有用户登录信息（附源码及程序）</a><br><a href="https://www.t00ls.net/viewthread.php?tid=47649&amp;extra=&amp;page=1" target="_blank" rel="noopener">域内用户在域内的机器ip怎么查呢？</a><br><a href="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/dd337721(v%3dws.10)" target="_blank" rel="noopener">https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/dd337721(v%3dws.10)</a><br><a href="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/cc732848(v=ws.11)" target="_blank" rel="noopener">https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/cc732848(v=ws.11)</a></p>
+<h2 id="0x03-DNS解析记录"><a href="#0x03-DNS解析记录" class="headerlink" title="0x03 DNS解析记录"></a>0x03 DNS解析记录</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dnscmd <span class="number">127.0</span>.<span class="number">0.1</span> /enumrecords demo<span class="selector-class">.rcoil</span><span class="selector-class">.me</span> demo<span class="selector-class">.rcoil</span><span class="selector-class">.me</span>. /type A <span class="comment">//利用dnscmd导出dns正向解析记录</span></span><br><span class="line">dnscmd <span class="number">127.0</span>.<span class="number">0.1</span> /zoneprint demo<span class="selector-class">.rcoil</span><span class="selector-class">.me</span> &gt;<span class="number">1</span>.txt</span><br></pre></td></tr></table></figure>
+<p><code>C# .NET</code> 编写的工具 <a href="https://github.com/RcoIl/CSharp_Tools/tree/master/SharpADDNSDump" target="_blank" rel="noopener">SharpADDNSDump</a></p>
+<h2 id="0x04-Exchange-日志"><a href="#0x04-Exchange-日志" class="headerlink" title="0x04 Exchange 日志"></a>0x04 Exchange 日志</h2><h3 id="4-1-Outlook-Web-Application"><a href="#4-1-Outlook-Web-Application" class="headerlink" title="4.1 Outlook Web Application"></a>4.1 <code>Outlook Web Application</code></h3><p><code>owa</code> 默认的登陆日志位置如下：</p>
+<figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:<span class="symbol">\i</span>netpub<span class="symbol">\l</span>ogs<span class="symbol">\L</span>ogFiles<span class="symbol">\W</span>3SVC1（W3SVC2）</span><br></pre></td></tr></table></figure>
+<p>日志是根据时间（天）¬为单位进行分割的，比如 <code>u_ex190426</code> 就表示 <code>19 年 4 月 26 号</code>那一天的日志。</p>
+<p>在实战中，可根据自己的实际需求，把指定时间段内的日志想办法拖回来即可。</p>
+<p>部分内容如下：</p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2019<span class="string">-04</span><span class="string">-26</span> 06:49:51 192.10.20.200 POST /owa/auth.owa &amp;CorrelationID=&lt;empty&gt;;&amp;ClientId=KFTFMZBXS0ATOXTCCJLOQ&amp;cafeReqId=c3db90a9<span class="string">-02</span>e3<span class="string">-4</span>fd0<span class="string">-8633</span><span class="string">-05</span>fb7799f4fd; 443 rcoil.me\pentest 192.10.20.104 Mozilla/5.0+(Windows+NT<span class="string">+10</span>.0;+Win64;+x64)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Chrome/73.0.3683.103+Safari/537.36 https://exchange/owa/auth/logon.aspx?replaceCurrent=1&amp;url=https%3a%2f%2fexchange%2fowa 302 0 0 31</span><br></pre></td></tr></table></figure>
+<p>此时我们需要的内容单单为：<code>rcoil.me\pentest 192.10.20.104</code>，其他数据可不理会。</p>
+<h3 id="4-2-Outlook-客户端"><a href="#4-2-Outlook-客户端" class="headerlink" title="4.2 Outlook 客户端"></a>4.2 <code>Outlook</code> 客户端</h3><p><code>Outlook</code> 客户端登陆的默认日志文件如下：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Program Files\Microsoft\Exchange Server\V14\Logging\RPC<span class="built_in"> Client </span>Access</span><br></pre></td></tr></table></figure>
+<h2 id="0x05【参考】"><a href="#0x05【参考】" class="headerlink" title="0x05【参考】"></a>0x05【参考】</h2><p><a href="http://cate4cafe.com/2018/11/21/wevtutil%E7%AD%9B%E9%80%89windows%E6%97%A5%E5%BF%97%E6%9F%A5%E8%AF%A2%E7%BB%93%E6%9E%9C/" target="_blank" rel="noopener">wevtutil筛选windows日志查询结果</a><br><a href="https://blog.csdn.net/dearggae/article/details/70147511" target="_blank" rel="noopener">[Tools]获取域环境内所有用户登录信息（附源码及程序）</a><br><a href="https://www.t00ls.net/viewthread.php?tid=47649&amp;extra=&amp;page=1" target="_blank" rel="noopener">域内用户在域内的机器ip怎么查呢？</a><br><a href="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/dd337721(v%3dws.10)" target="_blank" rel="noopener">https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/dd337721(v%3dws.10)</a><br><a href="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/cc732848(v=ws.11)" target="_blank" rel="noopener">https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/cc732848(v=ws.11)</a></p>
 
       
     </div>
@@ -528,6 +541,10 @@
           
             <a href="/tags/域渗透/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> 域渗透</a>
           
+            <a href="/tags/C/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> C#</a>
+          
+            <a href="/tags/Tools/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> Tools</a>
+          
         </div>
       
 
@@ -539,8 +556,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/11/【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本/" rel="next" title="【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本">
-                <i class="fa fa-chevron-left"></i> 【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本
+              <a href="/2018/11/【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本/" rel="next" title="【域渗透】【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本">
+                <i class="fa fa-chevron-left"></i> 【域渗透】【域渗透】在域控上使用cmd更改域用户配置文件中的登录脚本
               </a>
             
           </div>
@@ -549,8 +566,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/03/内网练习（四）/" rel="prev" title="内网练习（四）- 知识梳理">
-                内网练习（四）- 知识梳理 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/01/【测试评估】内网练习（三）/" rel="prev" title="【测试评估】内网练习（三）">
+                【测试评估】内网练习（三） <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -644,7 +661,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">30</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -799,7 +816,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00-adfind-未实践"><span class="nav-text">0x00 adfind(未实践)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-查看域内机器的用户目录文件夹"><span class="nav-text">0x01 查看域内机器的用户目录文件夹</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-域控日志"><span class="nav-text">0x02 域控日志</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-【参考】"><span class="nav-text">0x03 【参考】</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00-adfind"><span class="nav-text">0x00 adfind</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-查看域内机器的用户目录文件夹"><span class="nav-text">0x01 查看域内机器的用户目录文件夹</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-域控日志"><span class="nav-text">0x02 域控日志</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-DNS解析记录"><span class="nav-text">0x03 DNS解析记录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x04-Exchange-日志"><span class="nav-text">0x04 Exchange 日志</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-Outlook-Web-Application"><span class="nav-text">4.1 Outlook Web Application</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-Outlook-客户端"><span class="nav-text">4.2 Outlook 客户端</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x05【参考】"><span class="nav-text">0x05【参考】</span></a></li></ol></div>
             
 
           </div>

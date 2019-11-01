@@ -1,0 +1,1367 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|sans-serif:300,300italic,400,400italic,700,700italic|Lato:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="系统安全,知识回顾,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RcoIl的窝" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="摘要：数据保护接口是微软从 Windows 2000 开始引入的一种简易程序接口，主要为应用程序和操作系统程序提供高强度的数据加密和解密服务。Windows 系统用户大量的私密数据都采用了 DPAPI 进行加密存储。">
+<meta name="keywords" content="系统安全,知识回顾">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【知识回顾】DPAPI 详解">
+<meta property="og:url" content="https://rcoil.me/2019/07/【知识回顾】DPAPI 详解/index.html">
+<meta property="og:site_name" content="RcoIl的窝">
+<meta property="og:description" content="摘要：数据保护接口是微软从 Windows 2000 开始引入的一种简易程序接口，主要为应用程序和操作系统程序提供高强度的数据加密和解密服务。Windows 系统用户大量的私密数据都采用了 DPAPI 进行加密存储。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】DPAPI%20详解/CryptProtectData.png">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】DPAPI%20详解/DPAPI%20加密过程.png">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】DPAPI%20详解/DPAPI%20离线解密过程.png">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】DPAPI%20详解/定位主密钥.png">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】DPAPI%20详解/主密钥文件结构.png">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】DPAPI%20详解/历史凭据文件结构.png">
+<meta property="og:updated_time" content="2019-10-31T15:42:32.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【知识回顾】DPAPI 详解">
+<meta name="twitter:description" content="摘要：数据保护接口是微软从 Windows 2000 开始引入的一种简易程序接口，主要为应用程序和操作系统程序提供高强度的数据加密和解密服务。Windows 系统用户大量的私密数据都采用了 DPAPI 进行加密存储。">
+<meta name="twitter:image" content="https://rcoil.me/image/【知识回顾】DPAPI%20详解/CryptProtectData.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '6230266985318450000',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://rcoil.me/2019/07/【知识回顾】DPAPI 详解/">
+
+
+
+
+
+  <title> 【知识回顾】DPAPI 详解 | RcoIl的窝 </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?ce3d1967864bac5f69f1c1a6042e5577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RcoIl的窝</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-count">
+          <a href="/count" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-fa fa-free-code-camp"></i> <br>
+            
+            阅读榜
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://rcoil.me/2019/07/【知识回顾】DPAPI 详解/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RcoIl">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RcoIl的窝">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                【知识回顾】DPAPI 详解
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-06T21:29:11+08:00">
+                2019-07-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/系统安全/" itemprop="url" rel="index">
+                    <span itemprop="name">系统安全</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/07/【知识回顾】DPAPI 详解/" class="leancloud_visitors" data-flag-title="【知识回顾】DPAPI 详解">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                <!--
+				<i class="fa fa-eye"></i>
+				-->
+				<i class="fa fa-thermometer-three-quarters" aria-hidden="true"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">热度 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+				 <span>℃</span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>摘要：</strong>数据保护接口是微软从 Windows 2000 开始引入的一种简易程序接口，主要为应用程序和操作系统程序提供高强度的数据加密和解密服务。Windows 系统用户大量的私密数据都采用了 DPAPI 进行加密存储。</p>
+<a id="more"></a>
+<h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p>​        绝大多数应用程序都有数据加密保护的需求，存储和保护私密信息最安全的方式就是每次需要加密或解密时都从用户那里得到密码，使用后再丢弃。这种方式每次处理信息时都需要用户输入口令，对于绝大多数用户来说，这种方式是不可取的。因为这要求用户记住很多信息，而用户一般会反复使用同一个密码，从而降低系统的安全性和可用性。因此需要一种加密机制，再不需要用户输入任何信息的情况下也能存储秘密数据，而微软数据保护接口（<code>Data Protection Application Programming Interface</code>，DPAPI）便是瞒住这种要求的程序接口。</p>
+<p>​        从 Windows 2000 开始，用户程序或操作系统程序就可以直接调用 DPAPI 来加密数据。由于 DPAPI 简单易用且加密强大，大量应用程序都采用 DPAPI 加密用户的私密数据，如 <code>Chrome 浏览器</code>的自动登陆密码、<code>远程桌面</code>的自动登陆密码、<code>Outlook邮箱</code>的账号密码、<code>加密文件系统</code>的私钥等。DPAPI 内部加密流程异常复杂而且微软官方也未公布过其内部细节，这给理解该接口内部实现机制带来了极大困难。本文在已有的研究基础上对 DPAPI加密机制做了全面剖析，给出了DPAPI的离线解密方法。</p>
+<h2 id="0x01-DPAPI-概述"><a href="#0x01-DPAPI-概述" class="headerlink" title="0x01 DPAPI 概述"></a>0x01 DPAPI 概述</h2><h3 id="1-1-DPAPI-函数"><a href="#1-1-DPAPI-函数" class="headerlink" title="1.1 DPAPI 函数"></a>1.1 DPAPI 函数</h3><p>​        DPAPI 由一个加密函数（<code>CryptProtectData()</code>）和一个解密函数（<code>CryptUnProtectData()</code>）组成，是一组跟Windows 系统用户环境上下文密切相关的数据保护接口。某个系统用户调用 <code>CryptProtectData()</code> 加密后的数据只能由同一系统用户调用 <code>CryptUnProtectData()</code> 来解密，一个系统用户无法调用 <code>CryptUnProtectData()</code> 来解密其他系统用户的 <code>DPAPI</code> 加密数据。</p>
+<ul>
+<li><p><code>CryptProtectData()</code> 的函数调用</p>
+<p>  <img src="/image/【知识回顾】DPAPI 详解/CryptProtectData.png" alt=""></p>
+  <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">pDataIn：DATA_BLOB</span> <span class="string">结构指针，只想需要加密的数据明文块；</span></span><br><span class="line"><span class="string">szDataDescr：描述字符串，返回的数据包含该字符串，其未被加密。该参数为可选参数，可以为</span> <span class="literal">NULL</span><span class="string">；</span></span><br><span class="line"><span class="string">pOptionslEntropy：DATA_BLOB</span> <span class="string">结构指针，指向一个额外熵参数，可以是一个加密密码。改参数为可选参数乜可以为</span> <span class="literal">NULL</span><span class="string">。若加密时设置了额外熵参数，则加密时必须提供同样的熵参数，否则无法解密；</span></span><br><span class="line"><span class="string">pvReserved：保留，必须为</span> <span class="literal">NULL</span><span class="string">；</span></span><br><span class="line"><span class="string">pPromptStruct：CRYPTPROTECTPROMPTSTRUCT</span> <span class="string">结构指针，用于弹出对话框与用户交互，通常为</span> <span class="literal">NULL</span><span class="string">。</span></span><br><span class="line"><span class="string">dwFlags：加密标识位，通常为</span> <span class="literal">NULL</span><span class="string">；</span></span><br><span class="line"><span class="string">pDataOut：DATA_BLOB</span> <span class="string">结构指针，只想经过加密处理后的密文块。</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>CryptUnProtectData()</code> 的参数跟 <code>CryptProtectData()</code> 的参数类似，详见 <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa380882(v=vs.85" target="_blank" rel="noopener">MSDN 文档</a>.aspx)，这里不在说明。</p>
+</li>
+</ul>
+<h3 id="1-2-基本概念介绍"><a href="#1-2-基本概念介绍" class="headerlink" title="1.2 基本概念介绍"></a>1.2 基本概念介绍</h3><p><strong>1）加密应用程序编程接口</strong></p>
+<p>​        加密应用程序编程接口（ cryptography application programming interface, CryptoAPI ）是 Windows 平台提供的一组函数，该函数允许应用程序对用户的秘密信息进行编码、加密和数字签证等操作。<code>CryptoAPI</code> 内部的加密操作是在加密服务提供程序（CSP）的独立模块中执行，<strong>DPAPI 是在 CryptoAPI 的基础上实现封装</strong>。</p>
+<p><strong>2）加密服务提供程序</strong></p>
+<p>​        加密服务提供程序（ cryptographic service provider，CSP ）是一组实现标准加密和签名算法的硬件和软件的组合。每个 CSP 都包含一组它们自己定义并实现的函数。不同的 CSP 提供的安全算法不用，且 CSP 是平台相关的。不同的 Windows 操作系统提供的 CSP 的个数和类型也不同，每个 CSP 都有其对应的名称和类型，名称必须是唯一的。目前常用的 CSP 类型有9种，要指定采用哪种 CSP，只需在 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptacquirecontexta" target="_blank" rel="noopener">CryptAcquirecContext()</a> 中指定即可，DPAPI 默认使用 <code>PROV_RSA_FULL</code> 类型。</p>
+<p><strong>3）算法标识</strong></p>
+<p>​        算法标识（ ALG_ID ）是微软顶一顶一系列 32 位整型值，用于指明 <code>CryptoAPI</code> 所采用的加密或散列算法类型。其中以 <code>0x66</code> 开头的标识通常表示对称加密算法，以 <code>0x88</code> 开头的标识通常表示散列算法。例如，<code>CALG_3DES</code> 对应的值为 <code>0x6603</code> ，表示为三重数据加密标准。</p>
+<p><strong>4）安全散列算法</strong></p>
+<p>​        安全散列算法（ secure hash algorithm，SHA ）是散列算法中的一种，又叫摘要算法，用于产生消息摘要，也是经常使用的一种算法。在数据签名标准（ digita signature standard，DSS ）中，安全散列算法通常和数字签名算法（ digital signature algorithm，DSA ）一起用于对消息进行数字签名。每一个安全散列算法都有其对应的算法标识。在 <code>CryptoAPI</code> 中，SHA 对应的算法标识为 <code>CALG_SHA</code> 。目前，安全散列算法有 4 种：SHA-1、SHA-256、SHA-384 和 SHA-512，可分别产生 160 位、256 位、384 位和 512 位长的消息摘要，还有一个变种的SHA-224（224位）实现方为 Bouncy Castle。</p>
+<p><strong>5）会话密钥</strong></p>
+<p>​        会话密钥（ session key ）是随机产生的密钥，使用一次后，立刻被丢弃而不会被保存。在 <code>CryptoAPI</code> 中，会话密钥通常是对称加密算法的密钥。会话密钥由 40～2000 位随机数组成，可以通过调用 CryptoAPI 中的 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptderivekey" target="_blank" rel="noopener">CryptDeriveKey()</a> 并传递一个散列值来生成。</p>
+<p><strong>6）干扰值</strong></p>
+<p>​        干扰值（ salt valve ）也称作 “盐”，通常是随机数，一般可看作是会话密钥的一部分。干扰值被添加到会话密钥后，通常是以明文的形式被防止在加密数据的前端。加入干扰值可以有效地防止堆成加密算法被预先计算好的彩虹表攻击。在 <code>CryptoAPI</code> 中，干扰值通过 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptgenrandom" target="_blank" rel="noopener">CryptGenRandom()</a> 来生成，此函数在将来的版本会进行删除，详情请看函数详情。</p>
+<p><strong>7）基于口令的密钥派生函数</strong></p>
+<p>​        基于口令的密钥派生函数（ passwordbased key derivation function，PBKDF ）通过对干扰后的用户输入口令计算多次散列来缓和字典攻击。攻击者若想确定口令的正确性，需要执行上百万条指令，导致完成一次字典攻击就需要花费大量时间。PBKDF 目前有两个版本：PBKDF1 和 PBKDF2，两个函数均以口令、干扰值和内部函数的跌代次数作为输入。在 DPAPI 中，采用的是 PBKDF2 版本，且内部做了部分改动。</p>
+<p><strong>8）加密散列函数</strong></p>
+<p>​        加密散列函数又叫基于散列的消息认证代码（ hash-based message authentication code，HMAC ）。使用加密散列函数需要一个密钥，同时还需要制定一个散列函数，可以是 MD5 或 SHA-1 等。在 DPAPI 中，HMAC 主要用于数据认证。</p>
+<p><strong>9）密钥分组链接</strong></p>
+<p>​        密钥分组链接（ cipher-block chaining，CBC ）是一种加密模式，在 CBC 模式中，每个分组完的明文块都需要与前一个经过加密后的密文块进行异或操作，然后进行加密操作。因此需要使用初始化向量。 CBC 加密模块是微软默认使用的加密模块，DPAPI 内部对所有对称加密算法默认都采用 CBC 加密模式。</p>
+<p><strong>10）填充</strong></p>
+<p>​        填充( padding) 是明文根据加密函数进行数据分组后，<em>由于最后一个明文块不满足分组数据长度要求而在末尾额外添加的数据</em>。填充的数据解密后一般会被自动移除，DPAPI 内部所有堆成加密算法默认都采用 <code>PKCS</code> 填充方式。</p>
+<h2 id="0x02-DPAPI-加密机制分析"><a href="#0x02-DPAPI-加密机制分析" class="headerlink" title="0x02 DPAPI 加密机制分析"></a>0x02 DPAPI 加密机制分析</h2><p>​        <code>CryptProtectData()</code> 是对 <code>CryptoAPI</code> 的封装，其加密过程如下图所示。</p>
+<p><img src="/image/【知识回顾】DPAPI 详解/DPAPI 加密过程.png" alt=""></p>
+<p><center>图1 DPAPI 加密过程</center><br>​        整个加密过程大致可以分成 3 个阶段，分别为<strong>生成主密钥</strong>、<strong>解密主密钥</strong>以及<strong>使用主密钥加密数据</strong>。</p>
+<h3 id="2-1-生成主密钥"><a href="#2-1-生成主密钥" class="headerlink" title="2.1 生成主密钥"></a>2.1 生成主密钥</h3><p>​        当前应用程序调用 <code>CryptProtectData()</code> 时，DPAPI 会读取主密钥存储区下的 <code>Preferred</code> 文件，获取当前系统使用的主密钥文件及其创建时间，如果创建时间与当前系统时间相差超过了 90 天，则重新生成一个主密钥文件。</p>
+<p>​        为了防止攻击者对同一个加密主密钥进行长期的攻击，微软引入了主密钥的更新机制，更新时间微软设置为 90 天。即若 <code>Preferred</code> 文件中指示的主密钥创建时间与系统当前时间<strong>相差 90 天</strong>以上，将生成一个新的主密钥，新的主密钥将以同样的加密方式保护用户数据。这种主密钥更新策略有效防止了攻击者破解唯一的主密钥后即可访问用户所有的受保护数据。因为主密钥会更新，因而 DPAPI 必须提供一种机制能够解密历史主密钥加密下的数据库。其实，DPAPI 不删除任何过期的主密钥，所有的主密钥文件保存在用户的配置文件目录下，且全受到用户登陆密码的保护，并且每一个加密块都存储着当时加密它的主密钥全局唯一标识符（GUID）。当需要解密加密块时，DPAPI 从加密块中提取 GUID，找到对应主密钥文件进行相应的数据解密。</p>
+<h3 id="2-2-解密主密钥"><a href="#2-2-解密主密钥" class="headerlink" title="2.2 解密主密钥"></a>2.2 解密主密钥</h3><p>​        若 <code>Preferred</code> 文件指示的主密钥没有过期，DPAPI 将解密对应的主密钥文件，获取 64 字节的主密钥。</p>
+<p>​        主密钥受到用户登陆密码保护。DPAPI 首先使用 SHA-1 安全散列函数作用于用户登陆密码，然后将此密码散列和 16 字节的干扰值以跌代次数提供给基于口令的密钥派生函数 PBKDF2，用户派生一个会话密钥；然后用此会话密钥作为堆成加密算法的加密密钥，对主密钥进行加密，将加密后的主密钥存储在用户的配置文件目录下。</p>
+<p>​        为了防止主密钥被篡改，主密钥将被计算 HMAC 加密散列。DPAPI 将使用 SHA 版HMAC 加密散列算法并以密码散列作为加密密钥作用于 16 字节干扰值，进而派生对应加密 散列值。该加密散列值再次作为 HMAC 的密钥计算主密钥的加密散列，计算后的加密散列同加密后的主密钥一起存于主密钥中。</p>
+<p>​        由于主密钥受到用户登陆密码的保护，而用户登陆密码又是可修改的。因此，DPAPI 必须提供一种机制，使得在用户修改登陆密码后仍然可以正常解密主密钥。其实，DPAPI 对密码修改模块进行了 Hook 操作。当用户修改密码时，所有主密钥都将根据新的密码重新加密。另外，用户配置文件目录下有个历史凭据文件 <code>CREDHIST</code>，当用户修改密码时，旧密码的 SHA-1 散列值会用新的密码进行加密，然后将加密后的结果存放在文件的底部。因此，如果当前系统登录密码法务解密主密钥，DPAPI 将使用当前密码解密历史凭据文件，获取上一次历史密码散列值，然后用这个历史密码散列值解密主密钥。如果解密又失败了，历史密码散列值将再次用于解密历史凭据文件，获取更旧的密码散列值。如此下去，直到成功解密主密钥为止。</p>
+<h3 id="2-3-使用主密钥加密数据"><a href="#2-3-使用主密钥加密数据" class="headerlink" title="2.3 使用主密钥加密数据"></a>2.3 使用主密钥加密数据</h3><p>​        主密钥并不直接作为加密密钥来保护数据。DPAPI 首先将主密钥、16 字节干扰值以及应用程序提供的额外熵参数 3者组合派生一个会话密钥，然后用这个会话密钥对数据进行加密。但这个会话密钥永远不会被保存，DPAPI 选择存储用于派生会话密钥的 16 字节干扰值。这些干扰值是用来产生加密数据的关键。当 DPAPI 需要解密加密块时，便从加密块种提取这 16 字节的干扰值，并以同加密相同的方式派生出会话密钥，然后用该会话密钥对数据进行解密。</p>
+<h2 id="0x03-DPAPI-离线解密方法"><a href="#0x03-DPAPI-离线解密方法" class="headerlink" title="0x03 DPAPI 离线解密方法"></a>0x03 DPAPI 离线解密方法</h2><p>由以上对 DPAPI 加密过程的分析容易得出 DPAPI 离线解密过程，如下图所示。</p>
+<p><img src="/image/【知识回顾】DPAPI 详解/DPAPI 离线解密过程.png" alt=""></p>
+<p><center>图2 DPAPI 离线解密过程</center><br>​        DPAPI 离线解密过程大致可以分为以下几点。</p>
+<h3 id="3-1-定位主密钥"><a href="#3-1-定位主密钥" class="headerlink" title="3.1 定位主密钥"></a>3.1 定位主密钥</h3><p>​        由对 DPAPI 加密过程的分析可知主密钥文件会定期更新，Preferred 文件中存储这最后生成的主密钥文件 GUID，然而任意给定的一个 DPAPI 加密块并不一定时用最新的主密钥进行解密。为了快速定位 DPAPI加密块对应的主密钥文件，DPAPI 加密块种存储当时加密它的主密钥 GUID。DPAPI 加密块大致结构如下图所示。</p>
+<p><img src="/image/【知识回顾】DPAPI 详解/定位主密钥.png" alt=""></p>
+<p><center>图3 DPAPI 加密块结构</center><br>​        从 DPAPI 加密块结构可知其除了存储主密钥 GUID 外，还存储解密时所需的其他关键数据信息，包括所使用的对称加密算法标识、安全散列算法标识、干扰值等。</p>
+<ul>
+<li>第一个字段表示版本号，为固定值 0x00000001；</li>
+<li><p>第二个字段表示加密服务提供程序的 DUID，也为固定值 D08C9DDF0115D1118C7A00C04FC297EB；</p>
+<p>​    由于标准的 DPAPI 加密块总是以单个完整的文件存在，所以标准的 DPAPI 加密块有可能包含在文件中作为文件的一部分存在，甚至有些文件可以包含多个标准的 DPAPI 加密块。由于 DPAPI 加密块的前两个字段总是为固定值，因此可以以此为特征在文件中搜索和提取标准的 DPAPI 加密块。</p>
+</li>
+</ul>
+<h3 id="3-2-解密主密钥"><a href="#3-2-解密主密钥" class="headerlink" title="3.2 解密主密钥"></a>3.2 解密主密钥</h3><p>​        Windows 的主密钥文件和历史凭据文件有其固定的路径结构，如下所示。</p>
+<ul>
+<li>用户主密钥文件，位于<code>％APPDATA％\Microsoft\Protect\％SID％</code></li>
+<li><p>系统主密钥文件，位于<code>％WINDIR％\System32\Microsoft\Protect\S-1-5-18\User</code></p>
+<p>​    每个系统帐号都有其对应的若干个主密钥；%SID% 是 Windows系统为区分不同账户而为它们分配的全局唯一标识符，它们的格式的固定的。和主密钥对应的历史凭据文件则位于主密钥的上一层目录。</p>
+<p>​    主密钥文件共包含 5 个数据单元，分别为<code>主密钥头部单元</code>、<code>用户主密钥单元</code>、<code>本地加密密钥单元</code>、<code>历史凭据标识单元</code>和<code>域密钥备份单元</code>。结构如图所示。</p>
+</li>
+</ul>
+<p><img src="/image/【知识回顾】DPAPI 详解/主密钥文件结构.png" alt=""></p>
+<p><center>图4 主密钥文件结构</center><br>​        其中，主密钥头部单元包括主密钥 GUID，该标识与 DPAPI 中指示的加密密钥唯一标识相对应。另外，主密钥头部单元还包含了指示其他个单元占用字节数的字段。历史凭据单元也包含一个全局唯一表示符（ CREDHIST GUID ），用来指示跟主密钥文件对应的历史凭据文件。对于域密钥本分单元，只有域环境下的用户才会有，此单元的数据经过了域管理员的公钥加密处理。对于单机用户，无论什么系统都没有域密钥备份单元，这篇文章主要解析单机用户主密钥单元。用户主密钥单元包含一个经过加密的二进制加密块，其中的加密数据就是主密钥。</p>
+<p>​        用户主密钥单元中包含 PBKDF2 采用的迭代次数、安全散列算法类型和对称加密算法类型等字段，不同的操作系统有着不同的值</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">操作系统</th>
+<th style="text-align:center">PBKDF2迭代次数</th>
+<th style="text-align:center">安全散列算法类型</th>
+<th style="text-align:center">加密算法类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Windows XP</td>
+<td style="text-align:center">4000</td>
+<td style="text-align:center">SHA-1</td>
+<td style="text-align:center">DES-3</td>
+</tr>
+<tr>
+<td style="text-align:center">Windows 2003</td>
+<td style="text-align:center">4000</td>
+<td style="text-align:center">SHA-1</td>
+<td style="text-align:center">DES-3</td>
+</tr>
+<tr>
+<td style="text-align:center">Windows Vista</td>
+<td style="text-align:center">24000</td>
+<td style="text-align:center">SHA-1</td>
+<td style="text-align:center">DES-3</td>
+</tr>
+<tr>
+<td style="text-align:center">Windows 7</td>
+<td style="text-align:center">5600</td>
+<td style="text-align:center">SHA-512</td>
+<td style="text-align:center">SHA-256</td>
+</tr>
+<tr>
+<td style="text-align:center">Windows 8</td>
+<td style="text-align:center">8000</td>
+<td style="text-align:center">SHA-512</td>
+<td style="text-align:center">SHA-256</td>
+</tr>
+<tr>
+<td style="text-align:center">Windows 10</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<p>​        由 DPAPI 的加密过程分析可知，要使 DPAPI 正常运作，必须保存用户所有的历史登陆密码的 SHA-1 值。用户所有的历史登陆密码的 SHA-1 值存储在一个名为 CREDHIST 的历史凭据文件中，结构如图所示</p>
+<p><img src="/image/【知识回顾】DPAPI 详解/历史凭据文件结构.png" alt=""></p>
+<p><center>图5 历史凭据文件结构</center><br>​        CREDHIST 以链表的形式存储用户历史登陆密码的 SHA-1 值，每个用户的登陆密码散列值作为链表的一个节点，整个链表在文件中以反向形式存储，即表头在最后，倒数第二个记录时第一个节点，依次类推。而每个链表节点都具有相同的数据格式，并且每个节点的 SHA-1 值被前一个节点的 SHA-1 值加密处理，加密的方式与主密钥的加密方式一样。</p>
+<p>​        图 2 的解密主密钥过程中涉及一个基于口令的密钥派生函数（ PBKDF2 ）的调用，微软的 PBKDF2 跟工业标准（ PKCD#5 ）不太一样，其内部做了部分改动。工业标准的 PBKDF2 函数循环内的伪随机函数的输入时上一次循环伪随机函数的输出，而微软 PBKDF2 函数伪随机函数的输入则是上两次相邻随机函数输出的异或。</p>
+<h3 id="3-3-解密-DPAPI-加密块"><a href="#3-3-解密-DPAPI-加密块" class="headerlink" title="3.3 解密 DPAPI 加密块"></a>3.3 解密 DPAPI 加密块</h3><p>​        从图 2 的 DPAPI 离线解密过程可以知道，在解密 DPAPI加密块时先需要从主密钥派生一个会话密钥，派生过程中调用了改版的加密散列函数（ M_HMAC() ）和一个烟花密钥函数（ DeriveKey() ）。<code>M_HMAC()</code> 输入包括 DPAPI 提供的额外熵参数。</p>
+<ul>
+<li><p><code>M_HMAC()</code> 具体描述如下所示：</p>
+  <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">M_HMAC</span><span class="params">(K, m, e, s)</span></span> 算法的数据定义为：</span><br><span class="line"><span class="function"><span class="title">M_HMAC</span><span class="params">(K, m, e, s)</span></span> = H((K ⊕ opad) <span class="comment">// H((K ⊕ ipad) // m) // e // s)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">H</span><span class="params">()</span></span> 表示对应的散列函数</span><br><span class="line">K 表示密钥，这里对应密钥的 SHA-<span class="number">1</span> 值</span><br><span class="line">M 表示需要认证的数据，这里对应 Salt</span><br><span class="line">S 表示强密码</span><br><span class="line"><span class="comment">// 表示两个字符串的连接</span></span><br><span class="line">⊕ 表示异或</span><br><span class="line">Opad 表示外部填充块</span><br><span class="line">Ipad 表示内部填充块</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>DeriveKey()</code> 对应于 CryptoAPI 的 CryptDeriveKey()，具体描述如下：</p>
+  <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">DeriveKey</span><span class="params">(d, n)</span></span> 算法的数据定义为：</span><br><span class="line"><span class="function"><span class="title">DeriveKey</span><span class="params">(d, n)</span></span> = F-n(H( d ⊕ ipad) <span class="comment">// H(d ⊕ opad))</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">H</span><span class="params">()</span></span> 表示对应的散列函数</span><br><span class="line"><span class="function"><span class="title">F-n</span><span class="params">()</span></span> 表示取前 t 个字节数据</span><br><span class="line">n 表示需要演化出的密钥长度</span><br><span class="line">d 表示被演化的数据(对应 M_HMAC() 输出)，并通过填充 <span class="number">0</span> 补齐 <span class="number">64</span> 字节长</span><br><span class="line"><span class="comment">// 表示两个字符串的连接</span></span><br><span class="line">⊕ 表示异或</span><br><span class="line">Opad 表示外部填充块</span><br><span class="line">Ipad 表示内部填充块</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="0x04-DPAPI-的应用"><a href="#0x04-DPAPI-的应用" class="headerlink" title="0x04 DPAPI 的应用"></a>0x04 DPAPI 的应用</h2><ul>
+<li>EFS文件加密</li>
+<li>存储无线连接密码</li>
+<li>Windows凭据管理器</li>
+<li>IE浏览器</li>
+<li>外表</li>
+<li>Skype的</li>
+<li>Windows CardSpace</li>
+<li>Windows Vault</li>
+<li>谷歌浏览器</li>
+</ul>
+<h2 id="0x05-结束语"><a href="#0x05-结束语" class="headerlink" title="0x05 结束语"></a>0x05 结束语</h2><p>在 WIndows 操作系统中，DPAPI 作为具有加密功能的最主要接口之一，保护着大量的用户私密数据。然而，本文给出的 DPAPI 离线解密方法，只适用于单机用户，无法解密域管理员控制下的 DPAPI 加密的数据。与环境控制下的 DPAPI 加密机制相对于淡季用户有很大的不同。</p>
+<h2 id="0x06-参考"><a href="#0x06-参考" class="headerlink" title="0x06 参考"></a>0x06 参考</h2><p><a href="http://netinfo-security.org/CN/article/downloadArticleFile.do?attachType=PDF&amp;id=518" target="_blank" rel="noopener">DPAPI 离线解密方法及其取证应用</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>！坚持技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechatpay.jpg" alt="RcoIl WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>嘤嘤怪：</strong>
+      RcoIl
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://rcoil.me/2019/07/【知识回顾】DPAPI 详解/" title="【知识回顾】DPAPI 详解">https://rcoil.me/2019/07/【知识回顾】DPAPI 详解/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/系统安全/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> 系统安全</a>
+          
+            <a href="/tags/知识回顾/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> 知识回顾</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/【域渗透】SPN 扫描利用/" rel="next" title="【域渗透】SPN 扫描利用">
+                <i class="fa fa-chevron-left"></i> 【域渗透】SPN 扫描利用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/08/【知识回顾】深入了解 PsExec/" rel="prev" title="【知识回顾】深入了解 PsExec">
+                【知识回顾】深入了解 PsExec <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODE5NS80NzY4"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="RcoIl">
+          <p class="site-author-name" itemprop="name">RcoIl</p>
+           
+              <p class="site-description motion-element" itemprop="description">好吃懒做，还有就是皮肤比黄皮果还黄！</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RcoIl" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=rcoil@qq.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-fa fa-envelope-open"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+		
+		
+          <div class="feed-link motion-element">
+            <div id="days"></div>
+			<script language="javascript">
+			function show_date_time(){
+				window.setTimeout("show_date_time()", 1000);
+				BirthDay=new Date("09/01/2016 10:13:14");
+				today=new Date();
+				timeold=(today.getTime()-BirthDay.getTime());
+				sectimeold=timeold/1000
+				secondsold=Math.floor(sectimeold);
+				msPerDay=24*60*60*1000
+				e_daysold=timeold/msPerDay
+				daysold=Math.floor(e_daysold);
+				e_hrsold=(e_daysold-daysold)*24;
+				hrsold=setzero(Math.floor(e_hrsold));
+				e_minsold=(e_hrsold-hrsold)*60;
+				minsold=setzero(Math.floor((e_hrsold-hrsold)*60));
+				seconds=setzero(Math.floor((e_minsold-minsold)*60));
+				document.getElementById('days').innerHTML="本站已运行 "+daysold+" 天 "+hrsold+" 小时 "+minsold+" 分"+ seconds +" 秒";
+			}
+			function setzero(i){
+				if (i<10)
+				{i="0" + i};
+				return i;
+			}		
+			show_date_time();
+		</script>
+        </div>
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://isron.cn/" title="Isron" target="_blank">Isron</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hacktech.cn/" title="Akkuman" target="_blank">Akkuman</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://rootrain.me/" title="rootrain" target="_blank">rootrain</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://kerlinglovsec.lofter.com/" title="kerling" target="_blank">kerling</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.luolikong.vip/" title="Fire-ant" target="_blank">Fire-ant</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xnianq.cn/" title="xniang" target="_blank">xniang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://thief.one/" title="nMask" target="_blank">nMask</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://cate4cafe.com/" title="cate4cafe" target="_blank">cate4cafe</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://52stu.me/" title="IversOn5" target="_blank">IversOn5</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hone.cool/" title="Hone" target="_blank">Hone</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://sharecast.bitcron.com/" title="sharecast" target="_blank">sharecast</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://scarletf.github.io/" title="ScarletF" target="_blank">ScarletF</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.lz1y.cn/" title="Lz1y" target="_blank">Lz1y</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00-前言"><span class="nav-text">0x00 前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-DPAPI-概述"><span class="nav-text">0x01 DPAPI 概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-DPAPI-函数"><span class="nav-text">1.1 DPAPI 函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-基本概念介绍"><span class="nav-text">1.2 基本概念介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-DPAPI-加密机制分析"><span class="nav-text">0x02 DPAPI 加密机制分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-生成主密钥"><span class="nav-text">2.1 生成主密钥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-解密主密钥"><span class="nav-text">2.2 解密主密钥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-使用主密钥加密数据"><span class="nav-text">2.3 使用主密钥加密数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-DPAPI-离线解密方法"><span class="nav-text">0x03 DPAPI 离线解密方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-定位主密钥"><span class="nav-text">3.1 定位主密钥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-解密主密钥"><span class="nav-text">3.2 解密主密钥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-解密-DPAPI-加密块"><span class="nav-text">3.3 解密 DPAPI 加密块</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x04-DPAPI-的应用"><span class="nav-text">0x04 DPAPI 的应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x05-结束语"><span class="nav-text">0x05 结束语</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x06-参考"><span class="nav-text">0x06 参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+<!--
+    <i class="fa fa-heart"></i>
+-->
+	<i class="fa fa-address-card-o" aria-hidden="true"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RcoIl</span>
+</div>
+<!--
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+-->
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-blind" aria-hidden="true"></i>本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-user-md" aria-hidden="true"></i>本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("KVNdpVifyFqJPx0bzSg6cN7z-gzGzoHsz", "vlNRwqLbdUTKC1W06gjYj0iG");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

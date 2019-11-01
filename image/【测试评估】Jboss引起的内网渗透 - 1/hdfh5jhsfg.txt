@@ -1,0 +1,91 @@
+Authentication Id : 0 ; 14635055 (00000000:00df502f)
+Session           : Batch from 0
+User Name         : ComputerRoom
+Domain            : FCEOFFICES
+Logon Server      : FCE-DC01
+Logon Time        : 9/23/2017 9:25:15 AM
+SID               : S-1-5-21-74153173-157108918-620655208-1037
+	msv :	
+	 [00000003] Primary
+	 * Username : ComputerRoom
+	 * Domain   : FCEOFFICES
+	 * NTLM     : 3e32c6e4adc6dd40b37ff22bee701040
+	 * SHA1     : 7fb4a69cd2c8d76dfcaa3785b5125ae056575741
+	 [00010000] CredentialKeys
+	 * NTLM     : 3e32c6e4adc6dd40b37ff22bee701040
+	 * SHA1     : 7fb4a69cd2c8d76dfcaa3785b5125ae056575741
+	tspkg :	
+	wdigest :	
+	 * Username : ComputerRoom
+	 * Domain   : FCEOFFICES
+	 * Password : TokaCigUVoki4
+
+Authentication Id : 0 ; 377643 (00000000:0005c32b)
+Session           : RemoteInteractive from 2
+User Name         : jholloway
+Domain            : FCEOFFICES
+Logon Server      : FCE-DC03
+Logon Time        : 8/29/2017 9:16:22 AM
+SID               : S-1-5-21-74153173-157108918-620655208-10144
+	msv :	
+	 [00000003] Primary
+	 * Username : jholloway
+	 * Domain   : FCEOFFICES
+	 * NTLM     : f048df7f46a84502487857e5d3ba7311
+	 * SHA1     : 303ea689bdc0937a692294862c29ef0d4293df01
+	 [00010000] CredentialKeys
+	 * NTLM     : f048df7f46a84502487857e5d3ba7311
+	 * SHA1     : 303ea689bdc0937a692294862c29ef0d4293df01
+	tspkg :	
+	wdigest :	
+	 * Username : jholloway
+	 * Domain   : FCEOFFICES
+	 * Password : 1301Gailwood
+	kerberos :	
+	 * Username : jholloway
+	 * Domain   : FIRSTCOASTENERGY.COM
+	 * Password : (null)
+	ssp :	
+	credman :	
+
+
+
+Authentication Id : 0 ; 213202 (00000000:000340d2)
+Session           : Interactive from 1
+User Name         : jduffy
+Domain            : FCEOFFICES
+Logon Server      : FCE-DC01
+Logon Time        : 10/19/2017 8:58:43 AM
+SID               : S-1-5-21-74153173-157108918-620655208-1008
+	msv :	
+	 [00000003] Primary
+	 * Username : jduffy
+	 * Domain   : FCEOFFICES
+	 * NTLM     : d497852811c280c8621d431edeb65ced
+	 * SHA1     : 451793035414e50bfc318d8d1ea9e80025bd7112
+	 [00010000] CredentialKeys
+	 * NTLM     : d497852811c280c8621d431edeb65ced
+	 * SHA1     : 451793035414e50bfc318d8d1ea9e80025bd7112
+	tspkg :	
+	wdigest :	
+	 * Username : jduffy
+	 * Domain   : FCEOFFICES
+	 * Password : Bosco111
+	kerberos :	
+	 * Username : jduffy
+	 * Domain   : FIRSTCOASTENERGY.COM
+	 * Password : (null)
+	ssp :	
+	credman :	
+	 [00000000]
+	 * Username : (null)
+	 * Domain   : Microsoft_WinInet_www.firstcoastenergy.com:80/firstcoastenergy.c
+om
+	 * Password : 01 00 00 00 d0 8c 9d df 01 15 d1 11 8c 7a 00 c0 4f c2 97 eb 01 0
+0 00 00 b9 3f 48 7d 9e 2f 09 40 85 68 f5 56 43 a5 bf d7 00 00 00 00 18 00 00 00
+ 57 00 49 00 4e 00 49 00 4e 00 45 00 54 00 43 00 72 00 65 00 64 00 00 00 03 66 
+00 00 c0 00 00 00 10 00 00 00 cc 18 54 0b 9f ff ff ef 24 d9 38 59 07 7c d2 b8 0
+0 00 00 00 04 80 00 00 a0 00 00 00 10 00 00 00 78 f5 4b e3 4a 1d 44 3e 6e 6b 57
+ 81 b2 f7 78 d5 28 00 00 00 92 ca 32 71 70 ed 1f 78 65 38 cf 04 ab 11 81 b0 25 
+c1 29 39 e8 23 bc 02 fa 43 e8 98 cd 13 0d 17 88 4d 87 fb ca e1 7a f6 14 00 00 0
+0 65 1d d1 ff ed 1c 92 75 02 c5 1e c1 44 39 c5 6e b0 e7 21 9a 

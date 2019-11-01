@@ -1,0 +1,1232 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|sans-serif:300,300italic,400,400italic,700,700italic|Lato:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="内网渗透,系统安全,Tools,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RcoIl的窝" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="几乎对所有渗透者来讲,初衷或者最终目的无非就是想对目标实施长期监控及数据落地。">
+<meta name="keywords" content="内网渗透,系统安全,Tools">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【渗透技巧】利用目标系统现有工具快速打包目标机器数据">
+<meta property="og:url" content="https://rcoil.me/2017/03/【渗透技巧】利用目标系统现有工具快速打包目标机器数据/index.html">
+<meta property="og:site_name" content="RcoIl的窝">
+<meta property="og:description" content="几乎对所有渗透者来讲,初衷或者最终目的无非就是想对目标实施长期监控及数据落地。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-11-01T01:44:54.599Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【渗透技巧】利用目标系统现有工具快速打包目标机器数据">
+<meta name="twitter:description" content="几乎对所有渗透者来讲,初衷或者最终目的无非就是想对目标实施长期监控及数据落地。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '6230266985318450000',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://rcoil.me/2017/03/【渗透技巧】利用目标系统现有工具快速打包目标机器数据/">
+
+
+
+
+
+  <title> 【渗透技巧】利用目标系统现有工具快速打包目标机器数据 | RcoIl的窝 </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?ce3d1967864bac5f69f1c1a6042e5577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RcoIl的窝</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-count">
+          <a href="/count" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-fa fa-free-code-camp"></i> <br>
+            
+            阅读榜
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://rcoil.me/2017/03/【渗透技巧】利用目标系统现有工具快速打包目标机器数据/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RcoIl">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RcoIl的窝">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                【渗透技巧】利用目标系统现有工具快速打包目标机器数据
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-05T15:04:32+08:00">
+                2017-03-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/内网渗透/" itemprop="url" rel="index">
+                    <span itemprop="name">内网渗透</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/03/【渗透技巧】利用目标系统现有工具快速打包目标机器数据/" class="leancloud_visitors" data-flag-title="【渗透技巧】利用目标系统现有工具快速打包目标机器数据">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                <!--
+				<i class="fa fa-eye"></i>
+				-->
+				<i class="fa fa-thermometer-three-quarters" aria-hidden="true"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">热度 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+				 <span>℃</span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>几乎对所有渗透者来讲,初衷或者最终目的无非就是想对目标实施长期监控及数据落地。<br><a id="more"></a></p>
+<h2 id="在linux机器下的快速打包方式"><a href="#在linux机器下的快速打包方式" class="headerlink" title="在linux机器下的快速打包方式:"></a>在linux机器下的快速打包方式:</h2><h3 id="利用-‘tar’"><a href="#利用-‘tar’" class="headerlink" title="利用 ‘tar’"></a>利用 ‘tar’</h3><p>一般在部署系统时默认都会预先装上,其它还有很多其它的压缩工具,但这里就以最常用的为例。<br><figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">--exclude 排除不打包的文件</span></span><br><span class="line"><span class="deletion">-c 创建文件</span></span><br><span class="line"><span class="deletion">-v 显示打包过程</span></span><br><span class="line"><span class="deletion">-f 指定要打包的文件</span></span><br><span class="line"><span class="deletion">-z 压缩</span></span><br><span class="line"><span class="deletion">-X 把要排除的文件名事先写到文件中然后指定它就可以排除多个了</span></span><br><span class="line"><span class="deletion">-C 解压到指定目录中</span></span><br><span class="line"><span class="deletion">-p 打包的时候保持原有文件属性</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="以-gunzip-格式压缩解压"><a href="#以-gunzip-格式压缩解压" class="headerlink" title="以 gunzip 格式压缩解压:"></a>以 gunzip 格式压缩解压:</h3><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># <span class="keyword">find</span> / -name <span class="string">'*.php'</span> -<span class="built_in">type</span> <span class="keyword">f</span> | wc -<span class="keyword">l</span></span><br><span class="line"># tar zcf /tmp/phpfile.tar.gz `<span class="keyword">find</span> / -name <span class="string">'*.php'</span> -<span class="built_in">type</span> <span class="keyword">f</span>` <span class="number">2</span>&gt; /dev/null &amp;&amp; <span class="keyword">cd</span> /tmp &amp;&amp; <span class="keyword">ls</span> ./phpfile.tar.gz &amp;&amp; <span class="keyword">echo</span> $? &amp;&amp; tar <span class="keyword">tf</span> phpfile.tar.gz  | wc -<span class="keyword">l</span>  会带上原有的目录结构</span><br><span class="line"># tar xf phpfile.tar.gz -C ./  解压</span><br></pre></td></tr></table></figure>
+<h3 id="以-bzip-格式压缩解压"><a href="#以-bzip-格式压缩解压" class="headerlink" title="以 bzip 格式压缩解压:"></a>以 bzip 格式压缩解压:</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># <span class="selector-tag">tar</span> <span class="selector-tag">jcf</span> <span class="selector-tag">access</span><span class="selector-class">.tar</span><span class="selector-class">.bz</span> <span class="selector-tag">access</span>*   	<span class="selector-tag">bzip</span>格式打包压缩文件</span><br><span class="line"># <span class="selector-tag">tar</span> <span class="selector-tag">jxf</span> <span class="selector-tag">access</span><span class="selector-class">.tar</span><span class="selector-class">.bz</span>  		<span class="selector-tag">zip</span>解压缩</span><br></pre></td></tr></table></figure>
+<h3 id="针对大文件的分卷压缩解压"><a href="#针对大文件的分卷压缩解压" class="headerlink" title="针对大文件的分卷压缩解压:"></a>针对大文件的分卷压缩解压:</h3><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># tar cjf - /usr/local/apache2/htdocs/ | split -b 1m - www.bz2 2&gt;/dev/null  1m大小分割,直接压缩到当前目录下</span></span><br><span class="line"><span class="meta"># cat www.bz2a* | tar xj   分割压缩后的解压方法</span></span><br><span class="line"><span class="meta"># ls -lR usr/</span></span><br></pre></td></tr></table></figure>
+<h2 id="在win机器上的一些快速打包方式"><a href="#在win机器上的一些快速打包方式" class="headerlink" title="在win机器上的一些快速打包方式"></a>在win机器上的一些快速打包方式</h2><h3 id="7z"><a href="#7z" class="headerlink" title="7z"></a>7z</h3><figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">-r 递归压缩</span></span><br><span class="line"><span class="deletion">-o 指定要输出到的目录</span></span><br><span class="line"><span class="deletion">-p 指定密码</span></span><br><span class="line"><span class="deletion">-v 分卷压缩,给的务必要适量,否则文件会非常多</span></span><br><span class="line">a 添加压缩文件</span><br></pre></td></tr></table></figure>
+<h4 id="普通压缩解压方式"><a href="#普通压缩解压方式" class="headerlink" title="普通压缩解压方式"></a>普通压缩解压方式</h4><figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 7z.exe -r -padmin a c:<span class="symbol">\d</span>rupal754.7z C:<span class="symbol">\A</span>ppServ<span class="symbol">\w</span>ww<span class="symbol">\d</span>rupal-7.54-vuln-sqli-rce<span class="symbol">\*</span>.*</span><br><span class="line"># 7z.exe x -padmin drupal754.7z -oc:<span class="symbol">\x</span>l</span><br></pre></td></tr></table></figure>
+<h4 id="分卷压缩解压方式"><a href="#分卷压缩解压方式" class="headerlink" title="分卷压缩解压方式"></a>分卷压缩解压方式</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 7<span class="selector-tag">z</span><span class="selector-class">.exe</span> <span class="selector-tag">-r</span> <span class="selector-tag">-v1m</span> <span class="selector-tag">-padmin</span> <span class="selector-tag">a</span> <span class="selector-tag">c</span>:\<span class="selector-tag">drupal754</span><span class="selector-class">.7z</span> <span class="selector-tag">C</span>:\<span class="selector-tag">AppServ</span>\<span class="selector-tag">www</span>\<span class="selector-tag">drupal-7</span><span class="selector-class">.54-vuln-sqli-rce</span>\*.*</span><br><span class="line"># 7<span class="selector-tag">z</span><span class="selector-class">.exe</span> <span class="selector-tag">x</span> <span class="selector-tag">-padmin</span> <span class="selector-tag">drupal754</span><span class="selector-class">.7z</span><span class="selector-class">.001</span> <span class="selector-tag">-oc</span>:\<span class="selector-tag">xl</span></span><br></pre></td></tr></table></figure>
+<h3 id="rar"><a href="#rar" class="headerlink" title="rar"></a>rar</h3><p>把安装好的winrar安装目录的rar.exe提取出来就可以直接用了,前提是你安装winrar的系统和目标的系统版本要对应,不然可能有些问题(自己觉得库应该是兼容的)<br><figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">-a  	添加要压缩的文件</span></span><br><span class="line"><span class="deletion">-p  	指定压缩密码</span></span><br><span class="line"><span class="deletion">-r     递归压缩,默认只压根目录,需要先注册下,把rarreg.key丢到安装winrar目录即可</span></span><br><span class="line"><span class="deletion">-x 	 指定要排除的文件,单位 k,m,g</span></span><br><span class="line"><span class="deletion">-v 	 分卷打包,后面跟上单位就好了,打包大文件会很有用</span></span><br><span class="line"><span class="deletion">-m3,4 	使用较好的压缩方式,速度可能会有些慢</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="以-rar-格式压缩解压"><a href="#以-rar-格式压缩解压" class="headerlink" title="以 rar 格式压缩解压"></a>以 rar 格式压缩解压</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># <span class="selector-tag">Rar</span><span class="selector-class">.exe</span> <span class="selector-tag">a</span> <span class="selector-tag">-r</span> <span class="selector-tag">-padmin</span> <span class="selector-tag">-m3</span> <span class="selector-tag">-x</span>*<span class="selector-class">.txt</span> <span class="selector-tag">-ta</span> <span class="selector-tag">c</span>:\<span class="selector-tag">drupal754</span><span class="selector-class">.rar</span> <span class="selector-tag">C</span>:\<span class="selector-tag">AppServ</span>\<span class="selector-tag">www</span>\<span class="selector-tag">drupal-7</span><span class="selector-class">.54-vuln-sqli-rce</span>\*.*  	把指定目录下的所有文件<span class="selector-attr">[包括所有子目录及子目录中的文件,排除txt文件]</span>带密码压缩,然后把压缩好的文件放到<span class="selector-tag">c</span>的根下命名成<span class="selector-tag">drupal754</span><span class="selector-class">.rar</span></span><br><span class="line"># <span class="selector-tag">Rar</span><span class="selector-class">.exe</span> <span class="selector-tag">x</span> <span class="selector-tag">-padmin</span> <span class="selector-tag">c</span>:\<span class="selector-tag">drupal754</span><span class="selector-class">.rar</span> <span class="selector-tag">c</span>:\<span class="selector-tag">xl</span>	带密码保留原有目录结构解压</span><br></pre></td></tr></table></figure>
+<h4 id="以-zip-格式压缩解压-用法同上"><a href="#以-zip-格式压缩解压-用法同上" class="headerlink" title="以 zip 格式压缩解压[用法同上]"></a>以 zip 格式压缩解压[用法同上]</h4><figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># Rar.exe a -r -padmin -m3 -x*.txt -ta c:<span class="symbol">\d</span>rupal754.zip C:<span class="symbol">\A</span>ppServ<span class="symbol">\w</span>ww<span class="symbol">\d</span>rupal-7.54-vuln-sqli-rce<span class="symbol">\*</span>.*</span><br><span class="line"># Rar.exe x -padmin c:<span class="symbol">\d</span>rupal754.zip c:<span class="symbol">\x</span>l</span><br></pre></td></tr></table></figure>
+<h4 id="分卷压缩解压"><a href="#分卷压缩解压" class="headerlink" title="分卷压缩解压"></a>分卷压缩解压</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># <span class="selector-tag">Rar</span><span class="selector-class">.exe</span> <span class="selector-tag">a</span> <span class="selector-tag">-r</span> <span class="selector-tag">-v1m</span> <span class="selector-tag">-padmin</span> <span class="selector-tag">-m3</span> <span class="selector-tag">-x</span>*<span class="selector-class">.txt</span> <span class="selector-tag">-ta</span> <span class="selector-tag">c</span>:\<span class="selector-tag">drupal754</span><span class="selector-class">.rar</span> <span class="selector-tag">C</span>:\<span class="selector-tag">AppServ</span>\<span class="selector-tag">www</span>\<span class="selector-tag">drupal-7</span><span class="selector-class">.54-vuln-sqli-rce</span>\*.* 压缩</span><br><span class="line"># <span class="selector-tag">Rar</span><span class="selector-class">.exe</span> <span class="selector-tag">x</span> <span class="selector-tag">-padmin</span> <span class="selector-tag">c</span>:\<span class="selector-tag">drupal754</span><span class="selector-class">.part01</span><span class="selector-class">.rar</span> <span class="selector-tag">c</span>:\<span class="selector-tag">xl</span>	解压</span><br></pre></td></tr></table></figure>
+<h2 id="后话"><a href="#后话" class="headerlink" title="后话:"></a>后话:</h2><p>很显然,通关全文,跟技术几乎没有任何关系[仅仅就是几个小工具的简单使用而已],就当留个备忘吧,留给有需要的朋友,另外,打包的时候务必注意下目标分区的大小,不然空间不够,容易出错,文件的元数据要不要一并保存,正在打包的文件是否被占用什么的,有时候打包可能还会有些小小的问题,相信那对你都不是问题</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>！坚持技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechatpay.jpg" alt="RcoIl WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>嘤嘤怪：</strong>
+      RcoIl
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://rcoil.me/2017/03/【渗透技巧】利用目标系统现有工具快速打包目标机器数据/" title="【渗透技巧】利用目标系统现有工具快速打包目标机器数据">https://rcoil.me/2017/03/【渗透技巧】利用目标系统现有工具快速打包目标机器数据/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/内网渗透/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> 内网渗透</a>
+          
+            <a href="/tags/系统安全/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> 系统安全</a>
+          
+            <a href="/tags/Tools/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> Tools</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/【内网必修】hash传递-ipc$/" rel="prev" title="【内网必修】hash传递-ipc$">
+                【内网必修】hash传递-ipc$ <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODE5NS80NzY4"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="RcoIl">
+          <p class="site-author-name" itemprop="name">RcoIl</p>
+           
+              <p class="site-description motion-element" itemprop="description">好吃懒做，还有就是皮肤比黄皮果还黄！</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RcoIl" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=rcoil@qq.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-fa fa-envelope-open"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+		
+		
+          <div class="feed-link motion-element">
+            <div id="days"></div>
+			<script language="javascript">
+			function show_date_time(){
+				window.setTimeout("show_date_time()", 1000);
+				BirthDay=new Date("09/01/2016 10:13:14");
+				today=new Date();
+				timeold=(today.getTime()-BirthDay.getTime());
+				sectimeold=timeold/1000
+				secondsold=Math.floor(sectimeold);
+				msPerDay=24*60*60*1000
+				e_daysold=timeold/msPerDay
+				daysold=Math.floor(e_daysold);
+				e_hrsold=(e_daysold-daysold)*24;
+				hrsold=setzero(Math.floor(e_hrsold));
+				e_minsold=(e_hrsold-hrsold)*60;
+				minsold=setzero(Math.floor((e_hrsold-hrsold)*60));
+				seconds=setzero(Math.floor((e_minsold-minsold)*60));
+				document.getElementById('days').innerHTML="本站已运行 "+daysold+" 天 "+hrsold+" 小时 "+minsold+" 分"+ seconds +" 秒";
+			}
+			function setzero(i){
+				if (i<10)
+				{i="0" + i};
+				return i;
+			}		
+			show_date_time();
+		</script>
+        </div>
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://isron.cn/" title="Isron" target="_blank">Isron</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hacktech.cn/" title="Akkuman" target="_blank">Akkuman</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://rootrain.me/" title="rootrain" target="_blank">rootrain</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://kerlinglovsec.lofter.com/" title="kerling" target="_blank">kerling</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.luolikong.vip/" title="Fire-ant" target="_blank">Fire-ant</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xnianq.cn/" title="xniang" target="_blank">xniang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://thief.one/" title="nMask" target="_blank">nMask</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://cate4cafe.com/" title="cate4cafe" target="_blank">cate4cafe</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://52stu.me/" title="IversOn5" target="_blank">IversOn5</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hone.cool/" title="Hone" target="_blank">Hone</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://sharecast.bitcron.com/" title="sharecast" target="_blank">sharecast</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://scarletf.github.io/" title="ScarletF" target="_blank">ScarletF</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.lz1y.cn/" title="Lz1y" target="_blank">Lz1y</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#在linux机器下的快速打包方式"><span class="nav-text">在linux机器下的快速打包方式:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#利用-‘tar’"><span class="nav-text">利用 ‘tar’</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#以-gunzip-格式压缩解压"><span class="nav-text">以 gunzip 格式压缩解压:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#以-bzip-格式压缩解压"><span class="nav-text">以 bzip 格式压缩解压:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#针对大文件的分卷压缩解压"><span class="nav-text">针对大文件的分卷压缩解压:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在win机器上的一些快速打包方式"><span class="nav-text">在win机器上的一些快速打包方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7z"><span class="nav-text">7z</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#普通压缩解压方式"><span class="nav-text">普通压缩解压方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分卷压缩解压方式"><span class="nav-text">分卷压缩解压方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rar"><span class="nav-text">rar</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#以-rar-格式压缩解压"><span class="nav-text">以 rar 格式压缩解压</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#以-zip-格式压缩解压-用法同上"><span class="nav-text">以 zip 格式压缩解压[用法同上]</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分卷压缩解压"><span class="nav-text">分卷压缩解压</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后话"><span class="nav-text">后话:</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+<!--
+    <i class="fa fa-heart"></i>
+-->
+	<i class="fa fa-address-card-o" aria-hidden="true"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RcoIl</span>
+</div>
+<!--
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+-->
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-blind" aria-hidden="true"></i>本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-user-md" aria-hidden="true"></i>本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("KVNdpVifyFqJPx0bzSg6cN7z-gzGzoHsz", "vlNRwqLbdUTKC1W06gjYj0iG");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
