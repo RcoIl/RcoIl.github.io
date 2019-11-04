@@ -121,7 +121,7 @@
 <meta property="og:image" content="https://rcoil.me/image/【知识回顾】命名管道/blog_2019-10-27_11-47-54.png">
 <meta property="og:image" content="https://rcoil.me/image/【知识回顾】命名管道/blog_2019-10-27_12-36-47.png">
 <meta property="og:image" content="https://rcoil.me/image/【知识回顾】命名管道/blog_2019-10-27_12-37-26.png">
-<meta property="og:updated_time" content="2019-11-04T07:17:04.831Z">
+<meta property="og:updated_time" content="2019-11-04T07:20:23.596Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【知识回顾】命名管道">
 <meta name="twitter:description" content="本文是根据之前文章中涉及到的命名管道的一个理解和延伸进行编写的。 PS：本文开始是投稿于安全客。但由于和别的稿件冲突了，相比下另一篇在原理探究，利用上会稍详尽一些些。只能说两篇文章是从不同角度进行的，建议结合阅读，文章连接：Windows 命名管道研究初探。">
@@ -461,7 +461,7 @@
 <p>这种情下，<code>Reverse shell</code> 也是会失败的，那么我们该如何绕过这种限制呢？</p>
 <p><strong>其实，这个很简单：</strong> <em>我们就直接利用防火墙默认允许的规则就行。</em></p>
 <p>在 Windows 中，通常默认允许 <strong>SMB 协议</strong> 出入站，因此，如果有什么功能或机制可以用于与外部机器进行通信的，<strong>SMB 协议</strong> 无疑是一种很好的选择。而 <strong>【知识回顾】命名管道</strong> 就是基于 <em>SMB 协议</em> 进行通信的，所以我们可以基于【知识回顾】命名管道与外部机器进行通信，从而建立控制通道。</p>
-<h2 id="0x02-【知识回顾】命名管道"><a href="#0x02-【知识回顾】命名管道" class="headerlink" title="0x02 【知识回顾】命名管道"></a>0x02 【知识回顾】命名管道</h2><p><a href="https://docs.microsoft.com/en-us/windows/win32/ipc/named-pipes" target="_blank" rel="noopener">“【知识回顾】命名管道”</a> 又名 “命名管线”，但是通常都叫命名管道，是一种简单基于 <code>SMB 协议</code>的进程间通信（Internet Process Connection - <em>IPC</em>）机制。 在计算机编程里，命名管道可在同一台计算机的不同进程之间或在跨越一个网络的不同计算机的不同进程之间，支持可靠的、单向或双向的数据通信传输。<strong>这完全符合我们的需求</strong>。</p>
+<h2 id="0x02-【知识回顾】命名管道"><a href="#0x02-【知识回顾】命名管道" class="headerlink" title="0x02 【知识回顾】命名管道"></a>0x02 【知识回顾】命名管道</h2><p><a href="https://docs.microsoft.com/en-us/windows/win32/ipc/named-pipes" target="_blank" rel="noopener">“命名管道”</a> 又名 “命名管线”，但是通常都叫命名管道，是一种简单基于 <code>SMB 协议</code>的进程间通信（Internet Process Connection - <em>IPC</em>）机制。 在计算机编程里，命名管道可在同一台计算机的不同进程之间或在跨越一个网络的不同计算机的不同进程之间，支持可靠的、单向或双向的数据通信传输。<strong>这完全符合我们的需求</strong>。</p>
 <p>和一般的管道不同，命名管道可以被不同进程以不同的方式方法调用（可以跨语言、跨平台）。只要程序知道命名管道的名字，任何进程都可以通过该名字打开管道的另一端，根据给定的权限和服务器进程通信。  </p>
 <p>默认情况下，我们无法使用命名管道来控制计算机通信，但是微软提供了很多种 Windows API 函数，例如 ：</p>
 <ul>
@@ -470,7 +470,7 @@
 <li>客户端进程通过使用 <a href="https://docs.microsoft.com/windows/desktop/api/fileapi/nf-fileapi-createfilea" target="_blank" rel="noopener"><strong>CreateFile</strong></a> 或 <a href="https://docs.microsoft.com/en-us/windows/desktop/api/Winbase/nf-winbase-callnamedpipea" target="_blank" rel="noopener"><strong>CallNamedPipe </strong></a>函数连接到命名管道</li>
 </ul>
 <p><strong>命名规范</strong></p>
-<p>【命名管道的命名是采用的 <strong>UNC 格式</strong>：<code>\\Server\Pipe\[Path]Name</code> 的。 </p>
+<p>命名管道的命名是采用的 <strong>UNC 格式</strong>：<code>\\Server\Pipe\[Path]Name</code> 的。 </p>
 <p>第一部分<code>\\Server</code>指定了服务器的名字，命名管道服务即在此服务器创建，其字符串部分可表示为一个小数点(表示本机)、星号(当前网络字段)、域名或是一个真正的服务；第二部分 <code>\Pipe</code> 与邮槽的 <code>\Mailslot</code> 一样是一个不可变化的硬编码字串，以指出该文件是从属于 NTFS；第三部分<code>[Path]Name</code>则使应用程序可以唯一定义及标识一个命名管道的名字，而且可以设置多级目录。 </p>
 <p> 在 <code>C#</code>中，若要实现命名管道，如今只需要使用 <a href="https://docs.microsoft.com/zh-cn/dotnet/api/system.io.pipes.namedpipeserverstream" target="_blank" rel="noopener">NamedPipeServerStream</a> 和 <a href="https://docs.microsoft.com/zh-cn/dotnet/api/system.io.pipes.namedpipeclientstream" target="_blank" rel="noopener">NamedPipeClientStream</a> 类，开盒即食。 </p>
 <h2 id="0x03-使用-C-实现"><a href="#0x03-使用-C-实现" class="headerlink" title="0x03 使用 C#实现"></a>0x03 使用 <code>C#</code>实现</h2><p>命名管道既可以支持直接字节传输模式（<code>PipeTransmissionMode.Byte</code>），也可以支持消息传输模式（<code>PipeTransmissionMode.Message</code>） 。</p>
@@ -499,12 +499,7 @@
 <p>这里再说一个关于平时常用的 <code>IPC$</code>。</p>
 <p><code>IPC</code> 中文翻译网络进程连接服务，也就是说这个是为 <strong>“进程”</strong> 间建立网络连接而存在的服务，说的再明确点就是：<code>IPC$</code> 是一个为 “各类进程” 建立网络通信连接而存在的服务。 </p>
 <p>那么，为什么 <code>SMB Beacon</code> 中，为什么不需要账号密码呢？这个问题留给你们探索！！！</p>
-<h2 id="0x05-参考"><a href="#0x05-参考" class="headerlink" title="0x05 参考"></a>0x05 参考</h2><p><a href="https://docs.microsoft.com/zh-cn/dotnet/standard/io/how-to-use-named-pipes-for-network-interprocess-communication" target="_blank" rel="noopener">如何：使用命名管道进行网络进程间通信</a></p>
-<p><a href="https://www.cnblogs.com/HDK2016/p/9840989.html" target="_blank" rel="noopener">【C#】解析C#中管道流的使用</a></p>
-<p><a href="https://segmentfault.com/a/1190000003116875" target="_blank" rel="noopener">命名管道实践</a></p>
-<p><a href="https://github.com/malcomvetter/NamedPipes" target="_blank" rel="noopener">NamedPipes</a></p>
-<p><a href="https://docs.microsoft.com/zh-cn/windows/win32/ipc/named-pipes" target="_blank" rel="noopener">https://docs.microsoft.com/zh-cn/windows/win32/ipc/named-pipes</a> </p>
-<p><a href="https://decoder.cloud/2017/11/02/we-dont-need-powershell-exe/" target="_blank" rel="noopener">We don’t need powershell.exe</a></p>
+<h2 id="0x05-参考"><a href="#0x05-参考" class="headerlink" title="0x05 参考"></a>0x05 参考</h2><p><a href="https://docs.microsoft.com/zh-cn/dotnet/standard/io/how-to-use-named-pipes-for-network-interprocess-communication" target="_blank" rel="noopener">如何：使用命名管道进行网络进程间通信</a><br><a href="https://www.cnblogs.com/HDK2016/p/9840989.html" target="_blank" rel="noopener">【C#】解析C#中管道流的使用</a><br><a href="https://segmentfault.com/a/1190000003116875" target="_blank" rel="noopener">命名管道实践</a><br><a href="https://github.com/malcomvetter/NamedPipes" target="_blank" rel="noopener">NamedPipes</a><br><a href="https://docs.microsoft.com/zh-cn/windows/win32/ipc/named-pipes" target="_blank" rel="noopener">https://docs.microsoft.com/zh-cn/windows/win32/ipc/named-pipes</a><br><a href="https://decoder.cloud/2017/11/02/we-dont-need-powershell-exe/" target="_blank" rel="noopener">We don’t need powershell.exe</a></p>
 
       
     </div>
