@@ -1,0 +1,1421 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|sans-serif:300,300italic,400,400italic,700,700italic|Lato:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="内网渗透,Tools,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RcoIl的窝" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="想要理解整个认证过程，必须要动手走一轮代码。  想要理解整个认证过程，必须要动手走一轮代码。  想要理解整个认证过程，必须要动手走一轮代码。  想要理解整个认证过程，必须要动手走一轮代码。  想要理解整个认证过程，必须要动手走一轮代码。  想要理解整个认证过程，必须要动手走一轮代码。">
+<meta name="keywords" content="内网渗透,Tools">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【知识回顾】Cobalt Strike 4.0 认证及修补过程">
+<meta property="og:url" content="https://rcoil.me/2020/11/【知识回顾】Cobalt Strike 4.0认证及修补过程/index.html">
+<meta property="og:site_name" content="RcoIl的窝">
+<meta property="og:description" content="想要理解整个认证过程，必须要动手走一轮代码。  想要理解整个认证过程，必须要动手走一轮代码。  想要理解整个认证过程，必须要动手走一轮代码。  想要理解整个认证过程，必须要动手走一轮代码。  想要理解整个认证过程，必须要动手走一轮代码。  想要理解整个认证过程，必须要动手走一轮代码。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】Cobalt%20Strike%204.0认证及修补过程/blog_2020-07-29_11-03-26.png">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】Cobalt%20Strike%204.0认证及修补过程/blog_2020-07-29_10-47-15.png">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】Cobalt%20Strike%204.0认证及修补过程/blog_2020-07-29_10-57-38.png">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】Cobalt%20Strike%204.0认证及修补过程/blog_2020-07-29_11-07-55.png">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】Cobalt%20Strike%204.0认证及修补过程/blog_2020-07-29_11-15-22.png">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】Cobalt%20Strike%204.0认证及修补过程/blog_2020-07-29_11-21-21.png">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】Cobalt%20Strike%204.0认证及修补过程/微信图片_20200730195204.jpg">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】Cobalt%20Strike%204.0认证及修补过程/blog_2020-07-30_14-28-48.png">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】Cobalt%20Strike%204.0认证及修补过程/blog_2020-07-30_20-39-47.png">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】Cobalt%20Strike%204.0认证及修补过程/blog_2020-07-30_21-02-40.png">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】Cobalt%20Strike%204.0认证及修补过程/blog_2020-07-31_23-45-39.png">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】Cobalt%20Strike%204.0认证及修补过程/CS%204.X%20认证流程图.png">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】Cobalt%20Strike%204.0认证及修补过程/blog_2020-08-01_14-03-22.png">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】Cobalt%20Strike%204.0认证及修补过程/blog_2020-08-01_14-08-26.png">
+<meta property="og:image" content="https://rcoil.me/image/【知识回顾】Cobalt%20Strike%204.0认证及修补过程/blog_2020-08-01_17-52-18.png">
+<meta property="og:updated_time" content="2020-09-24T14:44:27.539Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【知识回顾】Cobalt Strike 4.0 认证及修补过程">
+<meta name="twitter:description" content="想要理解整个认证过程，必须要动手走一轮代码。  想要理解整个认证过程，必须要动手走一轮代码。  想要理解整个认证过程，必须要动手走一轮代码。  想要理解整个认证过程，必须要动手走一轮代码。  想要理解整个认证过程，必须要动手走一轮代码。  想要理解整个认证过程，必须要动手走一轮代码。">
+<meta name="twitter:image" content="https://rcoil.me/image/【知识回顾】Cobalt%20Strike%204.0认证及修补过程/blog_2020-07-29_11-03-26.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '6230266985318450000',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://rcoil.me/2020/11/【知识回顾】Cobalt Strike 4.0认证及修补过程/">
+
+
+
+
+
+  <title> 【知识回顾】Cobalt Strike 4.0 认证及修补过程 | RcoIl的窝 </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?ce3d1967864bac5f69f1c1a6042e5577";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RcoIl的窝</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-count">
+          <a href="/count" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-fa fa-free-code-camp"></i> <br>
+            
+            阅读榜
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://rcoil.me/2020/11/【知识回顾】Cobalt Strike 4.0认证及修补过程/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RcoIl">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RcoIl的窝">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                【知识回顾】Cobalt Strike 4.0 认证及修补过程
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-11-26T19:40:19+08:00">
+                2020-11-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/内网渗透/" itemprop="url" rel="index">
+                    <span itemprop="name">内网渗透</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2020/11/【知识回顾】Cobalt Strike 4.0认证及修补过程/" class="leancloud_visitors" data-flag-title="【知识回顾】Cobalt Strike 4.0 认证及修补过程">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                <!--
+				<i class="fa fa-eye"></i>
+				-->
+				<i class="fa fa-thermometer-three-quarters" aria-hidden="true"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">热度 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+				 <span>℃</span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li><font color="red">想要理解整个认证过程，必须要动手走一轮代码。</font>
+</li>
+<li><font color="#008000">想要理解整个认证过程，必须要动手走一轮代码。</font>
+</li>
+<li><font color="Blue">想要理解整个认证过程，必须要动手走一轮代码。</font>
+</li>
+<li><font face="STCAIYUN">想要理解整个认证过程，必须要动手走一轮代码。</font>
+</li>
+<li><font face="微软雅黑">想要理解整个认证过程，必须要动手走一轮代码。</font>
+</li>
+<li><font face="黑体">想要理解整个认证过程，必须要动手走一轮代码。</font>
+
+</li>
+</ul>
+<a id="more"></a>
+<blockquote>
+<p>该文章在星球里吃了几个月的灰，后来看到 SleevedKey 在网上已经可以随便搜到，所以就索性放出来了。<br>已先投稿先知社区，链接为：<a href="https://xz.aliyun.com/t/8557" target="_blank" rel="noopener">https://xz.aliyun.com/t/8557</a></p>
+</blockquote>
+<h3 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h3><p>这里提供了 CS 4.0 的认证过程，个人认为非常详细，文中配备认证的流程图，可以结合文中的代码注释，外加自己的 IDEA 调试，可以完整理解整个过程。因为 4.0 与 4.1 差了一个关键 key（前期的处理方式也多了一个步骤），因此这里就只针对 4.0 版本的认证进行说明。 附件中提供了 <code>CSHook.jar</code>，是针对 CS 4.1 版本的，并且文章中也明确提供了适用于 CS 4.1 的完整 key（使用该 key 需要删除多余的步骤，直接使用 4.0 的验证）。</p>
+<p>很多人拿到原版之所以没有搞破解，是因为缺少了最重要的 Sleeved 解密 key。 其实，到了 4.X 版本，是没有办法进行”破解”的，因为 <code>AES 的密钥是无法进行破译</code>，所以 Sleeved 解密 key 只能等好心人提供。</p>
+<p>CobaltStrike 4.X 的认证，如果对 Java 及密码学相关有所了解，理解起来并不难。但是对于它的破解来说，需要一个针对 Sleeved 模块的认证 key，这个 key 是无法进行穷举的，除非想不开了。因此对于破解来说，与其说破解，还不如说是将 key 进行补全了。</p>
+<h3 id="0x01-准备工作"><a href="#0x01-准备工作" class="headerlink" title="0x01 准备工作"></a>0x01 准备工作</h3><h4 id="1-1、必备知识"><a href="#1-1、必备知识" class="headerlink" title="1.1、必备知识"></a>1.1、必备知识</h4><h5 id="1-1-1、RAS-算法之加密与签名的区别"><a href="#1-1-1、RAS-算法之加密与签名的区别" class="headerlink" title="1.1.1、RAS 算法之加密与签名的区别"></a>1.1.1、RAS 算法之加密与签名的区别</h5><hr>
+<p>加密和签名都是为了安全性考虑，但略有不同。常有人问加密和签名是用私钥还是公钥？其实都是对加密和签名的作用有所混淆。简单的说，加密是为了防止信息被泄露，而签名是为了防止信息被篡改。这里举 2 个例子说明。</p>
+<ul>
+<li><strong>第一个场景</strong>：战场上，B 要给 A 传递一条消息，内容为某一指令。</li>
+</ul>
+<p>RSA 的加密过程如下：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">（<span class="number">1</span>）A 生成一对密钥（公钥和私钥），私钥不公开，A 自己保留。公钥为公开的，任何人可以获取。</span><br><span class="line">（<span class="number">2</span>）A 传递自己的公钥给 B，B 用 A 的公钥对消息进行加密。</span><br><span class="line">（<span class="number">3</span>）A 接收到 B 加密的消息，利用 A 自己的私钥对消息进行解密。</span><br></pre></td></tr></table></figure>
+<p>　　在这个过程中，只有 2 次传递过程，第一次是 A 传递公钥给 B，第二次是 B 传递加密消息给 A，即使都被敌方截获，也没有危险性，因为只有A的私钥才能对消息进行解密，防止了消息内容的泄露。</p>
+<ul>
+<li><strong>第二个场景：</strong>A 收到 B 发的消息后，需要进行回复“收到”。</li>
+</ul>
+<p>RSA 签名的过程如下：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">（<span class="number">1</span>）A 生成一对密钥（公钥和私钥），私钥不公开，A 自己保留。公钥为公开的，任何人可以获取。</span><br><span class="line">（<span class="number">2</span>）A 用自己的私钥对消息加签，形成签名，并将加签的消息和消息本身一起传递给 B。</span><br><span class="line">（<span class="number">3</span>）B 收到消息后，在获取 A 的公钥进行验签，如果验签出来的内容与消息本身一致，证明消息是 A 回复的。</span><br></pre></td></tr></table></figure>
+<p>　　在这个过程中，只有 2 次传递过程，第一次是 A 传递加签的消息和消息本身给 B，第二次是 B 获取 A 的公钥，即使都被敌方截获，也没有危险性，因为只有 A 的私钥才能对消息进行签名，即使知道了消息内容，也无法伪造带签名的回复给 B，防止了消息内容的篡改。</p>
+<p>　　但是，综合两个场景你会发现，第一个场景虽然被截获的消息没有泄露，但是可以利用截获的公钥，将假指令进行加密，然后传递给 A。第二个场景虽然截获的消息不能被篡改，但是消息的内容可以利用公钥验签来获得，并不能防止泄露。所以在实际应用中，要根据情况使用，也可以同时使用加密和签名，比如 A 和 B 都有一套自己的公钥和私钥，当 A 要给 B 发送消息时，先用 B 的公钥对消息加密，再对加密的消息使用 A 的私钥加签名，达到既不泄露也不被篡改，更能保证消息的安全性。</p>
+<p>　　<strong>总结：公钥加密、私钥解密；私钥签名、公钥验签。</strong></p>
+<p>但是，有一个要注意的是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">当你用公钥加密的时候，需要用私钥解密。</span><br><span class="line">当你用私钥加密的时候，需要用公钥解密。</span><br></pre></td></tr></table></figure>
+<h5 id="1-1-2、HMAC-消息摘要算法"><a href="#1-1-2、HMAC-消息摘要算法" class="headerlink" title="1.1.2、HMAC 消息摘要算法"></a>1.1.2、HMAC 消息摘要算法</h5><p><strong><em>MAC</em></strong>，全称 <code>Message Authentication Code</code>，也称为消息认证码（带密钥的Hash函数），通信实体双方使用的一种验证机制，保证消息数据完整性的一种工具。</p>
+<p>在发送数据之前，发送方首先使用通信双方协商好的散列函数计算其摘要值。在双方共享的会话密钥作用下，由摘要值获得消息验证码。之后，它和数据一起被发送。接收方收到报文后，首先利用会话密钥还原摘要值，同时利用散列函数在本地计算所收到数据的摘要值，并将这两个数据进行比对。若两者相等，则报文通过认证。</p>
+<p>说白了就是计算摘要的时候，需要一个秘钥 key，没有秘钥 key 就无法计算</p>
+<h5 id="1-1-3、AES"><a href="#1-1-3、AES" class="headerlink" title="1.1.3、AES"></a>1.1.3、AES</h5><ul>
+<li>破解 AES 算法需要多长时间？</li>
+</ul>
+<p>以 AES-128 算法为例，平均需要尝试 2^127 ≈ 1.7*10^38 个 128bit 的随机数作为密钥进行加解密运算，方能找到正确的密钥。</p>
+<p>常言道，“天下武功，唯快不破”；反之，天下密码，快必可破。问题是，那得有多快？我们知道，比特币网络在全球范围内调用了非常庞大的硬件资源以达到极高的运算效率，每秒钟操作的 Hash 运算（SHA-256）可高达 2.5644*10^19次。虽然 AES 和 SHA-256 算法并不相同，运算量也有所差异，但我们不妨近似地用该数据估算全球人民众志成城破解 AES 算法所需要的时间。</p>
+<p>假设 AES 的运算效率为 2.5644<em>10^19 ≈ 2^64.4753 次/秒，则进行 2^127 次 AES 运算所需要的时间为：<br>2^127 / 2^64.4753 ≈ 2^62.5247秒 ≈ 6.6345</em> 10^18 秒 ≈ 1.8429 <em>10^15 小时 ≈ 7.6789</em> 10^13 天 ≈ 2.104 * 10^11年 ≈ 210,400,000,000 年</p>
+<h4 id="1-2、运行环境"><a href="#1-2、运行环境" class="headerlink" title="1.2、运行环境"></a>1.2、运行环境</h4><p>此次破解测试使用的工具及文件为：</p>
+<ul>
+<li><code>IntelliJ IDEA Community Edition 2020.1.4</code></li>
+<li><code>Feb 22, 2020 - Cobalt Strike 4.0</code></li>
+</ul>
+<p>使用过 IDEA 的朋友都知道，它具备反编译 Jar 包的能力。</p>
+<p>首先，我们使用 IDEA 新建一个工程，将原始 Jar 包作为依赖进行导入，如下图所示：</p>
+<p><img src="/image/【知识回顾】Cobalt Strike 4.0认证及修补过程/blog_2020-07-29_11-03-26.png" alt=""></p>
+<p>此时 IDEA 将调用反编译模块，因此我们可以直接查看 jar 的源码，如图所示：</p>
+<p><img src="/image/【知识回顾】Cobalt Strike 4.0认证及修补过程/blog_2020-07-29_10-47-15.png" alt=""></p>
+<p>但由于单个文件点击，并不利于我们的有效查看，因此可以提取 IDEA 的反编译功能，用于对原始 Jar 包的反编译。</p>
+<p>下面我们进行测试，IDEA 的反编译功能依赖于 <code>java-decompiler.jar</code> ，该文件存在于以下路径当中：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%IDEA安装目录%\plugins\java-decompiler\lib\java-decompiler.jar</span><br></pre></td></tr></table></figure>
+<p>其使用方法为:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -cp java-decompiler.jar org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler -dgs=true c:\my.jar d:\decompiled\</span><br></pre></td></tr></table></figure>
+<p>将反编译后的 Jar 包进行解压，将解压的文件（带文件夹）放入 <code>src</code>（该步骤仅将需要更改的文件放入即可，当然，全部放也没关系），文件夹内，如下图所示：</p>
+<p><img src="/image/【知识回顾】Cobalt Strike 4.0认证及修补过程/blog_2020-07-29_10-57-38.png" alt=""></p>
+<p>然后就是设置编译生成 Jar 的步骤。</p>
+<p><img src="/image/【知识回顾】Cobalt Strike 4.0认证及修补过程/blog_2020-07-29_11-07-55.png" alt=""></p>
+<p>在 <code>Main Class</code> 中填写 <code>aggressor.Aggressor</code>，其余默认即可；然后尝试 <code>Build Artifacts...</code>，正常情况下，则生成一个新的 Jar 包。</p>
+<p>最后，为了方便实时预览及调试，我们需要对 <code>Run</code> 进行简单设置。</p>
+<p><img src="/image/【知识回顾】Cobalt Strike 4.0认证及修补过程/blog_2020-07-29_11-15-22.png" alt=""></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>.新建一个 run 配置</span><br><span class="line"><span class="number">2</span>.添加 JAR Application</span><br><span class="line"><span class="number">3</span>.选择运行的 Jar 包路径</span><br><span class="line"><span class="number">4</span>.配置启动该 Jar 包的虚拟选项</span><br><span class="line"><span class="number">5</span>.选择一个在执行 Run 操作时附带的操作</span><br><span class="line"><span class="number">6</span>.此处选择重新 Build Artiface</span><br><span class="line"></span><br><span class="line">注意：如果不选择 <span class="number">5</span>-<span class="number">6</span> 步骤，则在点击 Run 前，需要手动 Build Artiface。</span><br></pre></td></tr></table></figure>
+<p>实践一下，是否配置都正常。出现以下信息就说明可行。</p>
+<p><img src="/image/【知识回顾】Cobalt Strike 4.0认证及修补过程/blog_2020-07-29_11-21-21.png" alt=""></p>
+<p>这部分内容不理解的朋友，可以去看看红队学院（知识星球）相关视频：<a href="https://www.bilibili.com/video/BV1yz411i71Z" target="_blank" rel="noopener">RedCore 红队学院 CSTips</a></p>
+<h3 id="0x02-CS-3-X-版本的认证过程"><a href="#0x02-CS-3-X-版本的认证过程" class="headerlink" title="0x02 CS 3.X 版本的认证过程"></a>0x02 CS 3.X 版本的认证过程</h3><p>其实，我们可以从头开始走一轮认证代码，3.X 相对简单，走下来其实不难。</p>
+<p><strong><em>主要涉及的文件：</em></strong></p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">common</span>/License  <span class="comment">// license 检查逻辑</span></span><br><span class="line"><span class="keyword">common</span>/Authorization <span class="comment">// 检查的细节实现</span></span><br><span class="line"><span class="keyword">common</span>/AuthCrypto   <span class="comment">// RSA 解密和解压</span></span><br><span class="line"><span class="keyword">common</span>/CommonUtils  <span class="comment">// 相关数据类型转换辅助</span></span><br></pre></td></tr></table></figure>
+<p>先粗略说一下 3.X 的 .auth 整个加密过程是：</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">先对文本进行压缩，转换为 byte</span><br><span class="line">添加特征头 <span class="number">0xca</span>, <span class="number">0xfe</span>, <span class="number">0xc0</span>, <span class="number">0xbb</span>,<span class="number">0x00</span>, <span class="number">0x43</span></span><br><span class="line">使用 RSA 进行加密</span><br></pre></td></tr></table></figure>
+<p>故此解密的话只需要逆向此流程即可，那么我们要伪造一个自己的授权文件的话，只需要把公钥替换为自己的，然后使用自己的私钥对文本内容进行加密即可。因为只有在验证 GUI 和 Console 的时候需要进行验证步骤，因此也可以直接写死 <code>isValid()</code>、<code>isPerpetual()</code> 和 <code>isAlmostExpired()</code> 的值。比如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Authorization</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.valid = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">this</span>.validto = <span class="string">"forever"</span>;</span><br><span class="line">    <span class="keyword">this</span>.licensekey = <span class="string">"Cartier"</span>;</span><br><span class="line">    <span class="keyword">this</span>.watermark = <span class="number">1</span>;</span><br><span class="line">    MudgeSanity.systemDetail(<span class="string">"valid to"</span>, <span class="string">"perpetual"</span>);</span><br><span class="line">    MudgeSanity.systemDetail(<span class="string">"id"</span>, <span class="keyword">this</span>.watermark + <span class="string">""</span>);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>4.0 相比于 3.14 版本，多了一轮新的验证及更为复杂。</p>
+<h3 id="0x03-CS-4-X-版本的认证过程"><a href="#0x03-CS-4-X-版本的认证过程" class="headerlink" title="0x03 CS 4 .X 版本的认证过程"></a>0x03 CS 4 .X 版本的认证过程</h3><p><em>之所以只说这个 CS 4.x 的认证过程，是因为该认证是在 3.X 的基础上进行改进的。</em></p>
+<p>首先从主函数开始查看，第一步认证：<code>License.checkLicenseGUI(new Authorization());</code>，我们在查看源码过程中，直接对源码进行注释即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Aggressor</span> </span>&#123;</span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String VERSION = <span class="string">"4.0 (20200222) "</span> + (License.isTrial() ? <span class="string">"Trial"</span> : <span class="string">"Licensed"</span>);</span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">static</span> MultiFrame frame = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> MultiFrame <span class="title">getFrame</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> frame;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] var0)</span> </span>&#123;</span><br><span class="line">      ParserConfig.installEscapeConstant(<span class="string">'c'</span>, <span class="string">"\u0003"</span>);</span><br><span class="line">      ParserConfig.installEscapeConstant(<span class="string">'U'</span>, <span class="string">"\u001f"</span>);</span><br><span class="line">      ParserConfig.installEscapeConstant(<span class="string">'o'</span>, <span class="string">"\u000f"</span>);</span><br><span class="line">      (<span class="keyword">new</span> UseSynthetica()).setup();</span><br><span class="line">      Requirements.checkGUI();</span><br><span class="line">      <span class="comment">// 认证开始</span></span><br><span class="line">      License.checkLicenseGUI(<span class="keyword">new</span> Authorization());</span><br><span class="line">      frame = <span class="keyword">new</span> MultiFrame();</span><br><span class="line">      (<span class="keyword">new</span> ConnectDialog(frame)).show();</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-1、checkLicenseGUI"><a href="#3-1、checkLicenseGUI" class="headerlink" title="3.1、checkLicenseGUI()"></a>3.1、checkLicenseGUI()</h4><p>该函数是 CobaltStrike 的第一道验证，主要检查授权文件是否存在、解析的数据是否正确。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">checkLicenseGUI</span><span class="params">(Authorization var0)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 判断文件是否存在、有效，格式是否正确等，isValid 函数是一个 flag，默认为 false</span></span><br><span class="line">   <span class="keyword">if</span> (!var0.isValid()) &#123;</span><br><span class="line">      CommonUtils.print_error(<span class="string">"Your authorization file is not valid: "</span> + var0.getError());</span><br><span class="line">      JOptionPane.showMessageDialog((Component)<span class="keyword">null</span>, <span class="string">"Your authorization file is not valid.\n"</span> + var0.getError(), (String)<span class="keyword">null</span>, <span class="number">0</span>);</span><br><span class="line">      System.exit(<span class="number">0</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="comment">// 判断是否过期</span></span><br><span class="line">   <span class="keyword">if</span> (!var0.isPerpetual()) &#123;</span><br><span class="line">      <span class="keyword">if</span> (var0.isExpired()) &#123;</span><br><span class="line">         CommonUtils.print_error(<span class="string">"Your Cobalt Strike license is expired. Please contact sales@strategiccyber.com to renew. If you did renew, run the update program to refresh your authorization file."</span>);</span><br><span class="line">         JOptionPane.showMessageDialog((Component)<span class="keyword">null</span>, <span class="string">"Your Cobalt Strike license is expired.\nPlease contact sales@strategiccyber.com to renew\n\nIf you did renew, run the update program to refresh your\nauthorization file."</span>, (String)<span class="keyword">null</span>, <span class="number">0</span>);</span><br><span class="line">         System.exit(<span class="number">0</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 计算有效期</span></span><br><span class="line">      <span class="keyword">if</span> (var0.isAlmostExpired()) &#123;</span><br><span class="line">         CommonUtils.print_warn(<span class="string">"Your Cobalt Strike license expires in "</span> + var0.whenExpires() + <span class="string">". Email sales@strategiccyber.com to renew. If you did renew, run the update program to refresh your authorization file."</span>);</span><br><span class="line">         JOptionPane.showMessageDialog((Component)<span class="keyword">null</span>, <span class="string">"Your Cobalt Strike license expires in "</span> + var0.whenExpires() + <span class="string">"\nEmail sales@strategiccyber.com to renew\n\nIf you did renew, run the update program to refresh your\nauthorization file."</span>, (String)<span class="keyword">null</span>, <span class="number">1</span>);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先是对 GUI 的一个验证，该验证有且仅有一次验证；它是调用 <code>Authorization</code> 类 中的 <code>isValid()</code>、<code>isPerpetual()</code> 和 <code>isAlmostExpired()</code>进行校验。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">isValid</span><span class="params">()</span></span>  <span class="comment">// 判断文件是否存在、有效，格式是否正确等，isValid函数是一个flag，默认为false</span></span><br><span class="line"><span class="function"><span class="title">isPerpetual</span><span class="params">()</span></span> <span class="comment">// 判断 forever 关键字是否存在，存在则结束函数</span></span><br><span class="line"><span class="function"><span class="title">isAlmostExpired</span><span class="params">()</span></span> - <span class="comment">// 计算有效期</span></span><br><span class="line"></span><br><span class="line">注：这三个函数方法的返回可直接写死，以绕过验证。</span><br></pre></td></tr></table></figure>
+<p>而它们都依赖于 <code>Authorization.Authorization()</code>，因此我们需要先对 <code>Authorization()</code> 进行分析。</p>
+<h4 id="3-2、Authorization-的分析过程"><a href="#3-2、Authorization-的分析过程" class="headerlink" title="3.2、Authorization() 的分析过程"></a>3.2、Authorization() 的分析过程</h4><p>在 <code>Authorization</code> 类中，我们只需要查看 <code>Authorization()</code> 函数即可。</p>
+<p>该函数主要解析授权码字段构成和有效期的计算，并且调用了 <code>AuthCrypto</code> 类的 <code>decrypt</code> 函数对文件进行解密，详细信息请看代码注释。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Authorization</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   <span class="comment">// 读取当前目录中的 cobaltstrike.auth 文件</span></span><br><span class="line">   String str = CommonUtils.canonicalize(<span class="string">"cobaltstrike.auth"</span>);</span><br><span class="line">   <span class="comment">// 判断文件是否存在</span></span><br><span class="line">   <span class="keyword">if</span> (!(<span class="keyword">new</span> File(str)).exists()) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">         File localFile = <span class="keyword">new</span> File(<span class="keyword">this</span>.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());</span><br><span class="line">         <span class="keyword">if</span> (localFile.getName().toLowerCase().endsWith(<span class="string">".jar"</span>)) &#123;</span><br><span class="line">            localFile = localFile.getParentFile();</span><br><span class="line">         &#125;</span><br><span class="line">         str = (<span class="keyword">new</span> File(localFile, <span class="string">"cobaltstrike.auth"</span>)).getAbsolutePath();</span><br><span class="line">      &#125; <span class="keyword">catch</span> (Exception localException1) &#123;</span><br><span class="line">         <span class="comment">// 未找到该用于身份验证文件</span></span><br><span class="line">         MudgeSanity.logException(<span class="string">"trouble locating auth file"</span>, localException1, <span class="keyword">false</span>);</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">// 以 byte[]方式读取 cobaltstrike.auth 文件内容</span></span><br><span class="line">   <span class="keyword">byte</span>[] arrayOfByte1 = CommonUtils.readFile(str);</span><br><span class="line">   <span class="comment">// 判断长度，取决于文件内容</span></span><br><span class="line">   <span class="keyword">if</span> (arrayOfByte1.length == <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">this</span>.error = <span class="string">"Could not read "</span> + str;</span><br><span class="line">   &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// 初始化 AuthCrypto 类，并在初始化时调用 load()，以校验 authkey.pub 文件是否符合要求</span></span><br><span class="line">      AuthCrypto authCrypto = <span class="keyword">new</span> AuthCrypto();</span><br><span class="line">      <span class="comment">// 调用 AuthCrypto 类中的 decrypt 方法对 cobaltstrike.auth 文件内容进行解密，校验文件是否符合要求，并返回 byte</span></span><br><span class="line">      <span class="keyword">byte</span>[] arrayOfByte2 = authCrypto.decrypt(arrayOfByte1);</span><br><span class="line">      <span class="keyword">if</span> (arrayOfByte2.length == <span class="number">0</span>) &#123;</span><br><span class="line">         <span class="keyword">this</span>.error = authCrypto.error();</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 相比 3.14 版本，多了个 DateaParser，是用于解析 byte 类型数据的类</span></span><br><span class="line">            DataParser dataParser = <span class="keyword">new</span> DataParser(arrayOfByte2);</span><br><span class="line">            dataParser.big();</span><br><span class="line">            <span class="comment">// 该值是用于判断是否永久有效（是否为发行版）</span></span><br><span class="line">            <span class="keyword">int</span> i = dataParser.readInt();</span><br><span class="line">            <span class="comment">// 该值应该是水印作用。该值如果为 0，则在生成的 shellcode 中会带入 cs 水印（common/ListnerConfig.class）</span></span><br><span class="line">            <span class="keyword">this</span>.watermark = dataParser.readInt();</span><br><span class="line">            <span class="comment">// 该值是用于判断认证是否用于 Cobalt Strike 4.0+</span></span><br><span class="line">            <span class="keyword">byte</span> j = dataParser.readByte();</span><br><span class="line">            <span class="comment">// 取 16 个字节</span></span><br><span class="line">            <span class="keyword">byte</span> k = dataParser.readByte();</span><br><span class="line">            <span class="comment">// 获取关键 key，该 key是用于解密 Sleeved 的关键。</span></span><br><span class="line">            <span class="keyword">byte</span>[] arrayOfByte3 = dataParser.readBytes(k);</span><br><span class="line">            <span class="keyword">if</span> (j &lt; <span class="number">40</span>) &#123;</span><br><span class="line">               <span class="keyword">this</span>.error = <span class="string">"Authorization file is not for Cobalt Strike 4.0+"</span>;</span><br><span class="line">               <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (i == <span class="number">29999999</span>) &#123;</span><br><span class="line">               <span class="comment">// 判断是否为 forever</span></span><br><span class="line">               <span class="keyword">this</span>.validto = <span class="string">"forever"</span>;</span><br><span class="line">               MudgeSanity.systemDetail(<span class="string">"valid to"</span>, <span class="string">"perpetual"</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">               <span class="comment">// 否则跳到试用期为20天</span></span><br><span class="line">               <span class="keyword">this</span>.validto = <span class="string">"20"</span> + i;</span><br><span class="line">               CommonUtils.print_stat(<span class="string">"Valid to is: '"</span> + <span class="keyword">this</span>.validto + <span class="string">"'"</span>);</span><br><span class="line">               MudgeSanity.systemDetail(<span class="string">"valid to"</span>, CommonUtils.formatDateAny(<span class="string">"MMMMM d, YYYY"</span>, <span class="keyword">this</span>.getExpirationDate()));</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">this</span>.valid = <span class="keyword">true</span>;</span><br><span class="line">            MudgeSanity.systemDetail(<span class="string">"id"</span>, <span class="keyword">this</span>.watermark + <span class="string">""</span>);</span><br><span class="line">            <span class="comment">// 4.0 的 key 为 &#123;27, -27, -66, 82, -58, 37, 92, 51, 85, -114, -118, 28, -74, 103, -53, 6&#125;</span></span><br><span class="line">            SleevedResource.Setup(arrayOfByte3);</span><br><span class="line">         &#125; <span class="keyword">catch</span> (Exception localException2) &#123;</span><br><span class="line">            MudgeSanity.logException(<span class="string">"auth file parsing"</span>, localException2, <span class="keyword">false</span>);</span><br><span class="line">         &#125;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-3、AuthCrypto-类"><a href="#3-3、AuthCrypto-类" class="headerlink" title="3.3、AuthCrypto 类"></a>3.3、AuthCrypto 类</h4><p>看看对 <code>authkey.pub</code> 及 <code>cobaltstrike.auth</code> 解密的类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 解密函数解析，主要是涉及 RSA 解密和 gzip 解压相关操作，这里作者其实是在文件头加了四个字节</span></span><br><span class="line"><span class="comment">* */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">AuthCrypto</span> </span>&#123;</span><br><span class="line">   <span class="keyword">public</span> Cipher cipher;</span><br><span class="line">   <span class="keyword">public</span> Key pubkey = <span class="keyword">null</span>;</span><br><span class="line">   <span class="keyword">protected</span> String error = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="title">AuthCrypto</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">         <span class="comment">// 构造方法中生成了一个 RSA/ECB/PKCS1Padding 的 ciper</span></span><br><span class="line">         <span class="keyword">this</span>.cipher = Cipher.getInstance(<span class="string">"RSA/ECB/PKCS1Padding"</span>);</span><br><span class="line">         <span class="keyword">this</span>.load();</span><br><span class="line">      &#125; <span class="keyword">catch</span> (Exception var2) &#123;</span><br><span class="line">         <span class="keyword">this</span>.error = <span class="string">"Could not initialize crypto"</span>;</span><br><span class="line">         MudgeSanity.logException(<span class="string">"AuthCrypto init"</span>, var2, <span class="keyword">false</span>);</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="comment">// Load() -&gt; 加载公钥，验证哈希</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">load</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="comment">// RSA 解密常规初始化操作</span></span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">         <span class="comment">// 读取 authkey.pub</span></span><br><span class="line">         <span class="keyword">byte</span>[] arrayOfByte1 = CommonUtils.readAll(CommonUtils.class.getClassLoader().getResourceAsStream(<span class="string">"resources/authkey.pub"</span>));</span><br><span class="line">         <span class="comment">// MD5 操作</span></span><br><span class="line">         <span class="keyword">byte</span>[] arrayOfByte2 = CommonUtils.MD5(arrayOfByte1);</span><br><span class="line">         <span class="comment">// 对比 hash，以校验 authkey.pub 文件是否符合要求</span></span><br><span class="line">         <span class="keyword">if</span> (!<span class="string">"8bb4df00c120881a1945a43e2bb2379e"</span>.equals(CommonUtils.toHex(arrayOfByte2))) &#123;</span><br><span class="line">            <span class="comment">// 无效的授权文件</span></span><br><span class="line">            CommonUtils.print_error(<span class="string">"Invalid authorization file"</span>);</span><br><span class="line">            System.exit(<span class="number">0</span>);</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line">         X509EncodedKeySpec localX509EncodedKeySpec = <span class="keyword">new</span> X509EncodedKeySpec(arrayOfByte1);</span><br><span class="line">         KeyFactory localKeyFactory = KeyFactory.getInstance(<span class="string">"RSA"</span>);</span><br><span class="line">         <span class="comment">// RSA 公钥</span></span><br><span class="line">         <span class="keyword">this</span>.pubkey = localKeyFactory.generatePublic(localX509EncodedKeySpec);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (Exception var5) &#123;</span><br><span class="line">         <span class="keyword">this</span>.error = <span class="string">"Could not deserialize authpub.key"</span>;</span><br><span class="line">         MudgeSanity.logException(<span class="string">"authpub.key deserialization"</span>, var5, <span class="keyword">false</span>);</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> String <span class="title">error</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.error;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/*</span></span><br><span class="line"><span class="comment">   * 解密 cobaltstrike.auth 的主函数，如果返回不为 null，则校验通过。</span></span><br><span class="line"><span class="comment">   * */</span></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">byte</span>[] decrypt(<span class="keyword">byte</span>[] paramArrayOfByte) &#123;</span><br><span class="line">      <span class="comment">// RSA 解密，并返回 byte 数组</span></span><br><span class="line">      <span class="keyword">byte</span>[] arrayOfByte1 = <span class="keyword">this</span>._decrypt(paramArrayOfByte);</span><br><span class="line"></span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">         <span class="keyword">if</span> (arrayOfByte1.length == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> arrayOfByte1;</span><br><span class="line">         &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 将解密好的数据，交给了 DataParser</span></span><br><span class="line">            DataParser localDataParser = <span class="keyword">new</span> DataParser(arrayOfByte1);</span><br><span class="line">            localDataParser.big();</span><br><span class="line">            <span class="comment">// byte 数组转有符号 Int -&gt; 取头部 4个字节判断文件头是否正确，这里并不是标准的 gzip头 -&gt; byte[] b = &#123;-54, -2, -64, -45&#125;</span></span><br><span class="line">            <span class="comment">// 注：有符号数最高位为1，表示负数；最高位为0，表示正数</span></span><br><span class="line">            <span class="keyword">int</span> i = localDataParser.readInt();</span><br><span class="line">            <span class="keyword">if</span> (i == -<span class="number">889274181</span>) &#123;</span><br><span class="line">               <span class="keyword">this</span>.error = <span class="string">"pre-4.0 authorization file. Run update to get new file"</span>;</span><br><span class="line">               <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">0</span>];</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (i != -<span class="number">889274157</span>) &#123;</span><br><span class="line">               <span class="keyword">this</span>.error = <span class="string">"bad header"</span>;</span><br><span class="line">               <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">0</span>];</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">               <span class="comment">// 处理文件头并解压</span></span><br><span class="line">               <span class="keyword">int</span> j = localDataParser.readShort();</span><br><span class="line">               <span class="keyword">byte</span>[] arrayOfByte2 = localDataParser.readBytes(j);</span><br><span class="line">               <span class="keyword">return</span> arrayOfByte2;</span><br><span class="line">            &#125;</span><br><span class="line">         &#125;</span><br><span class="line">      &#125; <span class="keyword">catch</span> (Exception localException) &#123;</span><br><span class="line">         <span class="keyword">this</span>.error = localException.getMessage();</span><br><span class="line">         <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">0</span>];</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">    </span><br><span class="line">   <span class="comment">/*</span></span><br><span class="line"><span class="comment">    * 这个函数需要注意的是，代入的数据是使用 RSA 公钥进行解密的，然后返回解密后的数据。</span></span><br><span class="line"><span class="comment">    * 因此在生成 .auth 的时候，应该使用密钥进行加密。</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="keyword">protected</span> <span class="keyword">byte</span>[] _decrypt(<span class="keyword">byte</span>[] paramArrayOfByte) &#123;</span><br><span class="line">      <span class="keyword">byte</span>[] arrayOfByte = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">0</span>];</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">         <span class="keyword">if</span> (<span class="keyword">this</span>.pubkey == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">0</span>];</span><br><span class="line">         &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">synchronized</span>(<span class="keyword">this</span>.cipher) &#123;</span><br><span class="line">               <span class="keyword">this</span>.cipher.init(<span class="number">2</span>, <span class="keyword">this</span>.pubkey);</span><br><span class="line">               arrayOfByte = <span class="keyword">this</span>.cipher.doFinal(paramArrayOfByte);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> arrayOfByte;</span><br><span class="line">         &#125;</span><br><span class="line">      &#125; <span class="keyword">catch</span> (Exception localException) &#123;</span><br><span class="line">         <span class="keyword">this</span>.error = localException.getMessage();</span><br><span class="line">         <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">0</span>];</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结合上述两个代码，如果验证通过，则可以打开客户端页面。这与 3.X 的认证大致相同。</p>
+<h4 id="3-4、SleevedResource-类"><a href="#3-4、SleevedResource-类" class="headerlink" title="3.4、SleevedResource 类"></a>3.4、SleevedResource 类</h4><p>与 3.X 不同的是，4.X 在 <code>Authorization()</code> 中新增了一个新的验证 <code>SleevedResource.Setup()</code>。该验证的大致流程为：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>、使用 .auth 文件的一部分数据作为一个 key，将该 key 再进行处理拆分；</span><br><span class="line"><span class="number">2</span>、程序调用内置的 dll 文件；</span><br><span class="line"><span class="number">3</span>、读取 dll 文件，对 dll 文件进行处理拆分；</span><br><span class="line"><span class="number">4</span>、使用拆分的 key 分别对拆分的 dll 分别进行 hmac 摘要验证及 AES 解密。</span><br><span class="line"><span class="number">5</span>、最后执行 dll。</span><br></pre></td></tr></table></figure>
+<p>跟进 <code>SleevedResource.Setup(arrayOfByte3);</code> 看一看：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SleevedResource</span> </span>&#123;</span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">static</span> SleevedResource singleton;</span><br><span class="line">   <span class="keyword">private</span> SleeveSecurity data = <span class="keyword">new</span> SleeveSecurity();</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Setup</span><span class="params">(<span class="keyword">byte</span>[] paramArrayOfByte)</span> </span>&#123;</span><br><span class="line">      singleton = <span class="keyword">new</span> SleevedResource(paramArrayOfByte);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">byte</span>[] readResource(String paramString) &#123;</span><br><span class="line">      <span class="keyword">return</span> singleton._readResource(paramString);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">private</span> <span class="title">SleevedResource</span><span class="params">(<span class="keyword">byte</span>[] paramArrayOfByte)</span> </span>&#123;</span><br><span class="line">      <span class="comment">// 将 16 个字节的数据传入 SleeveSecurity.registerKey() 中</span></span><br><span class="line">      <span class="keyword">this</span>.data.registerKey(paramArrayOfByte);</span><br><span class="line">   &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    * 这是一个读取文件，并对文件进行解密的函数方法</span></span><br><span class="line"><span class="comment">    * paramString 是一个文件名（文件相对路径）</span></span><br><span class="line"><span class="comment">    * */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">byte</span>[] _readResource(String paramString) &#123;</span><br><span class="line">      <span class="comment">// strrep 是将 paramString 文件路径中的 resources/ 替换成 sleeve/</span></span><br><span class="line">      String str = CommonUtils.strrep(paramString, <span class="string">"resources/"</span>, <span class="string">"sleeve/"</span>);</span><br><span class="line">      <span class="comment">// 替换之后实际上是读取 jar 包中 sleeve 目录下的文件，返回一个 byte[]</span></span><br><span class="line">      <span class="keyword">byte</span>[] arrayOfByte1 = CommonUtils.readResource(str);</span><br><span class="line">      <span class="keyword">if</span> (arrayOfByte1.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">         <span class="keyword">long</span> l = System.currentTimeMillis();</span><br><span class="line">         <span class="comment">// 将读取的文件 byte[] 代入解密阶段</span></span><br><span class="line">         <span class="keyword">byte</span>[] arrayOfByte2 = <span class="keyword">this</span>.data.decrypt(arrayOfByte1);</span><br><span class="line">         <span class="keyword">return</span> arrayOfByte2;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         <span class="comment">// 不经过替换，直接读取源文件(sleeve 中不存在的文件，在 resources 中存在)</span></span><br><span class="line">         <span class="keyword">byte</span>[] arrayOfByte3 = CommonUtils.readResource(paramString);</span><br><span class="line">         <span class="keyword">if</span> (arrayOfByte3.length == <span class="number">0</span>) &#123;</span><br><span class="line">            CommonUtils.print_error(<span class="string">"Could not find sleeved resource: "</span> + paramString + <span class="string">" [ERROR]"</span>);</span><br><span class="line">         &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            CommonUtils.print_stat(<span class="string">"Used internal resource: "</span> + paramString);</span><br><span class="line">         &#125;</span><br><span class="line">         <span class="keyword">return</span> arrayOfByte3;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>发现调用 <code>SleevedResource</code> 类的构造函数并将该 byte 数组传递给了 <code>dns.SleeveSecurity</code> 的 <code>registerKey()</code> 方法，继续跟进该方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerKey</span><span class="params">(<span class="keyword">byte</span>[] paramArrayOfByte)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">synchronized</span>(<span class="keyword">this</span>) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line"></span><br><span class="line">         MessageDigest localMessageDigest = MessageDigest.getInstance(<span class="string">"SHA-256"</span>);</span><br><span class="line">         <span class="comment">// 首先利用我们的 array，获取了一个 digest，大小是 256</span></span><br><span class="line">         <span class="keyword">byte</span>[] arrayOfByte1 = localMessageDigest.digest(paramArrayOfByte);</span><br><span class="line">         <span class="keyword">byte</span>[] arrayOfByte2 = Arrays.copyOfRange(arrayOfByte1, <span class="number">0</span>, <span class="number">16</span>);</span><br><span class="line">         <span class="keyword">byte</span>[] arrayOfByte3 = Arrays.copyOfRange(arrayOfByte1, <span class="number">16</span>, <span class="number">32</span>);</span><br><span class="line">         <span class="comment">// 取了 arrayOfByte1 的 0-16 作为 AES 的加密 key</span></span><br><span class="line">         <span class="keyword">this</span>.key = <span class="keyword">new</span> SecretKeySpec(arrayOfByte2, <span class="string">"AES"</span>);</span><br><span class="line">         <span class="comment">// 取了arrayOfByte1 的 16-32 作为 Hmac 的加密 key</span></span><br><span class="line">         <span class="keyword">this</span>.hash_key = <span class="keyword">new</span> SecretKeySpec(arrayOfByte3, <span class="string">"HmacSHA256"</span>);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (Exception var8) &#123;</span><br><span class="line">         var8.printStackTrace();</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>嗯，到这里没见到往下走的验证了，估摸着第一轮验证就结束了。</p>
+<p>此时启动 <code>teamserver</code>，则会在 <code>temserver</code>  中看到一个错误：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">-</span>] [Sleeve] Bad HMAC <span class="keyword">on</span> xxxxx <span class="keyword">byte</span> message <span class="keyword">from</span> resource</span><br></pre></td></tr></table></figure>
+<p><img src="/image/【知识回顾】Cobalt Strike 4.0认证及修补过程/微信图片_20200730195204.jpg" alt=""></p>
+<p>注意：此验证是在调用 CS 内置 <code>EXE/DLL</code> 时所需要的，当验证不通过时，则出现该错误。因此当在绕过了开头的限制，则可以开启客户端，只不过功能受影响；只有该验证顺利通过，才是完全授权验证。</p>
+<h4 id="3-4、decrypt-方法调用链"><a href="#3-4、decrypt-方法调用链" class="headerlink" title="3.4、decrypt() 方法调用链"></a>3.4、decrypt() 方法调用链</h4><p>我们搜索该错误，在 <code>SleeveSecurity.decrypt()</code> 中找到。</p>
+<p><img src="/image/【知识回顾】Cobalt Strike 4.0认证及修补过程/blog_2020-07-30_14-28-48.png" alt=""></p>
+<p>我们依次查看调用链：</p>
+<p><img src="/image/【知识回顾】Cobalt Strike 4.0认证及修补过程/blog_2020-07-30_20-39-47.png" alt=""></p>
+<p>我们在 <code>SleevedResource</code> 中看到此 <code>decrypt()</code> 方法的调用。而 <code>readResource()</code> 则调用了 <code>_readResource()</code>。我们再查看关于 <code>readResource()</code>  的调用：</p>
+<p><img src="/image/【知识回顾】Cobalt Strike 4.0认证及修补过程/blog_2020-07-30_21-02-40.png" alt=""></p>
+<p>我们就此挑选比较干净的调用例子来分析。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">byte</span>[] export_dll() &#123;</span><br><span class="line">    <span class="comment">// 判断框架位数，之后传入一个文件</span></span><br><span class="line">    <span class="keyword">byte</span>[] arrayOfByte = SleevedResource.readResource(<span class="keyword">this</span>.x64 ? <span class="string">"resources/browserpivot.x64.dll"</span> : <span class="string">"resources/browserpivot.dll"</span>);</span><br><span class="line">    String str = CommonUtils.bString(arrayOfByte);</span><br><span class="line">    Packer packer = <span class="keyword">new</span> Packer();</span><br><span class="line">    packer.little();</span><br><span class="line">    packer.addShort(<span class="keyword">this</span>.port);</span><br><span class="line">    <span class="keyword">int</span> i = str.indexOf(<span class="string">"COBALTSTRIKE"</span>);</span><br><span class="line">    str = CommonUtils.replaceAt(str, CommonUtils.bString(packer.getBytes()), i);</span><br><span class="line">    <span class="keyword">return</span> CommonUtils.toBytes(str);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时回头查看 <code>_readResource()</code> 函数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 这是一个读取文件，并对文件进行解密的函数方法</span></span><br><span class="line"><span class="comment">* paramString 是一个文件名（文件相对路径）</span></span><br><span class="line"><span class="comment">* */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">byte</span>[] _readResource(String paramString) &#123;</span><br><span class="line">   <span class="comment">// strrep 是将 paramString 文件路径中的 resources/ 替换成 sleeve/</span></span><br><span class="line">   String str = CommonUtils.strrep(paramString, <span class="string">"resources/"</span>, <span class="string">"sleeve/"</span>);</span><br><span class="line">   <span class="comment">// 替换之后实际上是读取 jar 包中 sleeve 目录下的文件</span></span><br><span class="line">   <span class="keyword">byte</span>[] arrayOfByte1 = CommonUtils.readResource(str);</span><br><span class="line">   <span class="keyword">if</span> (arrayOfByte1.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">long</span> l = System.currentTimeMillis();</span><br><span class="line">      <span class="comment">// 将读取的文件 byte[] 代入解密阶段</span></span><br><span class="line">      <span class="keyword">byte</span>[] arrayOfByte2 = <span class="keyword">this</span>.data.decrypt(arrayOfByte1);</span><br><span class="line">      <span class="keyword">return</span> arrayOfByte2;</span><br><span class="line">   &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// 不经过替换，直接读取源文件(sleeve 中不存在的文件，在 resources 中存在)</span></span><br><span class="line">      <span class="keyword">byte</span>[] arrayOfByte3 = CommonUtils.readResource(paramString);</span><br><span class="line">      <span class="keyword">if</span> (arrayOfByte3.length == <span class="number">0</span>) &#123;</span><br><span class="line">         CommonUtils.print_error(<span class="string">"Could not find sleeved resource: "</span> + paramString + <span class="string">" [ERROR]"</span>);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         CommonUtils.print_stat(<span class="string">"Used internal resource: "</span> + paramString);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> arrayOfByte3;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们重点来看这个解密。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 该函数是从 license文件中获取的 2 个 key 进行一些列的验证解密；</span></span><br><span class="line"><span class="comment">* 最终将加密的 dll 文件进行解密返回。</span></span><br><span class="line"><span class="comment">* paramArrayOfbyte 是源文件读取出来的 byte[] 数据</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">byte</span>[] decrypt(<span class="keyword">byte</span>[] paramArrayOfbyte) &#123;</span><br><span class="line">   <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="comment">// 取 paramArrayOfbyte 的开头至倒数 -16 的数据，这段数据是 dll 的主体数据</span></span><br><span class="line">      <span class="keyword">byte</span>[] arrayOfByte1 = Arrays.copyOfRange(paramArrayOfbyte, <span class="number">0</span>, paramArrayOfbyte.length - <span class="number">16</span>);</span><br><span class="line">      <span class="comment">// 取 paramArrayOfbyte 的剩下的 16 位数据。</span></span><br><span class="line">      <span class="keyword">byte</span>[] arrayOfByte2 = Arrays.copyOfRange(paramArrayOfbyte, paramArrayOfbyte.length - <span class="number">16</span>, paramArrayOfbyte.length);</span><br><span class="line">      <span class="keyword">byte</span>[] arrayOfByte3 = <span class="keyword">null</span>;</span><br><span class="line">      <span class="keyword">synchronized</span>(<span class="keyword">this</span>) &#123;</span><br><span class="line">         <span class="comment">// 先用我们在 license中生成的 hash_key 作为密钥，对 arrayOfByte1 进行摘要计算</span></span><br><span class="line">         <span class="keyword">this</span>.mac.init(<span class="keyword">this</span>.hash_key);</span><br><span class="line">         arrayOfByte3 = <span class="keyword">this</span>.mac.doFinal(arrayOfByte1);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 取 arrayOfByte3 的前 16位数据</span></span><br><span class="line">      <span class="keyword">byte</span>[] arrayOfByte4 = Arrays.copyOfRange(arrayOfByte3, <span class="number">0</span>, <span class="number">16</span>);</span><br><span class="line">      <span class="comment">// 两两对比，如果相等，则步入 else。该对比，主要防止 dll 被篡改。</span></span><br><span class="line">      <span class="keyword">if</span> (!MessageDigest.isEqual(arrayOfByte2, arrayOfByte4)) &#123;</span><br><span class="line">         CommonUtils.print_error(<span class="string">"[Sleeve] Bad HMAC on "</span> + paramArrayOfbyte.length + <span class="string">" byte message from resource"</span>);</span><br><span class="line">         <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">0</span>];</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         <span class="keyword">byte</span>[] arrayOfByte5 = <span class="keyword">null</span>;</span><br><span class="line">         <span class="keyword">synchronized</span>(<span class="keyword">this</span>) &#123;</span><br><span class="line">            <span class="comment">// 在对比成功后，将使用 key 对 dll主体内容数据进行 AES 解密</span></span><br><span class="line">            arrayOfByte5 = <span class="keyword">this</span>.do_decrypt(<span class="keyword">this</span>.key, arrayOfByte1);</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line">         DataInputStream dataInputStream = <span class="keyword">new</span> DataInputStream(<span class="keyword">new</span> ByteArrayInputStream(arrayOfByte5));</span><br><span class="line">         <span class="keyword">int</span> i = dataInputStream.readInt();</span><br><span class="line">         <span class="keyword">int</span> j = dataInputStream.readInt();</span><br><span class="line">         <span class="keyword">if</span> (j &gt;= <span class="number">0</span> &amp;&amp; j &lt;= paramArrayOfbyte.length) &#123;</span><br><span class="line">            <span class="keyword">byte</span>[] var10 = <span class="keyword">new</span> <span class="keyword">byte</span>[j];</span><br><span class="line">            dataInputStream.readFully(var10, <span class="number">0</span>, j);</span><br><span class="line">            <span class="comment">// 最后返回解密后的文件，以便调用</span></span><br><span class="line">            <span class="keyword">return</span> var10;</span><br><span class="line">         &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            CommonUtils.print_error(<span class="string">"[Sleeve] Impossible message length: "</span> + j);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">0</span>];</span><br><span class="line">         &#125;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125; <span class="keyword">catch</span> (Exception exception) &#123;</span><br><span class="line">      exception.printStackTrace();</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">0</span>];</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法要在初始验证阶段是不会进行调用的，为了方便调试，直接在 <code>registerKey()</code> 写个调用即可，比如：</p>
+<p><img src="/image/【知识回顾】Cobalt Strike 4.0认证及修补过程/blog_2020-07-31_23-45-39.png" alt=""></p>
+<p>我们只是捋清整个需要认证的过程，不细讨其他的东西，因此只需要知道 <code>cobaltstrike.auth</code> 文件的组成和用处即可。</p>
+<h4 id="3-5、认证流程图"><a href="#3-5、认证流程图" class="headerlink" title="3.5、认证流程图"></a>3.5、认证流程图</h4><p><img src="/image/【知识回顾】Cobalt Strike 4.0认证及修补过程/CS 4.X 认证流程图.png" alt=""></p>
+<h3 id="0x04-破解方法"><a href="#0x04-破解方法" class="headerlink" title="0x04 破解方法"></a>0x04 破解方法</h3><p>理论上，穷举 <code>Authorization()</code> 中的 <code>arrayOfByte3</code> 有些不现实；因为逆着推回去，需要推出 hmac 的 key，AES 的 key，是我想多了。</p>
+<p>因此，至少需要知道 <code>arrayOfByte3</code> 的值才可能正常运行成功。但在有这个关键 key 的前提下，我们可以这么做。</p>
+<h4 id="4-1、重新生成-license"><a href="#4-1、重新生成-license" class="headerlink" title="4.1、重新生成 license"></a>4.1、重新生成 license</h4><p>也就是说，我们要伪造一个自己的授权文件的话， 只需要生成自己的 RSA 公私钥，然后使用私钥对文本内容进行加密，将公钥保存成  <code>authpub.key</code> ，并计算 MD5 值，对 <code>AuthCrypto.class</code> 中的 <code>8bb4df00c120881a1945a43e2bb2379e</code> 进行替换即可。这里的做法就是 <a href="https://mp.weixin.qq.com/s/Pneu8R0zoG0ONyFXF9VLpg" target="_blank" rel="noopener">Cobaltstrike 4破解之 我自己给我自己颁发license</a> 中的做法。</p>
+<h5 id="4-1-1、-auth-文件组成"><a href="#4-1-1、-auth-文件组成" class="headerlink" title="4.1.1、.auth 文件组成"></a>4.1.1、.auth 文件组成</h5><p>由对 <code>Authorization()</code> 的分析过程可以得出文本内容应该由这些有效元素构成：</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">将 .auth 文件读取成 byte[]，处理之后得出 <span class="number">26</span> 位的 byte[]，将其拆分为：</span><br><span class="line"></span><br><span class="line"><span class="number">4</span>位 -&gt; 经过有符号转换 int，结果为<span class="number">29999999</span> -&gt; 用于判断是否永久有效（是否为发行版）</span><br><span class="line"><span class="number">4</span>位 -&gt; 经过有符号转换 int，结果不为 <span class="number">0</span> 即可 -&gt; 水印</span><br><span class="line"><span class="number">1</span>位 -&gt; 该 byte 值必须是大于 <span class="number">40</span> 且小于 <span class="number">128</span> -&gt; 判断认证是否适合 <span class="number">4.</span>x</span><br><span class="line"><span class="number">1</span>位 -&gt; 该 byte 值必须是 <span class="number">16</span> -&gt; <span class="type">key</span> 的长度</span><br><span class="line"><span class="number">16</span>位 -&gt; 该 <span class="type">key</span> 理论上无法逆推</span><br><span class="line"></span><br><span class="line">要注意的是：处理 .auth 文件的时候，还需要判断文件头...，因此还需要填充文件头，但按照分析下来，是 <span class="number">4</span> 个字节，但在实测过程中，发现是 <span class="number">6</span> 个字节</span><br><span class="line">因此 .auth 文件的必要数据是 <span class="number">32</span> 位 -&gt; <span class="number">6</span> + <span class="number">4</span> + <span class="number">4</span> + <span class="number">1</span> + <span class="number">1</span> + <span class="number">16</span></span><br></pre></td></tr></table></figure>
+<p>因此我们只需要逆推 <code>DataParser</code> 中的 <code>readInt()</code>  就可以得到想要的内容。</p>
+<p><img src="/image/【知识回顾】Cobalt Strike 4.0认证及修补过程/blog_2020-08-01_14-03-22.png" alt=""></p>
+<p>因此在解析 <code>.auth</code> 后返回的 <code>byte[]</code> 应该为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span>[] decrypt = &#123; <span class="number">1</span>, -<span class="number">55</span>, -<span class="number">61</span>, <span class="number">127</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">34</span>, -<span class="number">112</span>, <span class="number">127</span>, <span class="number">16</span>, <span class="number">27</span>, -<span class="number">27</span>, -<span class="number">66</span>, <span class="number">82</span>, -<span class="number">58</span>, <span class="number">37</span>, <span class="number">92</span>, <span class="number">51</span>, <span class="number">85</span>, -<span class="number">114</span>, -<span class="number">118</span>, <span class="number">28</span>, -<span class="number">74</span>, <span class="number">103</span>, -<span class="number">53</span>, <span class="number">6</span> &#125;;</span><br></pre></td></tr></table></figure>
+<p>代入测试：</p>
+<p><img src="/image/【知识回顾】Cobalt Strike 4.0认证及修补过程/blog_2020-08-01_14-08-26.png" alt=""></p>
+<h5 id="4-1-2、生成-RSA-公钥、私钥及签名"><a href="#4-1-2、生成-RSA-公钥、私钥及签名" class="headerlink" title="4.1.2、生成 RSA 公钥、私钥及签名"></a>4.1.2、生成 RSA 公钥、私钥及签名</h5><p>该步骤，主要是生成 RSA 公私钥，然后使用私钥对上述生成的数据进行加密（注意，当你用私钥加密的时候，需要用公钥解密）后保存到 <code>cobaltstrike.auth</code>中。</p>
+<p>你可以使用 <code>openssl</code> 生成，使用 2048 位即可，也可以使用代码生成，参考代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.crypto.BadPaddingException;</span><br><span class="line"><span class="keyword">import</span> javax.crypto.Cipher;</span><br><span class="line"><span class="keyword">import</span> javax.crypto.IllegalBlockSizeException;</span><br><span class="line"><span class="keyword">import</span> javax.crypto.NoSuchPaddingException;</span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.security.*;</span><br><span class="line"><span class="keyword">import</span> java.util.Base64;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RSAKeyPairGenerator</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> PrivateKey privateKey;</span><br><span class="line">    <span class="keyword">private</span> PublicKey publicKey;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RSAKeyPairGenerator</span><span class="params">()</span> <span class="keyword">throws</span> NoSuchAlgorithmException </span>&#123;</span><br><span class="line">        KeyPairGenerator keyGen = KeyPairGenerator.getInstance(<span class="string">"RSA"</span>);</span><br><span class="line">        keyGen.initialize(<span class="number">2048</span>);</span><br><span class="line">        KeyPair pair = keyGen.generateKeyPair();</span><br><span class="line">        <span class="keyword">this</span>.privateKey = pair.getPrivate();</span><br><span class="line">        <span class="keyword">this</span>.publicKey = pair.getPublic();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将byte 写入文件</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">byte2File</span><span class="params">(String path, <span class="keyword">byte</span>[] data)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        File f = <span class="keyword">new</span> File(path);</span><br><span class="line">        f.getParentFile().mkdirs();</span><br><span class="line"></span><br><span class="line">        FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(f);</span><br><span class="line">        fos.write(data);</span><br><span class="line">        fos.flush();</span><br><span class="line">        fos.close();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> PrivateKey <span class="title">getPrivateKey</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> privateKey;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> PublicKey <span class="title">getPublicKey</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> publicKey;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 加密数据</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">byte</span>[] encryptPri(<span class="keyword">byte</span>[] data, PrivateKey privateKey) <span class="keyword">throws</span> BadPaddingException, IllegalBlockSizeException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException &#123;</span><br><span class="line">        Cipher cipher = Cipher.getInstance(<span class="string">"RSA/ECB/PKCS1Padding"</span>);</span><br><span class="line">        cipher.init(Cipher.ENCRYPT_MODE, <span class="keyword">this</span>.privateKey);</span><br><span class="line">        <span class="keyword">return</span> cipher.doFinal(data);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> NoSuchAlgorithmException, IOException, IllegalBlockSizeException, InvalidKeyException, NoSuchPaddingException, BadPaddingException </span>&#123;</span><br><span class="line">        RSAKeyPairGenerator PairGenerator = <span class="keyword">new</span> RSAKeyPairGenerator();</span><br><span class="line">        <span class="keyword">byte</span>[] data = &#123; -<span class="number">54</span>, -<span class="number">2</span>, -<span class="number">64</span>, -<span class="number">45</span>, <span class="number">0</span>, <span class="number">43</span>, <span class="number">1</span>, -<span class="number">55</span>, -<span class="number">61</span>, <span class="number">127</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">34</span>, -<span class="number">112</span>, <span class="number">127</span>, <span class="number">16</span>, <span class="number">27</span>, -<span class="number">27</span>, -<span class="number">66</span>, <span class="number">82</span>, -<span class="number">58</span>, <span class="number">37</span>, <span class="number">92</span>, <span class="number">51</span>, <span class="number">85</span>, -<span class="number">114</span>, -<span class="number">118</span>, <span class="number">28</span>, -<span class="number">74</span>, <span class="number">103</span>, -<span class="number">53</span>, <span class="number">6</span> &#125;;</span><br><span class="line">        <span class="keyword">byte</span>[] rsaByte = PairGenerator.encryptPri(data, PairGenerator.getPrivateKey());</span><br><span class="line">        PairGenerator.byte2File(<span class="string">"RSA/cobaltstrike.auth"</span>, rsaByte);</span><br><span class="line">        PairGenerator.byte2File(<span class="string">"RSA/authkey.private"</span>, PairGenerator.getPrivateKey().getEncoded());</span><br><span class="line">        PairGenerator.byte2File(<span class="string">"RSA/authkey.pub"</span>, PairGenerator.getPublicKey().getEncoded());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>成功生成，剩下的就是替换相关文件，再更改 <code>AuthCrypto.load()</code> 中的 MD5 值。</p>
+<h4 id="4-2、硬编码-key"><a href="#4-2、硬编码-key" class="headerlink" title="4.2、硬编码 key"></a>4.2、硬编码 key</h4><p>直接在 <code>Authorization()</code> 中注释掉以下代码行：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span>[] arrayOfByte2 = authCrypto.decrypt(arrayOfByte1);</span><br><span class="line">注释部分可以扩大到读取 cobaltstrike.auth 部分</span><br></pre></td></tr></table></figure>
+<p>然后直接将解析后的 byte[] 进行写入</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span>[] arrayOfByte2 = &#123; <span class="number">1</span>, -<span class="number">55</span>, -<span class="number">61</span>, <span class="number">127</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">34</span>, -<span class="number">112</span>, <span class="number">127</span>, <span class="number">16</span>, <span class="number">27</span>, -<span class="number">27</span>, -<span class="number">66</span>, <span class="number">82</span>, -<span class="number">58</span>, <span class="number">37</span>, <span class="number">92</span>, <span class="number">51</span>, <span class="number">85</span>, -<span class="number">114</span>, -<span class="number">118</span>, <span class="number">28</span>, -<span class="number">74</span>, <span class="number">103</span>, -<span class="number">53</span>, <span class="number">6</span> &#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="4-3、CSHook-jar"><a href="#4-3、CSHook-jar" class="headerlink" title="4.3、CSHook.jar"></a>4.3、CSHook.jar</h4><p>以上两种方法都对 Jar 包进行修改，那我们再来看看不对源码进行修改的前提下进行 hook。Hook 的原理就是热替换，热替换的核心就在于 <code>Instrumentation</code> 的两个方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// addTransformer() 用来注册类的修改器；</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">addTransformer</span><span class="params">(ClassFileTransformer transformer, <span class="keyword">boolean</span> canRetransform)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// retransformClasses() 会让类重新加载，从而使得注册的类修改器能够重新修改类的字节码。</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">retransformClasses</span><span class="params">(Class&lt;?&gt;... classes)</span> <span class="keyword">throws</span> UnmodifiableClassException</span>;</span><br></pre></td></tr></table></figure>
+<p>这里主要是使用了 <code>addTransformer()</code>，其实原理很简单，就是将 4.2 中编译好的 <code>Authorization()</code> 类进行热替换，从而不去修改 jar 包的情况下完成认证。这部分知识可以参考：<a href="https://www.cnblogs.com/rickiyang/p/11368932.html" target="_blank" rel="noopener">javaagent使用指南</a></p>
+<h5 id="4-3-1、读取-Authorization-class"><a href="#4-3-1、读取-Authorization-class" class="headerlink" title="4.3.1、读取 Authorization.class"></a>4.3.1、读取 Authorization.class</h5><p>首先先读取改写好的 <code>Authorization.class</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 先读取 Authorization.class，byte[] 转 base64</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">toByteArray</span><span class="params">(String filename)</span> <span class="keyword">throws</span> IOException</span>&#123;</span><br><span class="line">    File f = <span class="keyword">new</span> File(filename);</span><br><span class="line">    <span class="keyword">if</span> (!f.exists()) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> FileNotFoundException(filename);</span><br><span class="line">    &#125;</span><br><span class="line">    ByteArrayOutputStream bos = <span class="keyword">new</span> ByteArrayOutputStream((<span class="keyword">int</span>) f.length());</span><br><span class="line">    BufferedInputStream in = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        in = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(f));</span><br><span class="line">        <span class="keyword">int</span> buf_size = <span class="number">1024</span>;</span><br><span class="line">        <span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[buf_size];</span><br><span class="line">        <span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (-<span class="number">1</span> != (len = in.read(buffer, <span class="number">0</span>, buf_size))) &#123;</span><br><span class="line">            bos.write(buffer, <span class="number">0</span>, len);</span><br><span class="line">        &#125;</span><br><span class="line">        String base64Str = Base64.getEncoder().encodeToString(bos.toByteArray());</span><br><span class="line">        System.out.println(base64Str);</span><br><span class="line">        <span class="comment">//return base64Str;</span></span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        <span class="keyword">throw</span> e;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            in.close();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        bos.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后再编写 <code>addTransformer()</code> 的调用类</p>
+<h5 id="4-3-2、Transformer-类"><a href="#4-3-2、Transformer-类" class="headerlink" title="4.3.2、Transformer 类"></a>4.3.2、Transformer 类</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Transformer</span> <span class="keyword">implements</span> <span class="title">ClassFileTransformer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">byte</span>[] transform(ClassLoader loader, String className, Class classBeingRedefined, ProtectionDomain protectionDomain, <span class="keyword">byte</span>[] classfileBuffer) <span class="keyword">throws</span> IllegalClassFormatException &#123;</span><br><span class="line">        <span class="keyword">if</span> (className.equals(<span class="string">"common/Authorization"</span>)) &#123;</span><br><span class="line">            String base64class = <span class="string">"此处为 4.3.1 小节生成的内容"</span>;</span><br><span class="line">            System.out.println(<span class="string">"Found desired class: "</span> + className);</span><br><span class="line">            classfileBuffer = Base64.getDecoder().decode(base64class);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> classfileBuffer;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="4-3-3、premain"><a href="#4-3-3、premain" class="headerlink" title="4.3.3、premain"></a>4.3.3、premain</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CSHook</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">premain</span><span class="params">(String paramString, Instrumentation paramInstrumentation)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hook start"</span>);</span><br><span class="line">        Transformer transformer = <span class="keyword">new</span> Transformer();</span><br><span class="line">        paramInstrumentation.addTransformer(transformer);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意：指定 <code>premain</code> 方法的位置，这里选择了修改 <code>META-INF/MANIFEST.MF</code> 的内容，将 <code>Main-Class</code> 修改成 <code>Premain-Class</code>。编译生成即可。</p>
+<p><img src="/image/【知识回顾】Cobalt Strike 4.0认证及修补过程/blog_2020-08-01_17-52-18.png" alt=""></p>
+<p>最后，这里提供 CS 4.1 的 key ： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span>[] arrayOfByte2 = &#123; <span class="number">1</span>, -<span class="number">55</span>, -<span class="number">61</span>, <span class="number">127</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">34</span>, -<span class="number">112</span>, <span class="number">127</span>, <span class="number">16</span>, -<span class="number">128</span>, -<span class="number">29</span>, <span class="number">42</span>, <span class="number">116</span>, <span class="number">32</span>, <span class="number">96</span>, -<span class="number">72</span>, -<span class="number">124</span>, <span class="number">65</span>, -<span class="number">101</span>, -<span class="number">96</span>, -<span class="number">63</span>, <span class="number">113</span>, -<span class="number">55</span>, -<span class="number">86</span>, <span class="number">118</span> &#125;;</span><br></pre></td></tr></table></figure>
+<p>附件：<a href="/image/【知识回顾】Cobalt Strike 4.0认证及修补过程/CSHook_4.1.zip">CSHook_4.1.zip</a></p>
+<h3 id="0x05-参考"><a href="#0x05-参考" class="headerlink" title="0x05 参考"></a>0x05 参考</h3><ul>
+<li>[1] <a href="https://www.cnblogs.com/pcheng/p/9629621.html" target="_blank" rel="noopener">RSA加密、解密、签名、验签的原理及方法</a></li>
+<li>[2] <a href="https://blog.csdn.net/x_san3/article/details/80613605" target="_blank" rel="noopener">Java加密解密之MAC（消息认证码）</a></li>
+<li>[3] <a href="https://www.sdnlab.com/21145.html" target="_blank" rel="noopener">暴力解决一切？破解AES也是妄想！</a></li>
+<li>[4] <a href="https://blog.gzsec.org/post/Patch-Cobalt-Strike-4.0/" target="_blank" rel="noopener">Patch Cobalt Strike 4.0</a></li>
+<li>[5] <a href="https://ca3tie1.github.io/post/cobaltstrike40-wu-hook-man-li-cracked-license-si-lu/" target="_blank" rel="noopener">CobaltStrike4.0无Hook蛮力Cracked License思路</a></li>
+<li>[6] <a href="https://mp.weixin.qq.com/s/Pneu8R0zoG0ONyFXF9VLpg" target="_blank" rel="noopener">Cobaltstrike 4破解之 我自己给我自己颁发license</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+	
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/知识星球.jpeg" alt="RcoIl Alipay">
+        </div>
+    
+  
+    <div>！坚持技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechatpay.jpg" alt="RcoIl WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/知识星球.jpeg" alt="RcoIl Alipay">
+          <p>知识星球</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>嘤嘤怪：</strong>
+      RcoIl
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://rcoil.me/2020/11/【知识回顾】Cobalt Strike 4.0认证及修补过程/" title="【知识回顾】Cobalt Strike 4.0 认证及修补过程">https://rcoil.me/2020/11/【知识回顾】Cobalt Strike 4.0认证及修补过程/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/内网渗透/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> 内网渗透</a>
+          
+            <a href="/tags/Tools/" rel="tag"><i class="fa fa-tag" aria-hidden="true"></i> Tools</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/【渗透技巧】SCshell 技术细节/" rel="next" title="【渗透技巧】SCshell 技术细节">
+                <i class="fa fa-chevron-left"></i> 【渗透技巧】SCshell 技术细节
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODE5NS80NzY4"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="RcoIl">
+          <p class="site-author-name" itemprop="name">RcoIl</p>
+           
+              <p class="site-description motion-element" itemprop="description">好吃懒做，还有就是皮肤比黄皮果还黄！</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RcoIl" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=rcoil@qq.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-fa fa-envelope-open"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://t.zsxq.com/i2zJI2V" target="_blank" title="知识星球">
+                  
+                    <i class="fa fa-fw fa-fa fa-battery-bolt"></i>
+                  
+                  知识星球
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+		
+		
+          <div class="feed-link motion-element">
+            <div id="days"></div>
+			<script language="javascript">
+			function show_date_time(){
+				window.setTimeout("show_date_time()", 1000);
+				BirthDay=new Date("09/01/2016 10:13:14");
+				today=new Date();
+				timeold=(today.getTime()-BirthDay.getTime());
+				sectimeold=timeold/1000
+				secondsold=Math.floor(sectimeold);
+				msPerDay=24*60*60*1000
+				e_daysold=timeold/msPerDay
+				daysold=Math.floor(e_daysold);
+				e_hrsold=(e_daysold-daysold)*24;
+				hrsold=setzero(Math.floor(e_hrsold));
+				e_minsold=(e_hrsold-hrsold)*60;
+				minsold=setzero(Math.floor((e_hrsold-hrsold)*60));
+				seconds=setzero(Math.floor((e_minsold-minsold)*60));
+				document.getElementById('days').innerHTML="本站已运行 "+daysold+" 天 "+hrsold+" 小时 "+minsold+" 分"+ seconds +" 秒";
+			}
+			function setzero(i){
+				if (i<10)
+				{i="0" + i};
+				return i;
+			}		
+			show_date_time();
+		</script>
+        </div>
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://isron.cn/" title="Isron" target="_blank">Isron</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hacktech.cn/" title="Akkuman" target="_blank">Akkuman</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://rootrain.me/" title="rootrain" target="_blank">rootrain</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://kerlinglovsec.lofter.com/" title="kerling" target="_blank">kerling</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.luolikong.vip/" title="Fire-ant" target="_blank">Fire-ant</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xnianq.cn/" title="xniang" target="_blank">xniang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://thief.one/" title="nMask" target="_blank">nMask</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://cate4cafe.com/" title="cate4cafe" target="_blank">cate4cafe</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://52stu.me/" title="IversOn5" target="_blank">IversOn5</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hone.cool/" title="Hone" target="_blank">Hone</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://sharecast.bitcron.com/" title="sharecast" target="_blank">sharecast</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://scarletf.github.io/" title="ScarletF" target="_blank">ScarletF</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.lz1y.cn/" title="Lz1y" target="_blank">Lz1y</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://k8gege.org/" title="K8gege" target="_blank">K8gege</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#0x00-前言"><span class="nav-text">0x00 前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x01-准备工作"><span class="nav-text">0x01 准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1、必备知识"><span class="nav-text">1.1、必备知识</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1-1、RAS-算法之加密与签名的区别"><span class="nav-text">1.1.1、RAS 算法之加密与签名的区别</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1-2、HMAC-消息摘要算法"><span class="nav-text">1.1.2、HMAC 消息摘要算法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1-3、AES"><span class="nav-text">1.1.3、AES</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2、运行环境"><span class="nav-text">1.2、运行环境</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x02-CS-3-X-版本的认证过程"><span class="nav-text">0x02 CS 3.X 版本的认证过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x03-CS-4-X-版本的认证过程"><span class="nav-text">0x03 CS 4 .X 版本的认证过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1、checkLicenseGUI"><span class="nav-text">3.1、checkLicenseGUI()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2、Authorization-的分析过程"><span class="nav-text">3.2、Authorization() 的分析过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3、AuthCrypto-类"><span class="nav-text">3.3、AuthCrypto 类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4、SleevedResource-类"><span class="nav-text">3.4、SleevedResource 类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4、decrypt-方法调用链"><span class="nav-text">3.4、decrypt() 方法调用链</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-5、认证流程图"><span class="nav-text">3.5、认证流程图</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x04-破解方法"><span class="nav-text">0x04 破解方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1、重新生成-license"><span class="nav-text">4.1、重新生成 license</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#4-1-1、-auth-文件组成"><span class="nav-text">4.1.1、.auth 文件组成</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-1-2、生成-RSA-公钥、私钥及签名"><span class="nav-text">4.1.2、生成 RSA 公钥、私钥及签名</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2、硬编码-key"><span class="nav-text">4.2、硬编码 key</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3、CSHook-jar"><span class="nav-text">4.3、CSHook.jar</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#4-3-1、读取-Authorization-class"><span class="nav-text">4.3.1、读取 Authorization.class</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-3-2、Transformer-类"><span class="nav-text">4.3.2、Transformer 类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-3-3、premain"><span class="nav-text">4.3.3、premain</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x05-参考"><span class="nav-text">0x05 参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+<!--
+    <i class="fa fa-heart"></i>
+-->
+	<i class="fa fa-address-card-o" aria-hidden="true"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RcoIl</span>
+</div>
+<!--
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+-->
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-blind" aria-hidden="true"></i>本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-user-md" aria-hidden="true"></i>本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("KVNdpVifyFqJPx0bzSg6cN7z-gzGzoHsz", "vlNRwqLbdUTKC1W06gjYj0iG");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
