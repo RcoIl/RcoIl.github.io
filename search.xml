@@ -3,13 +3,13 @@
   <entry>
     <title><![CDATA[【使用说明】SharpExchangeKing]]></title>
     <url>%2F2023%2F06%2F%E3%80%90%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E%E3%80%91SharpExchangeKing%2F</url>
-    <content type="text"><![CDATA[摘要：针对本地 Windows Exchange Server 的 SharpExchangeKing 版本已经编写完成。 0x00 前言针对本地 Windows Exchange Server 的 SharpExchangeKing 版本已经编写完成。 主界面如下所示： SharpExchangeKing 的功能依次如下所示： 基本信息收集 邮箱账户枚举 邮箱账号密码暴力破解 一些在获取邮箱账号后的操作，主要是针对邮箱文件夹的设置，比如委派 检测委派 根据搜索条件对邮件进行下载 浏览共享 特别提醒：要想使用以上功能，在输入 Target 后，必须选择点击 GoGoGo，并且是通过获取基本信息后，才能正常使用，否则无法使用。在 Target 有更改时，也必须重新点击 GoGoGo。 PS：我也不清楚为什么 Defender 会将 SharpExchangeKing 标记为特洛伊木马。并且使用 DefenderCheck 检测是正常的。 0x01 Info 模块该模块主要是获取以下信息： 服务器所在内网域的域名及 Windows Server 版本，是根据之前编写的 NTLMSSP 解析工具。 获取 Exchange 发行版本信息，包含了发行时间。 尝试获取 Exchange 服务器内网 IP。 从 SSL 证书中获取一些数据，这个数据可以辅助判断该目标是否是我们要打的。 根据发行时间跟漏洞修补时间对比得出可能存在的漏洞。 效果如下所示： 当在本地 ExchangeReleaseVersion.data 文件中找不到版本数据时，会前往微软官网获取 Exchange 的版本数据。因此，此时确保当前网络可访问 https://learn.microsoft.com/en-us/exchange/new-features/build-numbers-and-release-dates?view=exchserver-2019。 0x02 Mailbox 模块模块说明：该模块主要是验证输入的邮箱用户是否存在。当前，该模块提供了 3 个可选择的方法，它们分别是： 方法 描述 缺点 SMTP 对输入的用户名有要求，需要提供完整的邮箱名，比如 rcoil@rowteam.lab 狗都不用| 如果目标邮服配置了 Catch-all 邮箱，则 SMTP 无法使用。 不支持多线程|| OWADate | 支持 rcoil@rowteam.lab 用户名格式 仅输入用户名 rcoil，则在请求时默认是 rowteam\rcoil 成功验证写入 owadate_success.txt| OWA 接口存在 MFA 时，则 OWADate 无法使用。 对网络条件要求，得多尝试几次 有些环境仅支持单种格式，两种格式需要反复尝试|| EASDate | 支持 rcoil@rowteam.lab 用户名格式 仅输入用户名 rcoil，则在请求时默认是 rowteam\rcoil 成功验证写入 easdate_success.txt| 对网络条件要求，得多尝试几次 有些环境仅支持单种格式，两种格式需要反复尝试| 以上三种方法都支持批量，将需要检测的用户写入文件即可。以下是使用 EASData 的测试结果： 0x03 Pwd Brute 模块模块说明：该模块为密码爆破，目前仅支持 EWS 接口的验证，且该接口支持 NLTM 验证，成功验证写入 brute_success.txt。 账号密码混杂组合支持 5 种模式： 模式 写入说明 单个账号单个密码 UserName 和 PassWord 分别填写账号密码即可。 单个账号多个密码 UserName 填写账号，PassWord 填写包含密码的本地文本路径。 多个账号单个密码 UserName 填写包含账号的本地文本路径，PassWord 填写密码。 多个账号多个密码 UserName 填写包含账号的本地文本路径，PassWord 填写包含密码的本地文本路径。 批量验证账号密码 UserName 填写包含账号密码的本地文本路径，格式必须为“用户名:密码”。 PS：如果以上的密码是 NTLM 格式，则勾选 NTLM，不支持明文和 NTLM 同时使用。 0x04 Setting 模块模块说明：粗略的充当一个权限维持的作用。主要是对当前邮箱的收信箱做转发及委派访问权限。 界面大致如下所示： 使用说明： Auto：必须为 “username:password” 格式。该字段支持批量、 Value1：根据 Funtion 选择。必须是 username 的邮箱名，比如当前登陆的是 rcoil，它的用户邮箱名为 rcoil@rowteam.me。 Value2：根据 Funtion 选择对应值。 这个模块当前支持 8 个函数功能，它们分别是： 方法 描述 GetMailLists 从全局地址簿获取邮箱账号数据，成功则输出到 MaiLists.txt 文件 GetInboxRules 读取用户 Value1 规则信息，从返回结果中能够获得规则对应的 RuleID。 AddForwardToRecipients 创建用户 Value1 转发邮件至用户 Value2 的规则。 DelForwardToRecipients 根据 RuleID 删除用户 Value1 的指定转发规则。 GetInboxPermissions 查看用户 Value1 收件箱的访问权限。 AddDelegateEditorToInboxPermissions 添加用户 Value2 对用户 Value1 收件箱的完全访问权限。 RemoveDelegateEditorToInboxPermissions 移除用户 Value2 对用户 Value1 收件箱的访问权限。 UpdateFolderDefaultToPermissions 设置所有用户都可以访问 username 的所有邮件。 它们都是只能作用自身，无法为他人设置转发及委派。 0x05 CheckDelegate 模块模块说明：主要是针对 UpdateFolderDefaultToPermissions 方法中的设置进行一个检测。如果成功检测出，那么就可以在 MailStore 模块中读取相应邮件文件夹的邮件。 Query 支持单个/多个邮箱用户 Query 支持文件 检测出来什么文件夹可访问，那么就可以读取相对应的文件夹。如果检测出 msgfolderroot，那么，可访问所有邮件。 在输入正确的邮箱，有些环境可能会提示 The SMTP address has no mailbox associated with it.也就是 SMTP 地址没有与其关联的邮箱，具体原因未明。这个问题在 MailStore 同意存在。 0x06 MailStore 模块模块说明：可读取当前用户的所有邮件，也可读取受委派的邮箱的邮件。 Value 输入框支持两种模式： 基于时间区间：格式为 2020/05/26-2023/06/02 基于关键字：格式为 VPN,密码，多个关键字以逗号隔开 Delegete 输入框支持两种格式： 直接输入单个或多个邮箱名称，多个邮箱以逗号隔开 支持文件列表 仅下载附件 读取委派用户的邮箱 关键字同理，就不演示了。 0x07 BroseShare 模块模块说明：当已知文件共享的 UNC 路径，且当前用户可访问时，可使用该模块浏览共享内的文件，并且支持下载。 当然，如果当前用户权限足够的话，也可以访问很多的东西，如下图： 支持右键下载及双击下载。该模块存在一个问题：太大的文件无法下载，这个大小的值未验证具体是多少，但 100M 以内的肯定可以下载。 ## 0x08 免责声明本工具仅面向合法授权的企业安全建设行为，例如企业内部攻防演练、漏洞验证和复测，如您需要测试本工具的可用性，请自行搭建靶机环境。在使用本工具进行检测时，您应确保该行为符合当地的法律法规，并且已经取得了足够的授权。请勿对非授权目标使用。如您在使用本工具的过程中存在任何非法行为，您需自行承担相应后果，我们将不承担任何法律及连带责任。]]></content>
+    <content type="text"><![CDATA[摘要：针对本地 Windows Exchange Server 的 SharpExchangeKing 版本已经编写完成。 0x00 前言针对本地 Windows Exchange Server 的 SharpExchangeKing 版本已经编写完成。 主界面如下所示： SharpExchangeKing 的功能依次如下所示： 基本信息收集 邮箱账户枚举 邮箱账号密码暴力破解 一些在获取邮箱账号后的操作，主要是针对邮箱文件夹的设置，比如委派 检测委派 根据搜索条件对邮件进行下载 浏览共享 特别提醒：要想使用以上功能，在输入 Target 后，必须选择点击 GoGoGo，并且是通过获取基本信息后，才能正常使用，否则无法使用。在 Target 有更改时，也必须重新点击 GoGoGo。 PS：我也不清楚为什么 Defender 会将 SharpExchangeKing 标记为特洛伊木马。并且使用 DefenderCheck 检测是正常的。 0x01 Info 模块该模块主要是获取以下信息： 服务器所在内网域的域名及 Windows Server 版本，是根据之前编写的 NTLMSSP 解析工具。 获取 Exchange 发行版本信息，包含了发行时间。 尝试获取 Exchange 服务器内网 IP。 从 SSL 证书中获取一些数据，这个数据可以辅助判断该目标是否是我们要打的。 根据发行时间跟漏洞修补时间对比得出可能存在的漏洞。 效果如下所示： 当在本地 ExchangeReleaseVersion.data 文件中找不到版本数据时，会前往微软官网获取 Exchange 的版本数据。因此，此时确保当前网络可访问 https://learn.microsoft.com/en-us/exchange/new-features/build-numbers-and-release-dates?view=exchserver-2019。 0x02 Mailbox 模块模块说明：该模块主要是验证输入的邮箱用户是否存在。当前，该模块提供了 3 个可选择的方法，它们分别是： 方法 描述 缺点 SMTP - 对输入的用户名有要求，需要提供完整的邮箱名，比如 rcoil@rowteam.lab - 狗都不用 - 如果目标邮服配置了 Catch-all 邮箱，则 SMTP 无法使用。 - 不支持多线程 OWADate - 支持 rcoil@rowteam.lab 用户名格式 - 仅输入用户名 rcoil，则在请求时默认是 rowteam\rcoil - 成功验证写入 owadate_success.txt - OWA 接口存在 MFA 时，则 OWADate 无法使用。 - 对网络条件要求，得多尝试几次 - 有些环境仅支持单种格式，两种格式需要反复尝试 EASDate - 支持 rcoil@rowteam.lab 用户名格式- 仅输入用户名 rcoil，则在请求时默认是 rowteam\rcoil- 成功验证写入 easdate_success.txt - 对网络条件要求，得多尝试几次- 有些环境仅支持单种格式，两种格式需要反复尝试 以上三种方法都支持批量，将需要检测的用户写入文件即可。以下是使用 EASData 的测试结果： 0x03 Pwd Brute 模块模块说明：该模块为密码爆破，目前仅支持 EWS 接口的验证，且该接口支持 NLTM 验证，成功验证写入 brute_success.txt。 账号密码混杂组合支持 5 种模式： 模式 写入说明 单个账号单个密码 UserName 和 PassWord 分别填写账号密码即可。 单个账号多个密码 UserName 填写账号，PassWord 填写包含密码的本地文本路径。 多个账号单个密码 UserName 填写包含账号的本地文本路径，PassWord 填写密码。 多个账号多个密码 UserName 填写包含账号的本地文本路径，PassWord 填写包含密码的本地文本路径。 批量验证账号密码 UserName 填写包含账号密码的本地文本路径，格式必须为“用户名:密码”。 PS：如果以上的密码是 NTLM 格式，则勾选 NTLM，不支持明文和 NTLM 同时使用。 0x04 Setting 模块模块说明：粗略的充当一个权限维持的作用。主要是对当前邮箱的收信箱做转发及委派访问权限。 界面大致如下所示： 使用说明： Auto：必须为 “username:password” 格式。该字段支持批量、 Value1：根据 Funtion 选择。必须是 username 的邮箱名，比如当前登陆的是 rcoil，它的用户邮箱名为 rcoil@rowteam.me。 Value2：根据 Funtion 选择对应值。 这个模块当前支持 8 个函数功能，它们分别是： 方法 描述 GetMailLists 从全局地址簿获取邮箱账号数据，成功则输出到 MaiLists.txt 文件 GetInboxRules 读取用户 Value1 规则信息，从返回结果中能够获得规则对应的 RuleID。 AddForwardToRecipients 创建用户 Value1 转发邮件至用户 Value2 的规则。 DelForwardToRecipients 根据 RuleID 删除用户 Value1 的指定转发规则。 GetInboxPermissions 查看用户 Value1 收件箱的访问权限。 AddDelegateEditorToInboxPermissions 添加用户 Value2 对用户 Value1 收件箱的完全访问权限。 RemoveDelegateEditorToInboxPermissions 移除用户 Value2 对用户 Value1 收件箱的访问权限。 UpdateFolderDefaultToPermissions 设置所有用户都可以访问 username 的所有邮件。 它们都是只能作用自身，无法为他人设置转发及委派。 0x05 CheckDelegate 模块模块说明：主要是针对 UpdateFolderDefaultToPermissions 方法中的设置进行一个检测。如果成功检测出，那么就可以在 MailStore 模块中读取相应邮件文件夹的邮件。 Query 支持单个/多个邮箱用户 Query 支持文件 检测出来什么文件夹可访问，那么就可以读取相对应的文件夹。如果检测出 msgfolderroot，那么，可访问所有邮件。 在输入正确的邮箱，有些环境可能会提示 The SMTP address has no mailbox associated with it.也就是 SMTP 地址没有与其关联的邮箱，具体原因未明。这个问题在 MailStore 同意存在。 0x06 MailStore 模块模块说明：可读取当前用户的所有邮件，也可读取受委派的邮箱的邮件。 Value 输入框支持两种模式： 基于时间区间：格式为 2020/05/26-2023/06/02 基于关键字：格式为 VPN,密码，多个关键字以逗号隔开 Delegete 输入框支持两种格式： 直接输入单个或多个邮箱名称，多个邮箱以逗号隔开 支持文件列表 仅下载附件 读取委派用户的邮箱 关键字同理，就不演示了。 0x07 BroseShare 模块模块说明：当已知文件共享的 UNC 路径，且当前用户可访问时，可使用该模块浏览共享内的文件，并且支持下载。 当然，如果当前用户权限足够的话，也可以访问很多的东西，如下图： 支持右键下载及双击下载。该模块存在一个问题：太大的文件无法下载，这个大小的值未验证具体是多少，但 100M 以内的肯定可以下载。 0x08 免责声明本工具仅面向合法授权的企业安全建设行为，例如企业内部攻防演练、漏洞验证和复测，如您需要测试本工具的可用性，请自行搭建靶机环境。 在使用本工具进行检测时，您应确保该行为符合当地的法律法规，并且已经取得了足够的授权。请勿对非授权目标使用。 如您在使用本工具的过程中存在任何非法行为，您需自行承担相应后果，我们将不承担任何法律及连带责任。]]></content>
       <categories>
         <category>编程之道</category>
       </categories>
       <tags>
-        <tag>编程之道</tag>
         <tag>King</tag>
+        <tag>编程之道</tag>
       </tags>
   </entry>
   <entry>
@@ -212,8 +212,8 @@
         <category>内网渗透</category>
       </categories>
       <tags>
-        <tag>内网渗透</tag>
         <tag>系统安全</tag>
+        <tag>内网渗透</tag>
         <tag>知识回顾</tag>
       </tags>
   </entry>
@@ -316,8 +316,8 @@
         <category>内网渗透</category>
       </categories>
       <tags>
-        <tag>内网渗透</tag>
         <tag>系统安全</tag>
+        <tag>内网渗透</tag>
       </tags>
   </entry>
   <entry>
@@ -464,8 +464,8 @@
       </categories>
       <tags>
         <tag>内网必修</tag>
-        <tag>内网渗透</tag>
         <tag>系统安全</tag>
+        <tag>内网渗透</tag>
       </tags>
   </entry>
   <entry>
@@ -499,8 +499,8 @@
         <category>内网渗透</category>
       </categories>
       <tags>
-        <tag>内网渗透</tag>
         <tag>系统安全</tag>
+        <tag>内网渗透</tag>
         <tag>Tools</tag>
       </tags>
   </entry>
@@ -548,8 +548,8 @@
         <category>内网渗透</category>
       </categories>
       <tags>
-        <tag>内网渗透</tag>
         <tag>系统安全</tag>
+        <tag>内网渗透</tag>
         <tag>Tools</tag>
       </tags>
   </entry>
